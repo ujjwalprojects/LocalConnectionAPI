@@ -39,7 +39,7 @@ namespace LocalConn.Entities.Models
         public DbSet<utblMstCabDriver> utblMstCabDrivers { get; set; }
         public DbSet<utblMstCabHead> utblMstCabHeads { get; set; }
 
-        public DbSet<utblMstTourCancellation> utblMstTourCancellations { get; set; }
+        public DbSet<utblMstTourCancellation> utblMstTourCancellations { get; set; } 
         public DbSet<utblTourPackage> utblTourPackages { get; set; }
         public DbSet<utblTourPackageItinerary> utblTourPackageItineraries { get; set; }
         public DbSet<utblTourPackageImage> utblTourPackageImages { get; set; }
