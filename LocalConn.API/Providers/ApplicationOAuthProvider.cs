@@ -45,18 +45,6 @@ namespace LocalConn.API.Providers
 
                     if (user == null)
                     {
-
-                        // if (result.Succeeded)
-                        // {
-                        //     ClaimsIdentity oAuthIdentity = await _repo._userManager.CreateIdentityAsync(user,
-                        //context.Options.AuthenticationType);
-                        //     ClaimsIdentity cookiesIdentity = await _repo._userManager.CreateIdentityAsync(user,
-                        //         CookieAuthenticationDefaults.AuthenticationType);
-                        //     AuthenticationProperties properties = CreateProperties(user);
-                        //     AuthenticationTicket ticket = new AuthenticationTicket(oAuthIdentity, properties);
-                        //     context.Validated(ticket);
-                        //     context.Request.Context.Authentication.SignIn(cookiesIdentity);
-                        // }
                         context.SetError("invalid_grant", "The email or password is incorrect.");
                         return;
                     }
