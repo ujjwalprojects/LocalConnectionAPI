@@ -585,7 +585,27 @@ namespace LocalConn.API.Controllers
         #region App
 
 
+        [Route("updateprofile")]
+        [HttpPost]
+        public async Task<string> UpdateProfile(UserDetailModel obj)
+        {
+            try
+            {
+                string Results = "";
+                var parID = new SqlParameter("@UserID", obj.UserID);
+                var parPName = new SqlParameter("@ProfileName", obj.ProfileName);
+                var parEmail = new SqlParameter("@Email", obj.Email);
+                var parMobile = new SqlParameter("@PhoneNumber", obj.PhoneNumber);
+                Results = await db.Database.SqlQuery<string>("udspLCUpdateProfile @UserID, @ProfileName,@Email,@PhoneNumber",
+                    parID,parPName,parEmail,parMobile).FirstOrDefaultAsync();
 
+                return Results;
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+        }
 
 
         [Route("RegisterDevice")]
@@ -595,10 +615,12 @@ namespace LocalConn.API.Controllers
             try
             {
                 string Results = "";
-                var par = new SqlParameter("@UserName", UserName);
+                var par = new SqlParameter("@UserName", DBNull.Value);
+                if (UserName!=null)
+                 par = new SqlParameter("@UserName", UserName);
                 var parDevice = new SqlParameter("@DeviceCode", DeviceID);
 
-                Results = await db.Database.SqlQuery<string>("udspAppRegisterDevice @UserName, @DeviceCode", par, parDevice).FirstOrDefaultAsync();
+                Results = await db.Database.SqlQuery<string>("utblLCMstUserDeviceCode @UserName, @DeviceCode", par, parDevice).FirstOrDefaultAsync();
 
                 return Results;
             }

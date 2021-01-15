@@ -16,7 +16,6 @@ namespace LocalConn.API.Providers
     {
         private readonly string _publicClientId;
         private readonly Func<UserManager<IdentityUser>> _userManagerFactory;
-        UserManager<ApplicationUser> userManager;
 
         public ApplicationOAuthProvider(string publicClientId, Func<UserManager<IdentityUser>> userManagerFactory)
         {
@@ -53,9 +52,7 @@ namespace LocalConn.API.Providers
                         context.SetError("disabled", "Sorry, your account has been disabled by admin.");
                         return;
                     }
-                    else
-                    {
-                        ClaimsIdentity oAuthIdentity = await _repo._userManager.CreateIdentityAsync(user,
+                   ClaimsIdentity oAuthIdentity = await _repo._userManager.CreateIdentityAsync(user,
                       context.Options.AuthenticationType);
                         ClaimsIdentity cookiesIdentity = await _repo._userManager.CreateIdentityAsync(user,
                             CookieAuthenticationDefaults.AuthenticationType);
@@ -63,7 +60,6 @@ namespace LocalConn.API.Providers
                         AuthenticationTicket ticket = new AuthenticationTicket(oAuthIdentity, properties);
                         context.Validated(ticket);
                         context.Request.Context.Authentication.SignIn(cookiesIdentity);
-                    }
 
 
                 }
