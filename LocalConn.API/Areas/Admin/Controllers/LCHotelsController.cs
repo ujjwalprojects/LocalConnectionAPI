@@ -16,7 +16,7 @@ namespace LocalConn.API.Areas.Admin.Controllers
     [RoutePrefix("api/Admin/lchotelconfig")] 
     public class LCHotelsController : ApiController
     {
-        dalLCHotel objLCHotel = new dalLCHotel();
+        dalLCHotel objLCHotel = new dalLCHotel(); 
 
         #region Hotels
         [HttpGet]
