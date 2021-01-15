@@ -41,5 +41,13 @@ namespace LocalConn.API.Models
 
         public string ProviderKey { get; set; }
     }
+
+    public class UserDetailModel
+    {
+        public string UserID { get; set; }
+        public string ProfileName { get; set; }
+        public string PhoneNumber { get; set; }
+        public string Email { get; set; }
+    }
     
 }
