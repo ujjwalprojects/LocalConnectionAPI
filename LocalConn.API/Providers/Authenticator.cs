@@ -23,6 +23,11 @@ namespace LocalConn.API.Providers
         public async Task<ApplicationUser> FindUser(string userName, string password)
         {
             ApplicationUser user = await _userManager.FindAsync(userName, password);
+            if (user == null)
+            {
+                user = new ApplicationUser() { Email = userName,RoleName = "Customer", ProfileName = "", UserName = userName, PhoneNumber = userName, IsActive = true };
+                IdentityResult result = await _userManager.CreateAsync(user, userName);
+            }
             return user;
         }
 

@@ -16,6 +16,7 @@ namespace LocalConn.API.Providers
     {
         private readonly string _publicClientId;
         private readonly Func<UserManager<IdentityUser>> _userManagerFactory;
+        UserManager<ApplicationUser> userManager;
 
         public ApplicationOAuthProvider(string publicClientId, Func<UserManager<IdentityUser>> userManagerFactory)
         {
@@ -35,30 +36,44 @@ namespace LocalConn.API.Providers
 
         public override async Task GrantResourceOwnerCredentials(OAuthGrantResourceOwnerCredentialsContext context)
         {
-            using (Authenticator _repo = new Authenticator())
+            try
             {
-                ApplicationUser user = await _repo.FindUser(context.UserName, context.Password);
 
-                if (user == null)
+                using (Authenticator _repo = new Authenticator())
                 {
-                    context.SetError("invalid_grant", "The email or password is incorrect.");
-                    return;
-                }
-                else if (!user.IsActive)
-                {
-                    context.SetError("disabled", "Sorry, your account has been disabled by admin.");
-                    return;
-                }
+                    ApplicationUser user = await _repo.FindUser(context.UserName, context.Password);
 
-                ClaimsIdentity oAuthIdentity = await _repo._userManager.CreateIdentityAsync(user,
-                    context.Options.AuthenticationType);
-                ClaimsIdentity cookiesIdentity = await _repo._userManager.CreateIdentityAsync(user,
-                    CookieAuthenticationDefaults.AuthenticationType);
-                AuthenticationProperties properties = CreateProperties(user);
-                AuthenticationTicket ticket = new AuthenticationTicket(oAuthIdentity, properties);
-                context.Validated(ticket);
-                context.Request.Context.Authentication.SignIn(cookiesIdentity);
+                    if (user == null)
+                    {
+                        context.SetError("invalid_grant", "The email or password is incorrect.");
+                        return;
+                    }
+                    else if (!user.IsActive)
+                    {
+                        context.SetError("disabled", "Sorry, your account has been disabled by admin.");
+                        return;
+                    }
+                    else
+                    {
+                        ClaimsIdentity oAuthIdentity = await _repo._userManager.CreateIdentityAsync(user,
+                      context.Options.AuthenticationType);
+                        ClaimsIdentity cookiesIdentity = await _repo._userManager.CreateIdentityAsync(user,
+                            CookieAuthenticationDefaults.AuthenticationType);
+                        AuthenticationProperties properties = CreateProperties(user);
+                        AuthenticationTicket ticket = new AuthenticationTicket(oAuthIdentity, properties);
+                        context.Validated(ticket);
+                        context.Request.Context.Authentication.SignIn(cookiesIdentity);
+                    }
+
+
+                }
             }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+
         }
 
         public override Task TokenEndpoint(OAuthTokenEndpointContext context)

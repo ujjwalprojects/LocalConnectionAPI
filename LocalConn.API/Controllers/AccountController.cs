@@ -22,6 +22,8 @@ using System.Web.Configuration;
 using System.Net.Mail;
 using System.Text;
 using System.Configuration;
+using System.Data.SqlClient;
+using LocalConn.Entities.Models;
 
 namespace LocalConn.API.Controllers
 {
@@ -31,6 +33,7 @@ namespace LocalConn.API.Controllers
     {
         private const string LocalLoginProvider = "Local";
         private string domainUrl = ConfigurationManager.AppSettings["WebUrl"];
+        EFDBContext db = new EFDBContext();
 
         public AccountController()
             : this(new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(new ApplicationDbContext())))
@@ -578,6 +581,58 @@ namespace LocalConn.API.Controllers
             }
 
         }
+
+        #region App
+
+
+
+
+
+        [Route("RegisterDevice")]
+        [HttpPost]
+        public async Task<string> RegisterDevice(string UserName, string DeviceID)
+        {
+            try
+            {
+                string Results = "";
+                var par = new SqlParameter("@UserName", UserName);
+                var parDevice = new SqlParameter("@DeviceCode", DeviceID);
+
+                Results = await db.Database.SqlQuery<string>("udspAppRegisterDevice @UserName, @DeviceCode", par, parDevice).FirstOrDefaultAsync();
+
+                return Results;
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+        }
+
+        [HttpGet]
+        [Route("VersionCodeUpdate")]
+        public string GetVersionCode(int ObjVersion)
+        {
+            //1st parameter set 0 if update is to be made 1 if no update is to be make
+            //2nt parameter - Version Code to display to the user
+            //3rd Parameter = Type of Prompt to update app force or optional
+            if (ObjVersion == 12)
+            {
+                return "1/1.0.4/Optional";
+            }
+            else
+            {
+                // return "0/1.1.0/Force";
+                return "0/1.0.4/Optional";
+            }
+
+            // return "0/1.1.8/Optional";
+
+        }
+
+
+        #endregion
+
+
         #region Helpers
 
         private IAuthenticationManager Authentication
