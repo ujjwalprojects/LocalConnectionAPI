@@ -39,4 +39,9 @@ namespace LocalConn.Entities.ViewModels
         public int TotalSingleRooms { get; set; }
         public int TotalDoubleRooms { get; set; }
     }
+    public class LCHotelDD
+    {
+        public long HotelID { get; set; }
+        public string HotelName { get; set; }
+    }
 }

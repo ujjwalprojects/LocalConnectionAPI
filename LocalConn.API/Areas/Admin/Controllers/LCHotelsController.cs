@@ -50,6 +50,47 @@ namespace LocalConn.API.Areas.Admin.Controllers
         {
             return await objLCHotel.DeleteLCHotelAsync(id);
         }
+        [HttpGet]
+        [Route("LCHotelDD")]
+        public async Task<IEnumerable<LCHotelDD>> AllLCHotels()
+        {
+            return await objLCHotel.GetAllLCHotelAsync();
+        }
         #endregion
+
+        #region Feature Hotels
+        [HttpGet]
+        [Route("FeatHotels")]
+        public async Task<FeatHotelsVM> FeatHotels(int PageNo, int PageSize, string SearchTerm)
+        {
+            return await objLCHotel.GetFeatHotelsAsync(PageNo, PageSize, SearchTerm);
+        }
+        [HttpPost]
+        [Route("SaveFeatHotels")]
+        public async Task<string> SaveFeatHotels(utblLCFeaturedHotel model)
+        {
+            if (ModelState.IsValid)
+            {
+                return await objLCHotel.SaveFeatHotelsAsync(model);
+            }
+            string messages = string.Join("; ", ModelState.Values
+                                         .SelectMany(x => x.Errors)
+                                         .Select(x => x.ErrorMessage));
+            return "Operation Error: " + messages;
+        }
+        [HttpGet]
+        [Route("FeatHotelsByID")]
+        public async Task<utblLCFeaturedHotel> FeatHotelsByID(long id)
+        {
+            return await objLCHotel.GetFeatHotelsByIDAsync(id);
+        }
+        [HttpDelete]
+        [Route("DeleteFeatHotels")]
+        public async Task<string> DeleteFeatHotels(long id)
+        {
+            return await objLCHotel.DeleteFeatHotelsAsync(id);
+        }
+        #endregion
+
     }
 }

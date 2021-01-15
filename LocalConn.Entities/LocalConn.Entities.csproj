@@ -108,6 +108,7 @@
     <Compile Include="ViewModels\HotelCustomModels.cs" />
     <Compile Include="ViewModels\InclusionCustomModels.cs" />
     <Compile Include="ViewModels\ItinerarieCustomModels.cs" />
+    <Compile Include="ViewModels\LCFeatHotelsCustomModels.cs" />
     <Compile Include="ViewModels\LCHotelsCustomModels.cs" />
     <Compile Include="ViewModels\LocalatiesCustomModels.cs" />
     <Compile Include="ViewModels\PackageCustomModels.cs" />
