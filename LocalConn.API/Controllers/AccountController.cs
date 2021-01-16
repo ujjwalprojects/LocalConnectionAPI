@@ -584,7 +584,7 @@ namespace LocalConn.API.Controllers
 
         #region App
 
-
+        //profile add edit
         [Route("updateprofile")]
         [HttpPost]
         public async Task<string> UpdateProfile(UserDetailModel obj)
