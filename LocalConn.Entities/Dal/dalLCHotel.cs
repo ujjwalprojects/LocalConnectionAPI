@@ -167,5 +167,82 @@ namespace LocalConn.Entities.Dal
             }
         }
         #endregion
+
+        #region HotelImages
+        public async Task<LCHotelImageVM> GetHotelImagesAsync(int pageno, int pagesize, string sterm)
+        {
+            LCHotelImageVM model = new LCHotelImageVM();
+            var parStart = new SqlParameter("@Start", (pageno - 1) * pagesize);
+            var parEnd = new SqlParameter("@PageSize", pagesize);
+
+            var parSearchTerm = new SqlParameter("@SearchTerm", DBNull.Value);
+            if (!(sterm == null || sterm == ""))
+                parSearchTerm.Value = sterm;
+            // setting stored procedure OUTPUT value
+            // This return total number of rows, and avoid two database call for data and total number of rows 
+            var spOutput = new SqlParameter
+            {
+                ParameterName = "@TotalCount",
+                SqlDbType = System.Data.SqlDbType.BigInt,
+                Direction = System.Data.ParameterDirection.Output
+            };
+
+            model.LCHotelImageList = await db.Database.SqlQuery<LCHotelImageView>("udspLCHotelImagesPaged @Start, @PageSize,@SearchTerm, @TotalCount out",
+                parStart, parEnd, parSearchTerm, spOutput).ToListAsync();
+            model.TotalRecords = int.Parse(spOutput.Value.ToString());
+            return model;
+        }
+        public async Task<string> SaveHotelImagesAsync(utblLCHotelImage model)
+        {
+            try
+            {
+                var parHotelImageID = new SqlParameter("@HotelImageID", model.HotelImageID);
+                var parHotelID = new SqlParameter("@HotelID", model.HotelID);
+                var parIsHotelCover = new SqlParameter("@IsHotelCover", model.IsHotelCover);
+                var parPhotoThumbPath = new SqlParameter("@PhotoThumbPath", model.PhotoThumbPath);
+                var parPhotoNormalPath = new SqlParameter("@PhotoNormalPath", model.PhotoNormalPath);
+                var parPhotoCaption = new SqlParameter("@PhotoCaption", model.PhotoCaption);
+
+                return await db.Database.SqlQuery<string>("udspLCHotelImagesSave @HotelImageID, @HotelID, @IsHotelCover,@PhotoThumbPath,@PhotoNormalPath,@PhotoCaption",
+                    parHotelImageID, parHotelID, parIsHotelCover, parPhotoThumbPath, parPhotoNormalPath, parPhotoCaption).FirstOrDefaultAsync();
+            }
+            catch (Exception ex)
+            {
+                return "Error: " + ex.Message;
+            }
+        }
+        public async Task<utblLCHotelImage> GetLCHotelImagesByIDAsync(long id)
+        {
+            return await db.utblLCHotelImages.Where(x => x.HotelImageID == id).FirstOrDefaultAsync();
+        }
+        public async Task<string> DeleteLCHotelImagesAsync(long id)
+        {
+            try
+            {
+                utblLCHotelImage curObj = await db.utblLCHotelImages.FindAsync(id);
+                db.utblLCHotelImages.Remove(curObj);
+                await db.SaveChangesAsync();
+                return "Hotel Images Details Removed";
+            }
+            catch (SqlException ex)
+            {
+                if (ex.Errors.Count > 0) // Assume the interesting stuff is in the first error
+                {
+                    switch (ex.Errors[0].Number)
+                    {
+                        case 547: // Foreign Key violation
+                            return "This record has dependencies on other records, so cannot be removed.";
+                        default:
+                            return "Error: " + ex.Message;
+                    }
+                }
+                return "Error while operation. Error Message: " + ex.Message;
+            }
+            catch (Exception ex)
+            {
+                return "Error: " + ex.Message;
+            }
+        }
+        #endregion
     }
 }

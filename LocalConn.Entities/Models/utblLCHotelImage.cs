@@ -1,0 +1,20 @@
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace LocalConn.Entities.Models
+{
+    public class utblLCHotelImage
+    {
+        [Key]
+        public long HotelImageID { get; set; }
+        public long HotelID { get; set; }
+        public bool IsHotelCover { get; set; }
+        public string PhotoThumbPath { get; set; }
+        public string PhotoNormalPath { get; set; }
+        public string PhotoCaption { get; set; }
+    }
+}

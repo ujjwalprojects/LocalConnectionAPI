@@ -20,6 +20,7 @@ namespace LocalConn.Entities.Models
         public DbSet<utblLCRoom> utblLCRooms { get; set; }
         public DbSet<utblLCHotel> utblLCHotels { get; set; }
         public DbSet<utblLCFeaturedHotel> utblLCFeaturedHotels { get; set; }
+        public DbSet<utblLCHotelImage> utblLCHotelImages { get; set; }
         public DbSet<utblMstActivitie> utblMstActivities { get; set; }
 
         //package type
