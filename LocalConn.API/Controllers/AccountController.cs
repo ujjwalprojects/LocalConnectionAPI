@@ -584,6 +584,13 @@ namespace LocalConn.API.Controllers
 
         #region App
 
+        public async Task<UserDetailModel> getProfileDtl(string UserID)
+        {
+            UserDetailModel obj = new UserDetailModel();
+            var parID = new SqlParameter("@UserID", UserID);
+            obj = await db.Database.SqlQuery<UserDetailModel>("udspLCGetUserProfile @UserID", parID).FirstOrDefaultAsync();
+            return obj;
+        }
 
         [Route("updateprofile")]
         [HttpPost]
