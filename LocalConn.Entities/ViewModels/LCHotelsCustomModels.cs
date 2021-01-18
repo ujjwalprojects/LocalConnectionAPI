@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace LocalConn.Entities.ViewModels
 {
+    //LCHotels
     public class LCHotelView
     {
         public long HotelID { get; set; }
@@ -38,5 +39,27 @@ namespace LocalConn.Entities.ViewModels
         public string MetaText { get; set; }
         public int TotalSingleRooms { get; set; }
         public int TotalDoubleRooms { get; set; }
+    }
+    public class LCHotelDD
+    {
+        public long HotelID { get; set; }
+        public string HotelName { get; set; }
+    }
+
+    //LCHotel Images
+    public class LCHotelImageView
+    {
+        public long HotelImageID { get; set; }
+        public long HotelID { get; set; }
+        public string HotelName { get; set; }
+        public bool IsHotelCover { get; set; }
+        public string PhotoThumbPath { get; set; }
+        public string PhotoNormalPath { get; set; }
+        public string PhotoCaption { get; set; }
+    }
+    public class LCHotelImageVM
+    {
+        public IEnumerable<LCHotelImageView> LCHotelImageList { get; set; }
+        public int TotalRecords { get; set; }
     }
 }
