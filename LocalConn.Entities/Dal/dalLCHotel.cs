@@ -169,15 +169,14 @@ namespace LocalConn.Entities.Dal
         #endregion
 
         #region HotelImages
-        public async Task<LCHotelImageVM> GetHotelImagesAsync(int pageno, int pagesize, string sterm)
+        public async Task<LCHotelImageVM> GetHotelImagesAsync(long hotelid, int pageno, int pagesize)
         {
             LCHotelImageVM model = new LCHotelImageVM();
+            var parHotelID = new SqlParameter("@HotelID", hotelid);
             var parStart = new SqlParameter("@Start", (pageno - 1) * pagesize);
             var parEnd = new SqlParameter("@PageSize", pagesize);
 
-            var parSearchTerm = new SqlParameter("@SearchTerm", DBNull.Value);
-            if (!(sterm == null || sterm == ""))
-                parSearchTerm.Value = sterm;
+          
             // setting stored procedure OUTPUT value
             // This return total number of rows, and avoid two database call for data and total number of rows 
             var spOutput = new SqlParameter
@@ -187,8 +186,8 @@ namespace LocalConn.Entities.Dal
                 Direction = System.Data.ParameterDirection.Output
             };
 
-            model.LCHotelImageList = await db.Database.SqlQuery<LCHotelImageView>("udspLCHotelImagesPaged @Start, @PageSize,@SearchTerm, @TotalCount out",
-                parStart, parEnd, parSearchTerm, spOutput).ToListAsync();
+            model.LCHotelImageList = await db.Database.SqlQuery<LCHotelImageView>("udspLCHotelImagesPaged @HotelID, @Start, @PageSize, @TotalCount out",
+                parHotelID, parStart, parEnd, spOutput).ToListAsync();
             model.TotalRecords = int.Parse(spOutput.Value.ToString());
             return model;
         }

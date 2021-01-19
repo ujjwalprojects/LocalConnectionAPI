@@ -99,9 +99,9 @@ namespace LocalConn.API.Areas.Admin.Controllers
         #region Hotel Images
         [HttpGet]
         [Route("LCHotelImages")]
-        public async Task<LCHotelImageVM> LCHotelImages(int PageNo, int PageSize, string SearchTerm)
+        public async Task<LCHotelImageVM> LCHotelImages(long HotelID, int PageNo, int PageSize)
         {
-            return await objLCHotel.GetHotelImagesAsync(PageNo, PageSize, SearchTerm);
+            return await objLCHotel.GetHotelImagesAsync(HotelID, PageNo, PageSize);
         }
         [HttpPost]
         [Route("SaveLCHotelImages")]
