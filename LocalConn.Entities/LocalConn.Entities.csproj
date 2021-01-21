@@ -65,6 +65,7 @@
     <Compile Include="Models\utblClientEnquiryItinerarie.cs" />
     <Compile Include="Models\utblLCFeaturedHotel.cs" />
     <Compile Include="Models\utblLCHotel.cs" />
+    <Compile Include="Models\utblLCHotelImage.cs" />
     <Compile Include="Models\utblLCMstAmenitie.cs" />
     <Compile Include="Models\utblLCMstCitie.cs" />
     <Compile Include="Models\utblLCMstHomeType.cs" />
@@ -108,6 +109,7 @@
     <Compile Include="ViewModels\HotelCustomModels.cs" />
     <Compile Include="ViewModels\InclusionCustomModels.cs" />
     <Compile Include="ViewModels\ItinerarieCustomModels.cs" />
+    <Compile Include="ViewModels\LCFeatHotelsCustomModels.cs" />
     <Compile Include="ViewModels\LCHotelsCustomModels.cs" />
     <Compile Include="ViewModels\LocalatiesCustomModels.cs" />
     <Compile Include="ViewModels\PackageCustomModels.cs" />

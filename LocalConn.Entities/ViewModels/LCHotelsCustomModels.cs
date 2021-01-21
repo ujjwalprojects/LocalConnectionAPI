@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace LocalConn.Entities.ViewModels
 {
+    //LCHotels
     public class LCHotelView
     {
         public long HotelID { get; set; }
@@ -13,6 +14,13 @@ namespace LocalConn.Entities.ViewModels
         public string HotelContactNo { get; set; }
         public string HotelEmail { get; set; }
         public string HomeTypeName { get; set; }
+        public string StateName { get; set; }
+        public string CityName { get; set; }
+        public string LocalityName { get; set; }
+        public string StarRatingName { get; set; }
+        public decimal HotelBaseFare { get; set; }
+        public int TotalSingleRooms { get; set; }
+        public int TotalDoubleRooms { get; set; }
     }
     public class LCHotelVM
     {
@@ -38,5 +46,26 @@ namespace LocalConn.Entities.ViewModels
         public string MetaText { get; set; }
         public int TotalSingleRooms { get; set; }
         public int TotalDoubleRooms { get; set; }
+    }
+    public class LCHotelDD
+    {
+        public long HotelID { get; set; }
+        public string HotelName { get; set; }
+    }
+
+    //LCHotel Images
+    public class LCHotelImageView
+    {
+        public long HotelImageID { get; set; }
+        public long HotelID { get; set; }
+        public bool IsHotelCover { get; set; }
+        public string PhotoThumbPath { get; set; }
+        public string PhotoNormalPath { get; set; }
+        public string PhotoCaption { get; set; }
+    }
+    public class LCHotelImageVM
+    {
+        public IEnumerable<LCHotelImageView> LCHotelImageList { get; set; }
+        public int TotalRecords { get; set; }
     }
 }
