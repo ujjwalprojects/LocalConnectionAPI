@@ -584,14 +584,18 @@ namespace LocalConn.API.Controllers
 
         #region App
 
+        [AllowAnonymous]
+        [Route("getprofiledtl")]
+        [HttpGet]
         public async Task<UserDetailModel> getProfileDtl(string UserID)
         {
             UserDetailModel obj = new UserDetailModel();
             var parID = new SqlParameter("@UserID", UserID);
-            obj = await db.Database.SqlQuery<UserDetailModel>("udspLCGetUserProfile @UserID", parID).FirstOrDefaultAsync();
+            obj = await db.Database.SqlQuery<UserDetailModel>("udspLCAppGetUserProfile @UserID", parID).FirstOrDefaultAsync();
             return obj;
         }
 
+        [AllowAnonymous]
         [Route("updateprofile")]
         [HttpPost]
         public async Task<string> UpdateProfile(UserDetailModel obj)
@@ -603,7 +607,7 @@ namespace LocalConn.API.Controllers
                 var parPName = new SqlParameter("@ProfileName", obj.ProfileName);
                 var parEmail = new SqlParameter("@Email", obj.Email);
                 var parMobile = new SqlParameter("@PhoneNumber", obj.PhoneNumber);
-                Results = await db.Database.SqlQuery<string>("udspLCUpdateProfile @UserID, @ProfileName,@Email,@PhoneNumber",
+                Results = await db.Database.SqlQuery<string>("udspLCAppUpdateProfile @UserID, @ProfileName,@Email,@PhoneNumber",
                     parID,parPName,parEmail,parMobile).FirstOrDefaultAsync();
 
                 return Results;
