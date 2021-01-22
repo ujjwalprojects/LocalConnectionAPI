@@ -120,11 +120,11 @@ namespace LocalConn.API.Providers
         {
             IDictionary<string, string> data = new Dictionary<string, string>
             {
-                { "userId", user.Id },
-                { "userName", user.UserName },
+                {"userId", user.Id },
+                {"userName", user.UserName },
                 {"profileName", user.ProfileName==null?"":user.ProfileName},
                 {"role", user.RoleName??""},
-                {"email", user.Email},
+                //{"email", user.Email},
                 {"userImage", user.UserImage==null?"":user.UserImage}
             };
             return new AuthenticationProperties(data);
