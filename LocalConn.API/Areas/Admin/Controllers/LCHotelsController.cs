@@ -110,15 +110,15 @@ namespace LocalConn.API.Areas.Admin.Controllers
             if (ModelState.IsValid)
             {
                 Random rand = new Random();
-                string name = model.HotelID + "_" + DateTime.Now.ToString("yyyyMMdd") + "_" + rand.Next(50) + ".webp";
+                string name = model.HotelID + "_" + DateTime.Now.ToString("yyyyMMdd") + "_" + rand.Next(50) + ".jpg";
                 string normal_result = SaveImage(model.PhotoNormalPath, model.PhotoThumbPath, name);
                 if (normal_result.Contains("Error"))
                 {
                     string stringerror = normal_result;
                     return "Unable to upload image" + stringerror;
                 }
-                model.PhotoNormalPath = FileUrl + "Photos/HotelImages/" + normal_result;
-                model.PhotoThumbPath = FileUrl + "Photos/HotelImages/" + normal_result;
+                model.PhotoNormalPath = FileUrl + "HotelImages/Normal/" + normal_result;
+                model.PhotoThumbPath = FileUrl + "HotelImages/Thumb/" + normal_result;
 
                 string result =  await objLCHotel.SaveHotelImagesAsync(model);
                 if(result.ToLower().Contains("error"))

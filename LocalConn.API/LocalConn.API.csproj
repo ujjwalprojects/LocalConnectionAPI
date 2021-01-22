@@ -254,6 +254,12 @@
     <Content Include="Scripts\modernizr-2.6.2.js" />
     <Content Include="Scripts\respond.js" />
     <Content Include="Scripts\respond.min.js" />
+    <Content Include="Uploads\HotelImages\Normal\3_20210122_23.jpg" />
+    <Content Include="Uploads\HotelImages\Normal\3_20210122_24.jpg" />
+    <Content Include="Uploads\HotelImages\Normal\3_20210122_7.jpg" />
+    <Content Include="Uploads\HotelImages\Thumb\3_20210122_23.jpg" />
+    <Content Include="Uploads\HotelImages\Thumb\3_20210122_24.jpg" />
+    <Content Include="Uploads\HotelImages\Thumb\3_20210122_7.jpg" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
     </Content>
@@ -272,6 +278,14 @@
     <Content Include="Views\Shared\Error.cshtml" />
     <Content Include="Views\Shared\_Layout.cshtml" />
     <Content Include="Scripts\jquery-1.10.2.min.map" />
+    <Content Include="Uploads\HotelImages\Normal\3_20210120_3.webp" />
+    <Content Include="Uploads\HotelImages\Normal\3_20210120_31.webp" />
+    <Content Include="Uploads\HotelImages\Thumb\3_20210120_3.webp" />
+    <Content Include="Uploads\HotelImages\Thumb\3_20210120_31.webp" />
+    <Content Include="Uploads\HotelImages\Normal\3_20210122_22.webp" />
+    <Content Include="Uploads\HotelImages\Normal\3_20210122_24.webp" />
+    <Content Include="Uploads\HotelImages\Thumb\3_20210122_22.webp" />
+    <Content Include="Uploads\HotelImages\Thumb\3_20210122_24.webp" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -282,7 +296,6 @@
     <Folder Include="Areas\Admin\Views\Shared\" />
     <Folder Include="Areas\General\Models\" />
     <Folder Include="Areas\General\Views\Shared\" />
-    <Folder Include="Uploads\HotelImages\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff" />
