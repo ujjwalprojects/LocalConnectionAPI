@@ -51,6 +51,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Dal\dalAgentConfig.cs" />
+    <Compile Include="Dal\dalApp.cs" />
     <Compile Include="Dal\dalCabConfig.cs" />
     <Compile Include="Dal\dalClientEnquiry.cs" />
     <Compile Include="Dal\dalConfigurations.cs" />
@@ -99,6 +100,8 @@
     <Compile Include="ViewModels\ActivitiesCustomModels.cs" />
     <Compile Include="ViewModels\AgentCustomModels.cs" />
     <Compile Include="ViewModels\AmenitiesCustomModel.cs" />
+    <Compile Include="ViewModels\AppAPIModelVM.cs" />
+    <Compile Include="ViewModels\AppAPIVM.cs" />
     <Compile Include="ViewModels\BannerCustomModels.cs" />
     <Compile Include="ViewModels\CabCustomModels.cs" />
     <Compile Include="ViewModels\CitiesCustomModels.cs" />

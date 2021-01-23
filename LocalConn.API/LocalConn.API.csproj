@@ -188,6 +188,7 @@
     <Compile Include="Areas\Admin\Controllers\LCHotelsController.cs" />
     <Compile Include="Areas\Admin\Controllers\PackageConfigController.cs" />
     <Compile Include="Areas\Admin\Controllers\TourGuideController.cs" />
+    <Compile Include="Areas\General\Controllers\AppController.cs" />
     <Compile Include="Areas\General\Controllers\ClientEnquiryController.cs" />
     <Compile Include="Areas\General\Controllers\GenTourPackageController.cs" />
     <Compile Include="Areas\General\GeneralAreaRegistration.cs" />

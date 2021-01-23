@@ -606,9 +606,8 @@ namespace LocalConn.API.Controllers
                 var parID = new SqlParameter("@UserID", obj.UserID);
                 var parPName = new SqlParameter("@ProfileName", obj.ProfileName);
                 var parEmail = new SqlParameter("@Email", obj.Email);
-                var parMobile = new SqlParameter("@PhoneNumber", obj.PhoneNumber);
-                Results = await db.Database.SqlQuery<string>("udspLCAppUpdateProfile @UserID, @ProfileName,@Email,@PhoneNumber",
-                    parID,parPName,parEmail,parMobile).FirstOrDefaultAsync();
+                Results = await db.Database.SqlQuery<string>("udspLCAppUpdateProfile @UserID, @ProfileName,@Email",
+                    parID,parPName,parEmail).FirstOrDefaultAsync();
 
                 return Results;
             }
