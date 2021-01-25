@@ -149,6 +149,12 @@ namespace LocalConn.API.Areas.Admin.Controllers
             }
             return result;
         }
+        [HttpPost]
+        [Route("MakeCoverImage")]
+        public async Task<string> MakeCoverImage(long hotelid, long imageid)
+        {
+            return await objLCHotel.MakeCoverImageAsync(hotelid, imageid);
+        }
         #endregion
 
         #region Helper
