@@ -39,30 +39,45 @@ namespace LocalConn.Entities.Dal
             model.TotalRecords = int.Parse(spOutput.Value.ToString());
             return model;
         }
-        public async Task<string> SaveLCHotelAsync(LCHotelSaveModel model)
+        public async Task<string> SaveLCHotelAsync(LCHotelManageModel model)
         {
             try
             {
-                var parHotelID = new SqlParameter("@HotelID", model.HotelID);
-                var parHotelName = new SqlParameter("@HotelName", model.HotelName);
-                var parHotelAddress = new SqlParameter("@HotelAddress", model.HotelAddress);
-                var parHotelDesc = new SqlParameter("@HotelDesc", model.HotelDesc);
-                var parHotelContactNo = new SqlParameter("@HotelContactNo", model.HotelContactNo);
-                var parHotelEmail = new SqlParameter("@HotelEmail", model.HotelEmail ?? "");
-                var parCountryID = new SqlParameter("@CountryID", model.CountryID);
-                var parStateID = new SqlParameter("@StateID", model.StateID);
-                var parCityID = new SqlParameter("@CityID", model.CityID);
-                var parLocalityID = new SqlParameter("@LocalityID", model.LocalityID);
-                var parHomeTypeID = new SqlParameter("@HomeTypeID", model.HomeTypeID);
-                var parStarRatingID = new SqlParameter("@StarRatingID", model.StarRatingID);
-                var parHotelBaseFare = new SqlParameter("@HotelBaseFare", model.HotelBaseFare);
-                //var parHotelHitCount = new SqlParameter("@HotelHitCount", model.HotelHitCount);
-                var parMetaText = new SqlParameter("@MetaText", model.MetaText);
-                var parTotalSingleRooms = new SqlParameter("@TotalSingleRooms", model.TotalSingleRooms);
-                var parTotalDoubleRooms = new SqlParameter("@TotalDoubleRooms", model.TotalDoubleRooms);
+                ConvertListToDT objDT = new ConvertListToDT();
+                DataTable typeDt = new DataTable();
 
-                return await db.Database.SqlQuery<string>("udspLCHotelSave @HotelID, @HotelName, @HotelAddress, @HotelDesc, @HotelContactNo, @HotelEmail, @CountryID,@StateID,@CityID,@LocalityID,@HomeTypeID,@StarRatingID,@HotelBaseFare,@MetaText,@TotalSingleRooms,@TotalDoubleRooms",
-                    parHotelID, parHotelName, parHotelAddress, parHotelDesc, parHotelContactNo, parHotelEmail, parCountryID, parStateID, parCityID, parLocalityID, parHomeTypeID, parStarRatingID, parHotelBaseFare, parMetaText, parTotalSingleRooms, parTotalDoubleRooms).FirstOrDefaultAsync();
+                var parHotelID = new SqlParameter("@HotelID", model.LCHotel.HotelID);
+                var parHotelName = new SqlParameter("@HotelName", model.LCHotel.HotelName);
+                var parHotelAddress = new SqlParameter("@HotelAddress", model.LCHotel.HotelAddress);
+                var parHotelDesc = new SqlParameter("@HotelDesc", model.LCHotel.HotelDesc);
+                var parHotelContactNo = new SqlParameter("@HotelContactNo", model.LCHotel.HotelContactNo);
+                var parHotelEmail = new SqlParameter("@HotelEmail", model.LCHotel.HotelEmail ?? "");
+                var parCountryID = new SqlParameter("@CountryID", model.LCHotel.CountryID);
+                var parStateID = new SqlParameter("@StateID", model.LCHotel.StateID);
+                var parCityID = new SqlParameter("@CityID", model.LCHotel.CityID);
+                var parLocalityID = new SqlParameter("@LocalityID", model.LCHotel.LocalityID);
+                var parHomeTypeID = new SqlParameter("@HomeTypeID", model.LCHotel.HomeTypeID);
+                var parStarRatingID = new SqlParameter("@StarRatingID", model.LCHotel.StarRatingID);
+                var parHotelBaseFare = new SqlParameter("@HotelBaseFare", model.LCHotel.HotelBaseFare);
+                var parHotelOfferPrice = new SqlParameter("@HotelOfferPrice", model.LCHotel.HotelOfferPrice);
+                var parOfferPercentage = new SqlParameter("@OfferPercentage", model.LCHotel.OfferPercentage);
+                //var parHotelHitCount = new SqlParameter("@HotelHitCount", model.HotelHitCount);
+                var parMetaText = new SqlParameter("@MetaText", model.LCHotel.MetaText);
+                var parTotalSingleRooms = new SqlParameter("@TotalSingleRooms", model.LCHotel.TotalSingleRooms);
+                var parTotalDoubleRooms = new SqlParameter("@TotalDoubleRooms", model.LCHotel.TotalDoubleRooms);
+
+                List<IDModel> tyepList = model.RoomID.Select(x => new IDModel()
+                {
+                    ID = Convert.ToInt64(x)
+                }).ToList();
+                typeDt = objDT.ConvertIEnumerableToDataTable(tyepList);
+
+                var parSubDT = new SqlParameter("@HotelRoomTypeTable", typeDt);
+                parSubDT.SqlDbType = SqlDbType.Structured;
+                parSubDT.TypeName = "dbo.IDType";
+
+                return await db.Database.SqlQuery<string>("udspLCHotelSave @HotelID, @HotelName, @HotelAddress, @HotelDesc, @HotelContactNo, @HotelEmail, @CountryID,@StateID,@CityID,@LocalityID,@HomeTypeID,@StarRatingID,@HotelBaseFare,@HotelOfferPrice,@OfferPercentage,@MetaText,@TotalSingleRooms,@TotalDoubleRooms,@HotelRoomTypeTable",
+                    parHotelID, parHotelName, parHotelAddress, parHotelDesc, parHotelContactNo, parHotelEmail, parCountryID, parStateID, parCityID, parLocalityID, parHomeTypeID, parStarRatingID, parHotelBaseFare, parHotelOfferPrice, parOfferPercentage, parMetaText, parTotalSingleRooms, parTotalDoubleRooms, parSubDT).FirstOrDefaultAsync();
             }
             catch (Exception ex)
             {

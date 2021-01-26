@@ -31,7 +31,7 @@ namespace LocalConn.API.Areas.Admin.Controllers
         }
         [HttpPost]
         [Route("SaveLCHotel")]
-        public async Task<string> SaveHotel(LCHotelSaveModel model)
+        public async Task<string> SaveHotel(LCHotelManageModel model)
         {
             if (ModelState.IsValid)
             {
