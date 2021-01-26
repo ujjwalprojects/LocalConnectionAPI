@@ -9,6 +9,11 @@ namespace LocalConn.Entities.ViewModels
     public class HotelList
     {
         public long HotelID { get; set; }
+        public string HotelName { get; set; }
+        public decimal HotelBaseFare { get; set; }
+        public string HotelDesc { get; set; }
+        public string HotelAddress { get; set; }
+        public long HomeTypeID { get; set; }
         public long HotelImageID { get; set; }
         public bool IsHotelCover { get; set; }
         public string PhotoThumbPath { get; set; }
@@ -19,5 +24,25 @@ namespace LocalConn.Entities.ViewModels
         public long CityID { get; set; }
         public string CityName { get; set; }
         public string CityIconPath { get; set; }
+    }
+    public class FtHotelList
+    {
+        public long FeatureID { get; set; }
+        public long HotelID { get; set; }
+        public string PhotoThumbPath { get; set; }
+    }
+
+    public class HotelDtl
+    {
+        public long HotelID { get; set; }
+        public string PhotoThumbPath { get; set; }
+        public string HotelName { get; set; }
+        public string HotelAddress { get; set; }
+        public string HotelDesc { get; set; }
+        public string LocalityName { get; set; }
+        public string StarRating { get; set; }
+        public decimal HotelBaseFare { get; set; }
+        public int TotalSingleRooms { get; set; }
+        public int TotalDoubleRooms { get; set; }
     }
 }

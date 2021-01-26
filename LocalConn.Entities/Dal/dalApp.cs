@@ -29,14 +29,12 @@ namespace LocalConn.Entities.Dal
             
 
         }
-
-
-        public async Task<List<HotelList>> getHotelMenuList(string HotelID)
+        public async Task<List<HotelList>> getFtHotelList(string HomeTypeID)
         {
             try
             {
-                var parID = new SqlParameter("@HotelID", HotelID);
-                return await objDB.Database.SqlQuery<HotelList>("udspLCAppGetHotelList @HotelID", parID).ToListAsync();
+                var parID = new SqlParameter("@HomeTypeID", HomeTypeID);
+                return await objDB.Database.SqlQuery<HotelList>("udspLCAppGetHotelList @HomeTypeID", parID).ToListAsync();
 
             }
             catch (Exception e)
@@ -46,6 +44,91 @@ namespace LocalConn.Entities.Dal
             }
 
 
+        }
+
+        public async Task<List<HotelList>> getHotelMenuList(string HomeTypeID)
+        {
+            try
+            {
+                var parID = new SqlParameter("@HomeTypeID", HomeTypeID);
+                return await objDB.Database.SqlQuery<HotelList>("udspLCAppGetHotelList @HomeTypeID", parID).ToListAsync();
+
+            }
+            catch (Exception e)
+            {
+
+                throw e;
+            }
+        }
+        public async Task<List<HotelList>> getResortMenuList(string HomeTypeID)
+        {
+            try
+            {
+                var parID = new SqlParameter("@HomeTypeID", HomeTypeID);
+                return await objDB.Database.SqlQuery<HotelList>("udspLCAppGetHotelList @HomeTypeID", parID).ToListAsync();
+
+            }
+            catch (Exception e)
+            {
+
+                throw e;
+            }
+        }
+        public async Task<List<HotelList>> getHomestayMenuList(string HomeTypeID)
+        {
+            try
+            {
+                var parID = new SqlParameter("@HomeTypeID", HomeTypeID);
+                return await objDB.Database.SqlQuery<HotelList>("udspLCAppGetHotelList @HomeTypeID", parID).ToListAsync();
+
+            }
+            catch (Exception e)
+            {
+
+                throw e;
+            }
+        }
+        public async Task<List<HotelList>> getLodgeMenuList(string HomeTypeID)
+        {
+            try
+            {
+                var parID = new SqlParameter("@HomeTypeID", HomeTypeID);
+                return await objDB.Database.SqlQuery<HotelList>("udspLCAppGetHotelList @HomeTypeID", parID).ToListAsync();
+
+            }
+            catch (Exception e)
+            {
+
+                throw e;
+            }
+        }
+        public async Task<List<HotelList>> getGHouseMenuList(string HomeTypeID)
+        {
+            try
+            {
+                var parID = new SqlParameter("@HomeTypeID", HomeTypeID);
+                return await objDB.Database.SqlQuery<HotelList>("udspLCAppGetHotelList @HomeTypeID", parID).ToListAsync();
+
+            }
+            catch (Exception e)
+            {
+
+                throw e;
+            }
+        }
+
+        public async Task<HotelDtl> getHotelDtl(string HotelID)
+        {
+            try
+            {
+                var parID = new SqlParameter("@HotelID", HotelID);
+                return await objDB.Database.SqlQuery<HotelDtl>("udspLCAppGetHotelDtl @HotelID", parID).FirstOrDefaultAsync();
+            }
+            catch (Exception e)
+            {
+
+                throw e;
+            }
         }
 
     }
