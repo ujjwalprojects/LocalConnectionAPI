@@ -131,12 +131,12 @@ namespace LocalConn.Entities.Dal
             }
         }
 
-        public async Task<HotelDtl> getHotelRoomList(string HotelID)
+        public async Task<List<HotelRoomList>> getHotelRoomList(string HotelID)
         {
             try
             {
                 var parID = new SqlParameter("@HotelID", HotelID);
-                return await objDB.Database.SqlQuery<HotelDtl>("udspLCAppGetHotelDtl @HotelID", parID).FirstOrDefaultAsync();
+                return await objDB.Database.SqlQuery<HotelRoomList>("udspLCAppGetHotelRoomTypeList @HotelID", parID).ToListAsync();
             }
             catch (Exception e)
             {

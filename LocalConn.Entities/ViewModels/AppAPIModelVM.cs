@@ -45,4 +45,12 @@ namespace LocalConn.Entities.ViewModels
         public int TotalSingleRooms { get; set; }
         public int TotalDoubleRooms { get; set; }
     }
+    public class HotelRoomList
+    {
+        public long HotelID { get; set; }
+        public long RoomID { get; set; }
+        public string RoomType { get; set; }
+        public decimal RoomBaseFare { get; set; }
+        public int RoomCapacity { get; set; }
+    }
 }
