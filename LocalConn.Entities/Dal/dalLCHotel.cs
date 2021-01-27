@@ -242,6 +242,14 @@ namespace LocalConn.Entities.Dal
                 return "Error: " + ex.Message;
             }
         }
+        public async Task<string> MakeCoverImageAsync(long hotelid, long imageid)
+        {
+
+            var parImgID = new SqlParameter("@HotelImageID", imageid);
+            var parhotelID = new SqlParameter("@HotelID", hotelid);
+
+            return await db.Database.SqlQuery<string>("udspLCHotelMakeCover @HotelImageID,@HotelID", parImgID, parhotelID).FirstOrDefaultAsync();
+        }
         #endregion
     }
 }
