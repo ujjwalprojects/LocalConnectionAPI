@@ -19,6 +19,8 @@ namespace LocalConn.Entities.ViewModels
         public string LocalityName { get; set; }
         public string StarRatingName { get; set; }
         public decimal HotelBaseFare { get; set; }
+        public decimal HotelOfferPrice { get; set; }
+        public int OfferPercentage { get; set; }
         public int TotalSingleRooms { get; set; }
         public int TotalDoubleRooms { get; set; }
     }
@@ -42,11 +44,20 @@ namespace LocalConn.Entities.ViewModels
         public long HomeTypeID { get; set; }
         public long StarRatingID { get; set; }
         public decimal HotelBaseFare { get; set; }
+        public decimal HotelOfferPrice { get; set; }
+        public int OfferPercentage { get; set; }
         public int HotelHitCount { get; set; }
         public string MetaText { get; set; }
         public int TotalSingleRooms { get; set; }
         public int TotalDoubleRooms { get; set; }
     }
+    public class LCHotelManageModel
+    {
+        public List<RoomTypeDD> RoomTypeList { get; set; }
+        public List<long> RoomID { get; set; }
+        public LCHotelSaveModel LCHotel { get; set; }
+    }
+   
     public class LCHotelDD
     {
         public long HotelID { get; set; }

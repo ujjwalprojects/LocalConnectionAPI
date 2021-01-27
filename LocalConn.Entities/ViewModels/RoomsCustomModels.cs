@@ -18,4 +18,10 @@ namespace LocalConn.Entities.ViewModels
         public IEnumerable<RoomsView> Rooms { get; set; }
         public int TotalRecords { get; set; }
     }
+
+    public class RoomTypeDD
+    {
+        public long RoomID { get; set; }
+        public string RoomType { get; set; }
+    }
 }
