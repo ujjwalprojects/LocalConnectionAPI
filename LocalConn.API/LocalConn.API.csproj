@@ -296,6 +296,7 @@
     <Folder Include="Areas\Admin\Views\Shared\" />
     <Folder Include="Areas\General\Models\" />
     <Folder Include="Areas\General\Views\Shared\" />
+    <Folder Include="Uploads\AmenitiesIcon\" />
     <Folder Include="Uploads\Cities\" />
   </ItemGroup>
   <ItemGroup>

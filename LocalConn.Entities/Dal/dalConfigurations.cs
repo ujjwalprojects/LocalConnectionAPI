@@ -287,10 +287,11 @@ namespace LocalConn.Entities.Dal
             {
                 var parAmenitiesID = new SqlParameter("@AmenitiesID", model.AmenitiesID);
                 var parAmenitiesName = new SqlParameter("@AmenitiesName", model.AmenitiesName);
+                var parAmenitiesIconPath = new SqlParameter("@AmenitiesIconPath", model.AmenitiesIconPath);
                 var parAmenitiesBasePrice = new SqlParameter("@AmenitiesBasePrice", model.AmenitiesBasePrice);
 
-                return await objDB.Database.SqlQuery<string>("udspLCMstAmenitiesSave @AmenitiesID, @AmenitiesName, @AmenitiesBasePrice",
-                    parAmenitiesID, parAmenitiesName, parAmenitiesBasePrice).FirstOrDefaultAsync();
+                return await objDB.Database.SqlQuery<string>("udspLCMstAmenitiesSave @AmenitiesID, @AmenitiesName, @AmenitiesIconPath, @AmenitiesBasePrice",
+                    parAmenitiesID, parAmenitiesName, parAmenitiesIconPath, parAmenitiesBasePrice).FirstOrDefaultAsync();
             }
             catch (Exception ex)
             {
