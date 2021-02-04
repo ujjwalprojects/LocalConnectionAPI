@@ -43,8 +43,8 @@ namespace LocalConn.Entities.Dal
         {
             try
             {
-                ConvertListToDT objDT = new ConvertListToDT();
-                DataTable typeDt = new DataTable();
+                //ConvertListToDT objDT = new ConvertListToDT();
+                //DataTable typeDt = new DataTable();
 
                 var parHotelID = new SqlParameter("@HotelID", model.LCHotel.HotelID);
                 var parHotelName = new SqlParameter("@HotelName", model.LCHotel.HotelName);
@@ -61,23 +61,45 @@ namespace LocalConn.Entities.Dal
                 var parHotelBaseFare = new SqlParameter("@HotelBaseFare", model.LCHotel.HotelBaseFare);
                 var parHotelOfferPrice = new SqlParameter("@HotelOfferPrice", model.LCHotel.HotelOfferPrice);
                 var parOfferPercentage = new SqlParameter("@OfferPercentage", model.LCHotel.OfferPercentage);
+                var parRatePerNight = new SqlParameter("@RatePerNight", model.LCHotel.RatePerNight);
+                var parRatePerRoom = new SqlParameter("@RatePerRoom", model.LCHotel.RatePerRoom);
+                var parRatePerGuest = new SqlParameter("@RatePerGuest", model.LCHotel.RatePerGuest);
+                var parRatePerChild = new SqlParameter("@RatePerChild", model.LCHotel.RatePerChild);
+
                 //var parHotelHitCount = new SqlParameter("@HotelHitCount", model.HotelHitCount);
                 var parMetaText = new SqlParameter("@MetaText", model.LCHotel.MetaText);
                 var parTotalSingleRooms = new SqlParameter("@TotalSingleRooms", model.LCHotel.TotalSingleRooms);
                 var parTotalDoubleRooms = new SqlParameter("@TotalDoubleRooms", model.LCHotel.TotalDoubleRooms);
 
-                List<IDModel> tyepList = model.RoomID.Select(x => new IDModel()
-                {
-                    ID = Convert.ToInt64(x)
-                }).ToList();
-                typeDt = objDT.ConvertIEnumerableToDataTable(tyepList);
+                //List<IDModel> tyepList = model.RoomID.Select(x => new IDModel()
+                //{
+                //    ID = Convert.ToInt64(x)
+                //}).ToList();
+                //typeDt = objDT.ConvertIEnumerableToDataTable(tyepList);
 
-                var parSubDT = new SqlParameter("@HotelRoomTypeTable", typeDt);
-                parSubDT.SqlDbType = SqlDbType.Structured;
-                parSubDT.TypeName = "dbo.IDType";
+                //var parSubDT = new SqlParameter("@HotelRoomTypeTable", typeDt);
+                //parSubDT.SqlDbType = SqlDbType.Structured;
+                //parSubDT.TypeName = "dbo.IDType";
 
-                return await db.Database.SqlQuery<string>("udspLCHotelSave @HotelID, @HotelName, @HotelAddress, @HotelDesc, @HotelContactNo, @HotelEmail, @CountryID,@StateID,@CityID,@LocalityID,@HomeTypeID,@StarRatingID,@HotelBaseFare,@HotelOfferPrice,@OfferPercentage,@MetaText,@TotalSingleRooms,@TotalDoubleRooms,@HotelRoomTypeTable",
-                    parHotelID, parHotelName, parHotelAddress, parHotelDesc, parHotelContactNo, parHotelEmail, parCountryID, parStateID, parCityID, parLocalityID, parHomeTypeID, parStarRatingID, parHotelBaseFare, parHotelOfferPrice, parOfferPercentage, parMetaText, parTotalSingleRooms, parTotalDoubleRooms, parSubDT).FirstOrDefaultAsync();
+                return await db.Database.SqlQuery<string>("udspLCHotelSave @HotelID, @HotelName, @HotelAddress, @HotelDesc, @HotelContactNo, @HotelEmail, @CountryID,@StateID,@CityID,@LocalityID,@HomeTypeID,@StarRatingID,@HotelBaseFare,@HotelOfferPrice,@OfferPercentage,@RatePerNight,@RatePerRoom,@RatePerGuest,@RatePerChild,@MetaText,@TotalSingleRooms,@TotalDoubleRooms",
+                    parHotelID, parHotelName, parHotelAddress, parHotelDesc, parHotelContactNo, parHotelEmail, parCountryID, parStateID, parCityID, parLocalityID, parHomeTypeID, parStarRatingID, parHotelBaseFare, parHotelOfferPrice, parOfferPercentage, parRatePerNight, parRatePerRoom, parRatePerGuest,parRatePerChild, parMetaText, parTotalSingleRooms, parTotalDoubleRooms).FirstOrDefaultAsync();
+            }
+            catch (Exception ex)
+            {
+                return "Error: " + ex.Message;
+            }
+        }
+        public async Task<string> UpdateLCHotelRateAsync(LCHotelSaveModel model)
+        {
+            try
+            {
+
+                var parHotelID = new SqlParameter("@HotelID", model.HotelID);
+                var parHotelBaseFare = new SqlParameter("@HotelBaseFare", model.HotelBaseFare);
+                var parHotelOfferPrice = new SqlParameter("@HotelOfferPrice", model.HotelOfferPrice);
+
+                return await db.Database.SqlQuery<string>("udspLCHotelRateUpdate @HotelID,@HotelBaseFare,@HotelOfferPrice",
+                    parHotelID,parHotelBaseFare, parHotelOfferPrice).FirstOrDefaultAsync();
             }
             catch (Exception ex)
             {
@@ -191,7 +213,7 @@ namespace LocalConn.Entities.Dal
             var parStart = new SqlParameter("@Start", (pageno - 1) * pagesize);
             var parEnd = new SqlParameter("@PageSize", pagesize);
 
-          
+
             // setting stored procedure OUTPUT value
             // This return total number of rows, and avoid two database call for data and total number of rows 
             var spOutput = new SqlParameter
@@ -264,6 +286,66 @@ namespace LocalConn.Entities.Dal
             var parhotelID = new SqlParameter("@HotelID", hotelid);
 
             return await db.Database.SqlQuery<string>("udspLCHotelMakeCover @HotelImageID,@HotelID", parImgID, parhotelID).FirstOrDefaultAsync();
+        }
+        #endregion
+
+        #region HotelRoomTypeMap
+
+        public async Task<IEnumerable<HotelRoomTypeMapView>> GetAllHotelRoomTypeMap(long id)
+        {   
+            var parHotelID = new SqlParameter("@HotelID", id);
+            return await db.Database.SqlQuery<HotelRoomTypeMapView>("udspLCHotelDelete @HotelID", parHotelID).ToListAsync();
+        }
+        public async Task<string> SaveHotelRoomTypeMapAsync(HotelRoomTypeMap model)
+        {
+            try
+            {
+                var parHotelID = new SqlParameter("@HotelID", model.HotelID);
+                var parRoomID = new SqlParameter("@RoomID", model.RoomID);
+                var parRoomTypePrice = new SqlParameter("@RoomTypePrice", model.RoomTypePrice);
+                var parIsStandard =   new SqlParameter("@IsStandard", model.IsStandard);
+
+                return await db.Database.SqlQuery<string>("udspLCHotelRoomTypeMapSave @HotelID, @RoomID, @RoomTypePrice,@IsStandard ",
+                    parHotelID, parRoomID, parRoomTypePrice, parIsStandard).FirstOrDefaultAsync();
+            }
+            catch (Exception ex)
+            {
+                return "Error: " + ex.Message;
+            }
+        }
+        public async Task<IEnumerable<HotelRoomTypeMapView>> GetHotelRoomTypeAsync(long id)
+        {
+            var parHotelID = new SqlParameter("@HotelID", id);
+            List<HotelRoomTypeMapView> model = new List<HotelRoomTypeMapView>();
+            model = await db.Database.SqlQuery<HotelRoomTypeMapView>("udspLCHotelRoomTypeMapList @HotelID", parHotelID).ToListAsync();
+            return model;
+        }
+        public async Task<HotelRoomTypeMap> GetHotelRoomTypeMapByIDAsync(long id, long rid)
+        {
+            try
+            {
+                string query = "select HotelID, RoomID, RoomTypePrice, IsStandard from utblLCHotelRoomTypeMaps where HotelID=" + id + "and RoomID =" + rid;
+                return await db.Database.SqlQuery<HotelRoomTypeMap>(query).FirstOrDefaultAsync();
+
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+        }
+        public async Task<string> DeleteHotelRoomTypeMapAsync(long id, long rid)
+        {
+            try
+            {
+                var parHotelID = new SqlParameter("@HotelID", id);
+                var parRoomID = new SqlParameter("@RoomID", rid);
+                return await db.Database.SqlQuery<string>("udspLCHotelRoomTypeMapDelete @HotelID,@RoomID ", parHotelID, parRoomID).FirstOrDefaultAsync();
+            }
+            catch (Exception ex)
+            {
+                return "Error: " + ex.Message;
+            }
         }
         #endregion
     }
