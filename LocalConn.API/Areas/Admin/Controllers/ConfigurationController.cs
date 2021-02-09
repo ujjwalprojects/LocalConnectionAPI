@@ -121,7 +121,8 @@ namespace LocalConn.API.Areas.Admin.Controllers
                 {
                     Random rand = new Random();
                     string name = model.CityName + "_" + DateTime.Now.ToString("yyyyMMdd") + "_" + rand.Next(50) + ".jpg";
-                    string normal_result = SaveImage(model.CityIconPath, name);
+                    string mappath = "~/Uploads/Cities";
+                    string normal_result = SaveImage(model.CityIconPath, name,mappath);
                     if (normal_result.Contains("Error"))
                     {
                         string stringerror = normal_result;
@@ -230,6 +231,28 @@ namespace LocalConn.API.Areas.Admin.Controllers
         {
             if (ModelState.IsValid)
             {
+                if (!model.AmenitiesIconPath.Contains(".jpg"))
+                {
+                    Random rand = new Random();
+                    string name = model.AmenitiesName + "_" + DateTime.Now.ToString("yyyyMMdd") + "_" + rand.Next(50) + ".jpg";
+                    string mappath = "~/Uploads/AmenitiesIcon";
+                    string normal_result = SaveImage(model.AmenitiesIconPath, name, mappath);
+                    if (normal_result.Contains("Error"))
+                    {
+                        string stringerror = normal_result;
+                        return "Unable to upload image" + stringerror;
+                    }
+                    model.AmenitiesIconPath = FileUrl + "AmenitiesIcon/" + normal_result;
+                }
+
+
+                //string result = await objDal.SaveCitiesAsync(model);
+                //if (result.ToLower().Contains("error"))
+                //{
+                //    DeleteFile(name);
+                //}
+                //return result;
+
                 return await objDal.SaveAmenitiesAsync(model);
             }
             string messages = string.Join("; ", ModelState.Values
@@ -735,12 +758,12 @@ namespace LocalConn.API.Areas.Admin.Controllers
         #endregion
 
         #region Helper
-        private string SaveImage(string imageStrNormal, string name)
+        private string SaveImage(string imageStrNormal, string name, string mappath)
         {
             try
             {
-                var path = Path.Combine(System.Web.HttpContext.Current.Server.MapPath("~/Uploads/Cities"), name);
-                var folderpath = System.Web.HttpContext.Current.Server.MapPath("~/Uploads/Cities");
+                var path = Path.Combine(System.Web.HttpContext.Current.Server.MapPath(mappath), name);
+                var folderpath = System.Web.HttpContext.Current.Server.MapPath(mappath);
 
                 //Check if normal directory exist
                 if (!System.IO.Directory.Exists(folderpath))

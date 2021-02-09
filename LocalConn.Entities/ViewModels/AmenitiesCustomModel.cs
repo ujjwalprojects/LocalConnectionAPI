@@ -10,6 +10,7 @@ namespace LocalConn.Entities.ViewModels
     {
         public long AmenitiesID { get; set; }
         public string AmenitiesName { get; set; }
+        public string AmenitiesIconPath { get; set; }
         public decimal AmenitiesBasePrice { get; set; }
     }
     public class AmenitiesVM

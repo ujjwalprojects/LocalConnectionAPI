@@ -24,6 +24,10 @@ namespace LocalConn.Entities.Models
         public long StarRatingID { get; set; }
         public decimal HotelBaseFare { get; set; }
         public decimal HotelOfferPrice { get; set; }
+        public decimal RatePerNight { get; set; }
+        public decimal RatePerRoom { get; set; }
+        public decimal RatePerGuest { get; set; }
+        public decimal RatePerChild { get; set; }
         public int OfferPercentage { get; set; }
         public int HotelHitCount { get; set; }
         public string MetaText { get; set; }

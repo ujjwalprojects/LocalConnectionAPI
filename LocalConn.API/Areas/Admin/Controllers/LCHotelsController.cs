@@ -42,6 +42,19 @@ namespace LocalConn.API.Areas.Admin.Controllers
                                          .Select(x => x.ErrorMessage));
             return "Operation Error: " + messages;
         }
+        [HttpPost]
+        [Route("UpdateLCHotelRate")]
+        public async Task<string> UpdateLCHotelRate(LCHotelSaveModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                return await objLCHotel.UpdateLCHotelRateAsync(model);
+            }
+            string messages = string.Join("; ", ModelState.Values
+                                         .SelectMany(x => x.Errors)
+                                         .Select(x => x.ErrorMessage));
+            return "Operation Error: " + messages;
+        }
         [HttpGet]
         [Route("LCHotelByID")]
         public async Task<utblLCHotel> HotelByID(long id)
@@ -156,6 +169,40 @@ namespace LocalConn.API.Areas.Admin.Controllers
             return await objLCHotel.MakeCoverImageAsync(hotelid, imageid);
         }
         #endregion
+
+        #region HotelRoomTypeMap
+        [HttpGet]
+        [Route("GetHotelRoomTypeMapList")]
+        public async Task<IEnumerable<HotelRoomTypeMapView>> GetHotelRoomTypeMapList(long id)
+        {
+            return await objLCHotel.GetHotelRoomTypeAsync(id);
+        }
+        [HttpPost]
+        [Route("SaveHotelRoomTypeMap")]
+        public async Task<string> SaveHotelRoomTypeMap(HotelRoomTypeMap model)
+        {
+            if (ModelState.IsValid)
+            {
+                return await objLCHotel.SaveHotelRoomTypeMapAsync(model);
+            }
+            string messages = string.Join("; ", ModelState.Values
+                                         .SelectMany(x => x.Errors)
+                                         .Select(x => x.ErrorMessage));
+            return "Operation Error: " + messages;
+        }
+        [HttpGet]
+        [Route("GetHotelRoomTypeMapByID")]
+        public async Task<HotelRoomTypeMap> GetHotelRoomTypeMapByID(long id, long rid)
+        {
+            return await objLCHotel.GetHotelRoomTypeMapByIDAsync(id, rid);
+        }
+        [HttpDelete]
+        [Route("DeleteHotelRoomTypeMap")]
+        public async Task<string> DeleteHotelRoomTypeMap(long id, long rid)
+        {
+            return await objLCHotel.DeleteHotelRoomTypeMapAsync(id,rid);
+        }
+        #endregion  
 
         #region Helper
         private string SaveImage(string imageStrNormal, string imageStrThumb, string name)

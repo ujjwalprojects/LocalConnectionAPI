@@ -21,6 +21,10 @@ namespace LocalConn.Entities.ViewModels
         public decimal HotelBaseFare { get; set; }
         public decimal HotelOfferPrice { get; set; }
         public int OfferPercentage { get; set; }
+        public decimal RatePerNight { get; set; }
+        public decimal RatePerRoom { get; set; }
+        public decimal RatePerGuest { get; set; }
+        public decimal RatePerChild { get; set; }
         public int TotalSingleRooms { get; set; }
         public int TotalDoubleRooms { get; set; }
     }
@@ -46,6 +50,10 @@ namespace LocalConn.Entities.ViewModels
         public decimal HotelBaseFare { get; set; }
         public decimal HotelOfferPrice { get; set; }
         public int OfferPercentage { get; set; }
+        public decimal RatePerNight { get; set; }
+        public decimal RatePerRoom { get; set; }
+        public decimal RatePerGuest { get; set; }
+        public decimal RatePerChild { get; set; }
         public int HotelHitCount { get; set; }
         public string MetaText { get; set; }
         public int TotalSingleRooms { get; set; }
@@ -78,5 +86,21 @@ namespace LocalConn.Entities.ViewModels
     {
         public IEnumerable<LCHotelImageView> LCHotelImageList { get; set; }
         public int TotalRecords { get; set; }
+    }
+    //Hotel to Room Type Mapping
+    public class HotelRoomTypeMap
+    {
+        public long HotelID { get; set; }
+        public long RoomID { get; set; }
+        public decimal RoomTypePrice { get; set; }
+        public bool IsStandard { get; set; }
+    }
+    public class HotelRoomTypeMapView
+    {
+        public long HotelID { get; set; }
+        public long RoomID { get; set; }
+        public string RoomType { get; set; }
+        public decimal RoomTypePrice { get; set; }
+        public bool IsStandard { get; set; }
     }
 }
