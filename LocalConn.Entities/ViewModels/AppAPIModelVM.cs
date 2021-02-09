@@ -29,7 +29,9 @@ namespace LocalConn.Entities.ViewModels
     {
         public long FeatureID { get; set; }
         public long HotelID { get; set; }
+        public string HotelName { get; set; }
         public string PhotoThumbPath { get; set; }
+        public decimal BaseFare { get; set; }
     }
 
     public class HotelDtl
@@ -52,5 +54,11 @@ namespace LocalConn.Entities.ViewModels
         public string RoomType { get; set; }
         public decimal RoomBaseFare { get; set; }
         public int RoomCapacity { get; set; }
+    }
+    public class HotelRoomImg
+    {
+        public long HotelImgID { get; set; }
+        public long HotelID { get; set; }
+        public string PhotoNormalPath { get; set; }
     }
 }

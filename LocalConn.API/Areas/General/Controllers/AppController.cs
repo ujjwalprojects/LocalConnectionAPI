@@ -75,6 +75,24 @@ namespace LocalConn.API.Areas.General.Controllers
         {
             return await objDal.getHotelRoomList(HotelID);
         }
+        [HttpGet]
+        [Route("gethroomimglist")]
+        public async Task<List<HotelRoomImg>> getHRoomImgList(string HotelID)
+        {
+            return await objDal.getHRoomImgList(HotelID);
+        }
+        [HttpGet]
+        [Route("gethotelvmlist")]
+        public async Task<List<HotelList>> getHotelVMList(string HomeTypeID)
+        {
+            return await objDal.gethotelvmlist(HomeTypeID);
+        }
 
+        [HttpGet]
+        [Route("getFHotelList")]
+        public async Task<List<FtHotelList>> getFeaturedList(string Dt)
+        {
+            return await objDal.getFeaturedlist(Dt);
+        }
     }
 }

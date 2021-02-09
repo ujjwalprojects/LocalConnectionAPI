@@ -144,6 +144,44 @@ namespace LocalConn.Entities.Dal
                 throw e;
             }
         }
+        public async Task<List<HotelRoomImg>> getHRoomImgList(string HotelID)
+        {
+            try
+            {
+                var parID = new SqlParameter("@HotelID", HotelID);
+                return await objDB.Database.SqlQuery<HotelRoomImg>("udspLCAppGetHotelRoomImgList @HotelID", parID).ToListAsync();
+            }
+            catch (Exception e)
+            {
 
+                throw e;
+            }
+        }
+        public async Task<List<HotelList>> gethotelvmlist(string HomeTypeID)
+        {
+            try
+            {
+                var parID = new SqlParameter("@HomeTypeID", HomeTypeID);
+                return await objDB.Database.SqlQuery<HotelList>("udspLCAppGetHotelVMList @HomeTypeID", parID).ToListAsync();
+            }
+            catch (Exception e)
+            {
+
+                throw e;
+            }
+        }
+        public async Task<List<FtHotelList>> getFeaturedlist(string Date)
+        {
+            try
+            {
+                var parID = new SqlParameter("@Date", Date);
+                return await objDB.Database.SqlQuery<FtHotelList>("udspLCAppGetFeaturedList @Date", parID).ToListAsync();
+            }
+            catch (Exception e)
+            {
+
+                throw e;
+            }
+        }
     }
 }
