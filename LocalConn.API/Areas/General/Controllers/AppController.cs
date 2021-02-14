@@ -70,6 +70,13 @@ namespace LocalConn.API.Areas.General.Controllers
             return await objDal.getHotelDtl(HotelID);
         }
         [HttpGet]
+        [Route("gethamenitieslist")]
+        public async Task<List<HAmenitiesList>> getAmenitiesList(string HotelID)
+        {
+            return await objDal.getAmnetieslist(HotelID);
+        }
+
+        [HttpGet]
         [Route("gethotelroomlist")]
         public async Task<List<HotelRoomList>> getHotelRoomList(string HotelID)
         {
@@ -94,5 +101,27 @@ namespace LocalConn.API.Areas.General.Controllers
         {
             return await objDal.getFeaturedlist(Dt);
         }
+
+        [HttpGet]
+        [Route("getorderlist")]
+        public async Task<List<OrderList>> GetOrderList(string CustPhNo)
+        {
+            return await objDal.getOrderlist(CustPhNo);
+        }
+
+        [HttpGet]
+        [Route("getBookingDtl")]
+        public async Task<PreBookingDtl> getBookingDtl(string Dt)
+        {
+            return await objDal.getBookingDtl(Dt);
+        }
+        [Route("paynow")]
+        [HttpPost]
+        public async Task<string> PayNow(PreBookingDtl obj)
+        {
+       
+            return await objDal.preBooking(obj);
+        }
+
     }
 }

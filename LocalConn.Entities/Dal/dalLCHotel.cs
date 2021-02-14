@@ -108,7 +108,16 @@ namespace LocalConn.Entities.Dal
         }
         public async Task<utblLCHotel> GetLCHotelByIDAsync(long id)
         {
-            return await db.utblLCHotels.Where(x => x.HotelID == id).FirstOrDefaultAsync();
+            try
+            {
+                return await db.utblLCHotels.Where(x => x.HotelID == id).FirstOrDefaultAsync();
+            }
+            catch (Exception e)
+            {
+
+                throw e;
+            }
+         
         }
         public async Task<string> DeleteLCHotelAsync(long id)
         {

@@ -131,6 +131,20 @@ namespace LocalConn.Entities.Dal
             }
         }
 
+        public async Task<List<HAmenitiesList>> getAmnetieslist(string HotelID)
+        {
+            try
+            {
+                var parID = new SqlParameter("@HotelID", HotelID);
+                return await objDB.Database.SqlQuery<HAmenitiesList>("udspLCAppGetHAmenitiesList @HotelID", parID).ToListAsync();
+            }
+            catch (Exception e)
+            {
+
+                throw e;
+            }
+        }
+
         public async Task<List<HotelRoomList>> getHotelRoomList(string HotelID)
         {
             try
@@ -183,5 +197,60 @@ namespace LocalConn.Entities.Dal
                 throw e;
             }
         }
+        public async Task<List<OrderList>> getOrderlist(string CustPhNo)
+        {
+            try
+            {
+                var parID = new SqlParameter("@CustPhNo", CustPhNo);
+                return await objDB.Database.SqlQuery<OrderList>("udspLCAppGetOrderList @CustPhNo", parID).ToListAsync();
+            }
+            catch (Exception e)
+            {
+
+                throw e;
+            }
+        }
+        public async Task<PreBookingDtl> getBookingDtl(string BookingID)
+        {
+            try
+            {
+                var parID = new SqlParameter("@BookingID", BookingID);
+                return await objDB.Database.SqlQuery<PreBookingDtl>("udspLCAppGetBookingDtl @BookingID", parID).FirstOrDefaultAsync();
+            }
+            catch (Exception e)
+            {
+
+                throw e;
+            }
+        }
+        public async Task<string>preBooking(PreBookingDtl obj)
+        {
+            try
+            {
+                string Results = "";
+                var parCName = new SqlParameter("@CustName", obj.CustName);
+                var parCMail = new SqlParameter("@CustEmail", obj.CustEmail);
+                var parCustPhNo= new SqlParameter("@CustPhNo", obj.CustPhNo);
+                var parBHID = new SqlParameter("@HotelID", obj.HotelID);
+                var parBFrom = new SqlParameter("@BookingFrom",obj.BookingFrom);
+                var parBUpto = new SqlParameter("@BookingUpto",obj.BookingUpto);
+                var parCDtl = new SqlParameter("@CustDetails", obj.CustDetails);
+                var parBStatue = new SqlParameter("@BookingStatus", obj.BookingStatus);
+                var parFare= new SqlParameter("@FinalFare", obj.FinalFare);
+                Results = await objDB.Database.SqlQuery<string>("udspLCAppBookingRooms @CustName, @CustEmail,@CustPhNo,@HotelID,@BookingFrom,@BookingUpto,@CustDetails,@BookingStatus,@FinalFare",
+                    parCName, parCMail, parCustPhNo, parBHID, parBFrom, parBUpto, parCDtl, parBStatue, parFare).FirstOrDefaultAsync();
+
+                return Results;
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+        }
+
+        //public async Task<string> confirmBooking()
+        //{
+
+        //}
     }
 }
