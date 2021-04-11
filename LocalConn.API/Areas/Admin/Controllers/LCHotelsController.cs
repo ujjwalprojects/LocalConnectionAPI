@@ -16,7 +16,7 @@ namespace LocalConn.API.Areas.Admin.Controllers
 {
 
     [Authorize]
-    [RoutePrefix("api/Admin/lchotelconfig")] 
+    [RoutePrefix("api/Admin/lchotelconfig")]
     public class LCHotelsController : ApiController
     {
         dalLCHotel objLCHotel = new dalLCHotel();
@@ -122,22 +122,24 @@ namespace LocalConn.API.Areas.Admin.Controllers
         {
             if (ModelState.IsValid)
             {
-                Random rand = new Random();
-                string name = model.HotelID + "_" + DateTime.Now.ToString("yyyyMMdd") + "_" + rand.Next(50) + ".jpg";
-                string normal_result = SaveImage(model.PhotoNormalPath, model.PhotoThumbPath, name);
-                if (normal_result.Contains("Error"))
+                if (!model.PhotoThumbPath.Contains(".jpg"))
                 {
-                    string stringerror = normal_result;
-                    return "Unable to upload image" + stringerror;
+                    Random rand = new Random();
+                    string name = model.HotelID + "_" + DateTime.Now.ToString("yyyyMMdd") + "_" + rand.Next(50) + ".jpg";
+                    string normal_result = SaveImage(model.PhotoNormalPath, model.PhotoThumbPath, name);
+                    if (normal_result.Contains("Error"))
+                    {
+                        string stringerror = normal_result;
+                        return "Unable to upload image" + stringerror;
+                    }
+                    model.PhotoNormalPath = FileUrl + "HotelImages/Normal/" + normal_result;
+                    model.PhotoThumbPath = FileUrl + "HotelImages/Thumb/" + normal_result;
                 }
-                model.PhotoNormalPath = FileUrl + "HotelImages/Normal/" + normal_result;
-                model.PhotoThumbPath = FileUrl + "HotelImages/Thumb/" + normal_result;
-
-                string result =  await objLCHotel.SaveHotelImagesAsync(model);
-                if(result.ToLower().Contains("error"))
-                {
-                    DeleteFile(name);
-                }
+                string result = await objLCHotel.SaveHotelImagesAsync(model);
+                //if (result.ToLower().Contains("error"))
+                //{
+                //    DeleteFile(name);
+                //}
                 return result;
             }
             string messages = string.Join("; ", ModelState.Values
@@ -168,6 +170,19 @@ namespace LocalConn.API.Areas.Admin.Controllers
         {
             return await objLCHotel.MakeCoverImageAsync(hotelid, imageid);
         }
+        [HttpGet]
+        [Route("HotelPremisesDD")]
+        public async Task<IEnumerable<utblLCMstHotelPremise>> HotelPremisesDD()
+        {
+            return await objLCHotel.GetAllLCHotelPremisesAsync();
+        }
+        [HttpGet]
+        [Route("RoomTypeDD")]
+        public async Task<IEnumerable<RoomTypeDD>> GetRoomTypeByID(long id)
+        {
+            return await objLCHotel.GetRoomTypeByID(id);
+        }
+      
         #endregion
 
         #region HotelRoomTypeMap
@@ -202,7 +217,35 @@ namespace LocalConn.API.Areas.Admin.Controllers
         {
             return await objLCHotel.DeleteHotelRoomTypeMapAsync(id,rid);
         }
-        #endregion  
+        #endregion
+
+        #region HotelTerms&Cancellations
+        [HttpGet]
+        [Route("HotelTerms")]
+        public async Task<IEnumerable<HotelTerms>> HotelTerms(long id)
+        {
+            return await objLCHotel.GetHotelTermsAsync(id);
+        }
+        [HttpGet]
+        [Route("HotelCancellations")]
+        public async Task<IEnumerable<HotelCancellations>> HotelCancellations(long id)
+        {
+            return await objLCHotel.GetHotelCancellationsAsync(id);
+        }
+        [HttpPost]
+        [Route("SaveTermsCancellations")]
+        public async Task<string> SaveTermsCancellations(HotelTermCancSaveModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                return await objLCHotel.SaveTermsCancAsync(model);
+            }
+            string messages = string.Join("; ", ModelState.Values
+                                         .SelectMany(x => x.Errors)
+                                         .Select(x => x.ErrorMessage));
+            return "Operation Error: " + messages;
+        }
+        #endregion
 
         #region Helper
         private string SaveImage(string imageStrNormal, string imageStrThumb, string name)

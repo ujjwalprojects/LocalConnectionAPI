@@ -746,7 +746,6 @@ namespace LocalConn.Entities.Dal
                 return "Error: " + ex.Message;
             }
         }
-
         public async Task<utblPackageOffer> GetPackageOfferByIDAsync(long id)
         {
             return await db.utblPackageOffers.Where(x => x.PackageOfferID == id).FirstOrDefaultAsync();

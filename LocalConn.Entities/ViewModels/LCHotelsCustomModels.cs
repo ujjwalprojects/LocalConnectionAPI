@@ -1,5 +1,7 @@
-﻿using System;
+﻿using LocalConn.Entities.Models;
+using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -102,5 +104,95 @@ namespace LocalConn.Entities.ViewModels
         public string RoomType { get; set; }
         public decimal RoomTypePrice { get; set; }
         public bool IsStandard { get; set; }
+    }
+
+    //LCHotel Terms and cancellations
+    public class HotelTerms
+    {
+        public long HotelTermsID { get; set; }
+        public long HotelID { get; set; }
+        public long TermID { get; set; }
+        public string TermName { get; set; }
+        public bool IsSelected { get; set; }
+    }
+    public class HotelCancellations
+    {
+        public long HotelCancID { get; set; }
+        public long HotelID { get; set; }
+        public long CancellationID { get; set; }
+        public string CancellationDesc { get; set; }
+        public bool IsSelected { get; set; }
+    }
+    public class HotelTermCancSaveModel
+    {
+        [Required]
+        public long HotelID { get; set; }
+        public List<HOtelTermsSave> Terms { get; set; }
+        public List<HotelCancellationsSave> Cancellations { get; set; }
+    }
+    public class HOtelTermsSave
+    {
+        [Required]
+        public long HotelTermsID { get; set; }
+        [Required]
+        public long HotelID { get; set; }
+        [Required]
+        public long TermID { get; set; }
+    }
+    public class HotelCancellationsSave
+    {
+        [Required]
+        public long HotelCancID { get; set; }
+        [Required]
+        public long HotelID { get; set; }
+        [Required]
+        public long CancellationID { get; set; }
+    }
+
+
+    //LCHotel Offers
+    public class HotelOffer
+    {
+        public long OfferID { get; set; }
+        [Required]
+        public string OfferTagLine { get; set; }
+        [Required]
+        public string OfferImagePath { get; set; }
+        [Required]
+        public DateTime OfferStartDate { get; set; }
+        [Required]
+        public DateTime OfferEndDate { get; set; }
+    }
+    public class SaveHotelOffer
+    {
+        [Required]
+        public List<long> HotelID { get; set; }
+        public HotelOffer HotelOffer { get; set; }
+    }
+    public class HotelOfferView
+    {
+        public long OfferID { get; set; }
+        public string OfferTagLine { get; set; }
+        public string HotelName { get; set; }
+        public DateTime OfferStartDate { get; set; }
+        public DateTime OfferEndDate { get; set; }
+    }
+    public class HotelOfferVM
+    {
+        //public IEnumerable<GenPackageOfferView> GenPackageOfferList { get; set; }
+        public IEnumerable<HotelOfferView> HotelOfferList { get; set; }
+        public IEnumerable<HotelDD> HotelList { get; set; }
+        public int TotalRecords { get; set; }
+    }
+    public class EditHotelOffer
+    {
+        public utblLCFeatureOffer HotelOffer { get; set; }
+        public List<HotelDD> HotelList { get; set; }
+        public long HotelID { get; set; }
+    }
+    public class HotelDD
+    {
+        public long HotelID { get; set; }
+        public string HotelName { get; set; }
     }
 }

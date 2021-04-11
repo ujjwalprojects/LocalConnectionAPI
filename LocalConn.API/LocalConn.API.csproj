@@ -185,6 +185,7 @@
     <Compile Include="Areas\Admin\Controllers\ClientController.cs" />
     <Compile Include="Areas\Admin\Controllers\ConfigurationController.cs" />
     <Compile Include="Areas\Admin\Controllers\HotelConfigController.cs" />
+    <Compile Include="Areas\Admin\Controllers\LCHotelOffersController.cs" />
     <Compile Include="Areas\Admin\Controllers\LCHotelsController.cs" />
     <Compile Include="Areas\Admin\Controllers\PackageConfigController.cs" />
     <Compile Include="Areas\Admin\Controllers\TourGuideController.cs" />
@@ -300,6 +301,7 @@
     <Folder Include="Areas\General\Views\Shared\" />
     <Folder Include="Uploads\AmenitiesIcon\" />
     <Folder Include="Uploads\Cities\" />
+    <Folder Include="Uploads\FeatureOffers\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff" />

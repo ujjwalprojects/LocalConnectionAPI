@@ -51,5 +51,8 @@ namespace LocalConn.Entities.Models
         public DbSet<utblClientEnquiryActivitie> utblClientEnquiryActivites { get; set; }
 
         public DbSet<utblTourGuide> utblTourGuides { get; set; }
+
+        public DbSet<utblLCFeatureOffer> utblLCFeatureOffers { get; set; }
+        public DbSet<utblLCMstHotelPremise> utblLCMstHotelPremises { get; set; }
     }
 }

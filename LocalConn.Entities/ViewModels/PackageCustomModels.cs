@@ -19,7 +19,6 @@ namespace LocalConn.Entities.ViewModels
         public IEnumerable<PackageTypeView> PackageList { get; set; }
         public int TotalRecords { get; set; }
     }
-
     public class PackageOfferView
     {
         public long PackageOfferID { get; set; }
@@ -40,7 +39,6 @@ namespace LocalConn.Entities.ViewModels
         public IEnumerable<PackageDD> PackageList { get; set; }
         public int TotalRecords { get; set; }
     }
-
     public class PackageOffer
     {
         public long PackageOfferID { get; set; }
@@ -54,8 +52,6 @@ namespace LocalConn.Entities.ViewModels
         [Required]
         public DateTime EndDate { get; set; }
     }
-
-
     public class SavePackageOffer
     {
         public List<PackageDD> PackageList { get; set; }

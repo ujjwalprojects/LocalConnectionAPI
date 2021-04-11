@@ -82,7 +82,7 @@ namespace LocalConn.Entities.Dal
                 //parSubDT.TypeName = "dbo.IDType";
 
                 return await db.Database.SqlQuery<string>("udspLCHotelSave @HotelID, @HotelName, @HotelAddress, @HotelDesc, @HotelContactNo, @HotelEmail, @CountryID,@StateID,@CityID,@LocalityID,@HomeTypeID,@StarRatingID,@HotelBaseFare,@HotelOfferPrice,@OfferPercentage,@RatePerNight,@RatePerRoom,@RatePerGuest,@RatePerChild,@MetaText,@TotalSingleRooms,@TotalDoubleRooms",
-                    parHotelID, parHotelName, parHotelAddress, parHotelDesc, parHotelContactNo, parHotelEmail, parCountryID, parStateID, parCityID, parLocalityID, parHomeTypeID, parStarRatingID, parHotelBaseFare, parHotelOfferPrice, parOfferPercentage, parRatePerNight, parRatePerRoom, parRatePerGuest,parRatePerChild, parMetaText, parTotalSingleRooms, parTotalDoubleRooms).FirstOrDefaultAsync();
+                    parHotelID, parHotelName, parHotelAddress, parHotelDesc, parHotelContactNo, parHotelEmail, parCountryID, parStateID, parCityID, parLocalityID, parHomeTypeID, parStarRatingID, parHotelBaseFare, parHotelOfferPrice, parOfferPercentage, parRatePerNight, parRatePerRoom, parRatePerGuest, parRatePerChild, parMetaText, parTotalSingleRooms, parTotalDoubleRooms).FirstOrDefaultAsync();
             }
             catch (Exception ex)
             {
@@ -99,7 +99,7 @@ namespace LocalConn.Entities.Dal
                 var parHotelOfferPrice = new SqlParameter("@HotelOfferPrice", model.HotelOfferPrice);
 
                 return await db.Database.SqlQuery<string>("udspLCHotelRateUpdate @HotelID,@HotelBaseFare,@HotelOfferPrice",
-                    parHotelID,parHotelBaseFare, parHotelOfferPrice).FirstOrDefaultAsync();
+                    parHotelID, parHotelBaseFare, parHotelOfferPrice).FirstOrDefaultAsync();
             }
             catch (Exception ex)
             {
@@ -117,7 +117,7 @@ namespace LocalConn.Entities.Dal
 
                 throw e;
             }
-         
+
         }
         public async Task<string> DeleteLCHotelAsync(long id)
         {
@@ -215,6 +215,18 @@ namespace LocalConn.Entities.Dal
         #endregion
 
         #region HotelImages
+        //RoomType mapped with hotel list
+        public async Task<IEnumerable<RoomTypeDD>> GetRoomTypeByID(long id)
+        {
+            var parHotelID = new SqlParameter("@HotelID", id);
+            return await db.Database.SqlQuery<RoomTypeDD>("udspLCRoomTypeListByID @HotelID", parHotelID).ToListAsync();
+        }
+        //Hotel Premises list for Drop Down
+        public async Task<IEnumerable<utblLCMstHotelPremise>> GetAllLCHotelPremisesAsync()
+        {
+            string query = "select HotelPremID, HotelPremName from utblLCMstHotelPremises";
+            return await db.Database.SqlQuery<utblLCMstHotelPremise>(query).ToListAsync();
+        }
         public async Task<LCHotelImageVM> GetHotelImagesAsync(long hotelid, int pageno, int pagesize)
         {
             LCHotelImageVM model = new LCHotelImageVM();
@@ -243,13 +255,25 @@ namespace LocalConn.Entities.Dal
             {
                 var parHotelImageID = new SqlParameter("@HotelImageID", model.HotelImageID);
                 var parHotelID = new SqlParameter("@HotelID", model.HotelID);
+                var parHotelPremID = new SqlParameter("@HotelPremID", model.HotelPremID);
+                var parRoomsID = new SqlParameter("@RoomID", DBNull.Value);
+                if (model.RoomID != null)
+                {
+                    parRoomsID = new SqlParameter("@RoomID", model.RoomID);
+                }
+                var parIsRoomCover = new SqlParameter("@IsRoomCover", DBNull.Value);
+                //if(model.IsRoomCover != false)
+                //{
+                    
+                //}
+                parIsRoomCover = new SqlParameter("@IsRoomCover", model.IsRoomCover);
                 var parIsHotelCover = new SqlParameter("@IsHotelCover", model.IsHotelCover);
                 var parPhotoThumbPath = new SqlParameter("@PhotoThumbPath", model.PhotoThumbPath);
                 var parPhotoNormalPath = new SqlParameter("@PhotoNormalPath", model.PhotoNormalPath);
                 var parPhotoCaption = new SqlParameter("@PhotoCaption", model.PhotoCaption);
 
-                return await db.Database.SqlQuery<string>("udspLCHotelImagesSave @HotelImageID, @HotelID, @IsHotelCover,@PhotoThumbPath,@PhotoNormalPath,@PhotoCaption",
-                    parHotelImageID, parHotelID, parIsHotelCover, parPhotoThumbPath, parPhotoNormalPath, parPhotoCaption).FirstOrDefaultAsync();
+                return await db.Database.SqlQuery<string>("udspLCHotelImagesSave @HotelImageID, @HotelID,@HotelPremID,@RoomID,@IsRoomCover, @IsHotelCover,@PhotoThumbPath,@PhotoNormalPath,@PhotoCaption",
+                    parHotelImageID, parHotelID, parHotelPremID, parRoomsID, parIsRoomCover, parIsHotelCover, parPhotoThumbPath, parPhotoNormalPath, parPhotoCaption).FirstOrDefaultAsync();
             }
             catch (Exception ex)
             {
@@ -258,7 +282,17 @@ namespace LocalConn.Entities.Dal
         }
         public async Task<utblLCHotelImage> GetLCHotelImagesByIDAsync(long id)
         {
-            return await db.utblLCHotelImages.Where(x => x.HotelImageID == id).FirstOrDefaultAsync();
+            try
+            {
+                var parHotelImageID = new SqlParameter("@HotelImageID", id);
+                return await db.Database.SqlQuery<utblLCHotelImage>("udspLCHotelImagesByID @HotelImageID", parHotelImageID).FirstOrDefaultAsync();
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+           
         }
         public async Task<string> DeleteLCHotelImagesAsync(long id)
         {
@@ -301,7 +335,7 @@ namespace LocalConn.Entities.Dal
         #region HotelRoomTypeMap
 
         public async Task<IEnumerable<HotelRoomTypeMapView>> GetAllHotelRoomTypeMap(long id)
-        {   
+        {
             var parHotelID = new SqlParameter("@HotelID", id);
             return await db.Database.SqlQuery<HotelRoomTypeMapView>("udspLCHotelDelete @HotelID", parHotelID).ToListAsync();
         }
@@ -312,7 +346,7 @@ namespace LocalConn.Entities.Dal
                 var parHotelID = new SqlParameter("@HotelID", model.HotelID);
                 var parRoomID = new SqlParameter("@RoomID", model.RoomID);
                 var parRoomTypePrice = new SqlParameter("@RoomTypePrice", model.RoomTypePrice);
-                var parIsStandard =   new SqlParameter("@IsStandard", model.IsStandard);
+                var parIsStandard = new SqlParameter("@IsStandard", model.IsStandard);
 
                 return await db.Database.SqlQuery<string>("udspLCHotelRoomTypeMapSave @HotelID, @RoomID, @RoomTypePrice,@IsStandard ",
                     parHotelID, parRoomID, parRoomTypePrice, parIsStandard).FirstOrDefaultAsync();
@@ -356,6 +390,155 @@ namespace LocalConn.Entities.Dal
                 return "Error: " + ex.Message;
             }
         }
+        #endregion
+
+        #region HotelTems&Cancellations
+        public async Task<IEnumerable<HotelTerms>> GetHotelTermsAsync(long id)
+        {
+            var parHotelID = new SqlParameter("@HotelID", id);
+            return await db.Database.SqlQuery<HotelTerms>("select * from dbo.udfGetLCHotelTerms(@HotelID)", parHotelID).ToListAsync();
+        }
+        public async Task<IEnumerable<HotelCancellations>> GetHotelCancellationsAsync(long id)
+        {
+            var parHotelID = new SqlParameter("@HotelID", id);
+            return await db.Database.SqlQuery<HotelCancellations>("select * from dbo.udfGetLCHotelCancellations(@HotelID)", parHotelID).ToListAsync();
+        }
+
+        public async Task<string> SaveTermsCancAsync(HotelTermCancSaveModel model)
+        {
+            try
+            {
+                var parHotelID = new SqlParameter("@HotelID", model.HotelID);
+                ConvertListToDT objList = new ConvertListToDT();
+                DataTable termdt = new DataTable();
+                DataTable candt = new DataTable();
+
+                //Converting subject list to datatable if record is present else send empty datatable
+                if (model.Terms != null)
+                {
+                    termdt = objList.ConvertIEnumerableToDataTable(model.Terms);
+                }
+                else
+                {
+                    if (termdt.Columns.Count == 0)
+                    {
+                        DataColumn col = new DataColumn();
+                        col.ColumnName = "HotelTermsID";
+                        termdt.Columns.Add(col);
+                        DataColumn col1 = new DataColumn();
+                        col1.ColumnName = "HotelID";
+                        termdt.Columns.Add(col1);
+                        DataColumn col2 = new DataColumn();
+                        col2.ColumnName = "TermID";
+                        termdt.Columns.Add(col2);
+                    }
+                }
+
+                var parTermDT = new SqlParameter("@LCTermTable", termdt);
+                parTermDT.SqlDbType = SqlDbType.Structured;
+                parTermDT.TypeName = "dbo.LCHotelTermType";
+
+
+                if (model.Cancellations != null)
+                {
+                    candt = objList.ConvertIEnumerableToDataTable(model.Cancellations);
+                }
+                else
+                {
+                    if (candt.Columns.Count == 0)
+                    {
+                        DataColumn col = new DataColumn();
+                        col.ColumnName = "HotelCancID";
+                        candt.Columns.Add(col);
+                        DataColumn col1 = new DataColumn();
+                        col1.ColumnName = "HotelID";
+                        candt.Columns.Add(col1);
+                        DataColumn col2 = new DataColumn();
+                        col2.ColumnName = "CancellationID";
+                        candt.Columns.Add(col2);
+                    }
+                }
+
+                var parCanDT = new SqlParameter("@LCCancellationTable", candt);
+                parCanDT.SqlDbType = SqlDbType.Structured;
+                parCanDT.TypeName = "dbo.LCHotelCancType";
+
+                return await db.Database.SqlQuery<string>("udspLCHotelTermCancellationSave @HotelID, @LCTermTable,@LCCancellationTable",
+                    parHotelID, parTermDT, parCanDT).FirstOrDefaultAsync();
+
+            }
+            catch (Exception ex)
+            {
+                return "Error: " + ex.Message;
+            }
+        }
+        #endregion
+
+        #region HotelOffers
+        public async Task<utblLCFeatureOffer> GetHotelOfferByIDAsync(long id)
+        {
+            return await db.utblLCFeatureOffers.Where(x => x.OfferID == id).FirstOrDefaultAsync();
+        }
+        public async Task<IEnumerable<long>> GetOfferHotelsAsync(long id)
+        {
+            string query = "select HotelID from utblLCFeatureOfferHotelMapping where OfferID=" + id;
+            return await db.Database.SqlQuery<long>(query).ToListAsync();
+        }
+        public async Task<HotelOfferVM> GetHotelOfferListAsync(int pageno, int pagesize, string sterm)
+        {
+            HotelOfferVM model = new HotelOfferVM();
+            var parStart = new SqlParameter("@Start", (pageno - 1) * pagesize);
+            var parEnd = new SqlParameter("@PageSize", pagesize);
+
+            var parSearchTerm = new SqlParameter("@SearchTerm", DBNull.Value);
+            if (!(sterm == null || sterm == ""))
+                parSearchTerm.Value = sterm;
+            // setting stored procedure OUTPUT value
+            // This return total number of rows, and avoid two database call for data and total number of rows 
+            var spOutput = new SqlParameter
+            {
+                ParameterName = "@TotalCount",
+                SqlDbType = System.Data.SqlDbType.BigInt,
+                Direction = System.Data.ParameterDirection.Output
+            };
+
+            model.HotelOfferList = await db.Database.SqlQuery<HotelOfferView>("udspLCFeatureOfferspaged @Start, @PageSize,@SearchTerm, @TotalCount out",
+                parStart, parEnd, parSearchTerm, spOutput).ToListAsync();
+            model.TotalRecords = int.Parse(spOutput.Value.ToString());
+            return model;
+        }
+        public async Task<string> SaveHotelOfferAsync(SaveHotelOffer model)
+        {
+            try
+            {
+                ConvertListToDT objDT = new ConvertListToDT();
+                DataTable typeDt = new DataTable();
+
+                var parOffID = new SqlParameter("@OfferID", model.HotelOffer.OfferID);
+                var parOfferTag = new SqlParameter("@OfferTagLine", model.HotelOffer.OfferTagLine);
+                var parOfferImgPath = new SqlParameter("@OfferImagePath", model.HotelOffer.OfferImagePath);
+                var parStart = new SqlParameter("@OfferStartDate", model.HotelOffer.OfferStartDate);
+                var parEnd = new SqlParameter("@OfferEndDate", model.HotelOffer.OfferEndDate);
+
+                List<IDModel> tyepList = model.HotelID.Select(x => new IDModel()
+                {
+                    ID = Convert.ToInt64(x)
+                }).ToList();
+                typeDt = objDT.ConvertIEnumerableToDataTable(tyepList);
+
+                var parSubDT = new SqlParameter("@LCOfferTable", typeDt);
+                parSubDT.SqlDbType = SqlDbType.Structured;
+                parSubDT.TypeName = "dbo.IDType";
+
+                return await db.Database.SqlQuery<string>("udspLCFeatureOffersSave @OfferID , @OfferTagLine, @OfferImagePath, @OfferStartDate, @OfferEndDate,@LCOfferTable",
+                     parOffID, parOfferTag, parOfferImgPath, parStart, parEnd, parSubDT).FirstOrDefaultAsync();
+            }
+            catch (Exception ex)
+            {
+                return "Error: " + ex.Message;
+            }
+        }
+
         #endregion
     }
 }
