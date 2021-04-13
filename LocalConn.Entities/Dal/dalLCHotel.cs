@@ -58,31 +58,17 @@ namespace LocalConn.Entities.Dal
                 var parLocalityID = new SqlParameter("@LocalityID", model.LCHotel.LocalityID);
                 var parHomeTypeID = new SqlParameter("@HomeTypeID", model.LCHotel.HomeTypeID);
                 var parStarRatingID = new SqlParameter("@StarRatingID", model.LCHotel.StarRatingID);
-                var parHotelBaseFare = new SqlParameter("@HotelBaseFare", model.LCHotel.HotelBaseFare);
-                var parHotelOfferPrice = new SqlParameter("@HotelOfferPrice", model.LCHotel.HotelOfferPrice);
-                var parOfferPercentage = new SqlParameter("@OfferPercentage", model.LCHotel.OfferPercentage);
-                var parRatePerNight = new SqlParameter("@RatePerNight", model.LCHotel.RatePerNight);
-                var parRatePerRoom = new SqlParameter("@RatePerRoom", model.LCHotel.RatePerRoom);
-                var parRatePerGuest = new SqlParameter("@RatePerGuest", model.LCHotel.RatePerGuest);
-                var parRatePerChild = new SqlParameter("@RatePerChild", model.LCHotel.RatePerChild);
+                var parMaxOccupant = new SqlParameter("@MaxOccupant", model.LCHotel.MaxOccupant);
+                var parOverallOfferPercentage = new SqlParameter("@OverallOfferPercentage", model.LCHotel.OverallOfferPercentage);
+                var parTwoOccupantPercentage = new SqlParameter("@TwoOccupantPercentage", model.LCHotel.TwoOccupantPercentage);
+                var parThreeOccupantPercentage = new SqlParameter("@ThreeOccupantPercentage", model.LCHotel.ThreeOccupantPercentage);
+                var parFourPlusOccupantPercentage = new SqlParameter("@FourPlusOccupantPercentage", model.LCHotel.FourPlusOccupantPercentage);
+                var parChildOccupantNote = new SqlParameter("@ChildOccupantNote", model.LCHotel.ChildOccupantNote);
+                var parIsActive = new SqlParameter("@IsActive", model.LCHotel.IsActive);
 
-                //var parHotelHitCount = new SqlParameter("@HotelHitCount", model.HotelHitCount);
-                var parMetaText = new SqlParameter("@MetaText", model.LCHotel.MetaText);
-                var parTotalSingleRooms = new SqlParameter("@TotalSingleRooms", model.LCHotel.TotalSingleRooms);
-                var parTotalDoubleRooms = new SqlParameter("@TotalDoubleRooms", model.LCHotel.TotalDoubleRooms);
 
-                //List<IDModel> tyepList = model.RoomID.Select(x => new IDModel()
-                //{
-                //    ID = Convert.ToInt64(x)
-                //}).ToList();
-                //typeDt = objDT.ConvertIEnumerableToDataTable(tyepList);
-
-                //var parSubDT = new SqlParameter("@HotelRoomTypeTable", typeDt);
-                //parSubDT.SqlDbType = SqlDbType.Structured;
-                //parSubDT.TypeName = "dbo.IDType";
-
-                return await db.Database.SqlQuery<string>("udspLCHotelSave @HotelID, @HotelName, @HotelAddress, @HotelDesc, @HotelContactNo, @HotelEmail, @CountryID,@StateID,@CityID,@LocalityID,@HomeTypeID,@StarRatingID,@HotelBaseFare,@HotelOfferPrice,@OfferPercentage,@RatePerNight,@RatePerRoom,@RatePerGuest,@RatePerChild,@MetaText,@TotalSingleRooms,@TotalDoubleRooms",
-                    parHotelID, parHotelName, parHotelAddress, parHotelDesc, parHotelContactNo, parHotelEmail, parCountryID, parStateID, parCityID, parLocalityID, parHomeTypeID, parStarRatingID, parHotelBaseFare, parHotelOfferPrice, parOfferPercentage, parRatePerNight, parRatePerRoom, parRatePerGuest, parRatePerChild, parMetaText, parTotalSingleRooms, parTotalDoubleRooms).FirstOrDefaultAsync();
+                return await db.Database.SqlQuery<string>("udspLCHotelSave @HotelID, @HotelName, @HotelAddress, @HotelDesc, @HotelContactNo, @HotelEmail, @CountryID,@StateID,@CityID,@LocalityID,@HomeTypeID,@StarRatingID,@MaxOccupant,@OverallOfferPercentage,@TwoOccupantPercentage,@ThreeOccupantPercentage,@FourPlusOccupantPercentage,@ChildOccupantNote,@IsActive",
+                    parHotelID, parHotelName, parHotelAddress, parHotelDesc, parHotelContactNo, parHotelEmail, parCountryID, parStateID, parCityID, parLocalityID, parHomeTypeID, parStarRatingID, parMaxOccupant, parOverallOfferPercentage, parTwoOccupantPercentage, parThreeOccupantPercentage, parFourPlusOccupantPercentage, parChildOccupantNote,parIsActive).FirstOrDefaultAsync();
             }
             catch (Exception ex)
             {
@@ -94,12 +80,14 @@ namespace LocalConn.Entities.Dal
             try
             {
 
-                var parHotelID = new SqlParameter("@HotelID", model.HotelID);
-                var parHotelBaseFare = new SqlParameter("@HotelBaseFare", model.HotelBaseFare);
-                var parHotelOfferPrice = new SqlParameter("@HotelOfferPrice", model.HotelOfferPrice);
+                //var parHotelID = new SqlParameter("@HotelID", model.HotelID);
+                //var parHotelBaseFare = new SqlParameter("@HotelBaseFare", model.HotelBaseFare);
+                //var parHotelOfferPrice = new SqlParameter("@HotelOfferPrice", model.HotelOfferPrice);
 
-                return await db.Database.SqlQuery<string>("udspLCHotelRateUpdate @HotelID,@HotelBaseFare,@HotelOfferPrice",
-                    parHotelID, parHotelBaseFare, parHotelOfferPrice).FirstOrDefaultAsync();
+                //return await db.Database.SqlQuery<string>("udspLCHotelRateUpdate @HotelID,@HotelBaseFare,@HotelOfferPrice",
+                //    parHotelID, parHotelBaseFare, parHotelOfferPrice).FirstOrDefaultAsync();
+
+                return "sdf";
             }
             catch (Exception ex)
             {
