@@ -125,14 +125,36 @@ namespace LocalConn.API.Areas.General.Controllers
         {
             return await objDal.getBookingDtl(Dt);
         }
-        //[Route("paynow")]
-        //[HttpPost]
-        //public async Task<string> PayNow(PreBookingDtl obj)
-        //{
 
-        //    return  objDal.preBooking(obj);
-        //}
 
+        [Route("paynow")]
+        [HttpPost]
+        public string PayNow(PreBookingDtl obj)
+        {
+
+            return objDal.preBooking(obj);
+        }
+        #region Offer
+        [HttpGet]
+        [Route("getofferlist")]
+        public List<OfferList> getOfferList(string Dt)
+        {
+            List<OfferList> obj = new List<OfferList>();
+            obj = objDal.getOfferlist(Dt);
+            return obj;
+        }
+        [HttpGet]
+        [Route("getofferhotellist")]
+        public  async Task<OfferHotelsList> getOfferHotelList(string OfferID)
+        {
+            OfferHotelsList obj = new OfferHotelsList();
+            obj.hotelList = await objDal.getOfferHotellist(Convert.ToInt64(OfferID));
+            obj.homeTypeList = await objDal.getHomtTypeOnOffer(Convert.ToInt64(OfferID));
+            return obj;
+        }
+
+
+        #endregion
 
 
 

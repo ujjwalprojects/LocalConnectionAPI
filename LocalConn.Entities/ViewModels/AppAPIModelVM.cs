@@ -127,4 +127,24 @@ namespace LocalConn.Entities.ViewModels
         public string AmenitiesIconPath { get; set; }
         public decimal AmenitiesBasePrice { get; set; }
     }
+
+    public class OfferList
+    {
+        public long OfferID { get; set; }
+        public string OfferTagLine { get; set; }
+        public string OfferImagePath { get; set; }
+     
+    }
+
+    public class OfferHotelsList
+    {
+       public List<HomeTypeOnOffer> homeTypeList { get; set; }
+       public List<HotelList> hotelList { get; set; }
+    }
+    public class HomeTypeOnOffer
+    {
+        public long OfferID { get; set; }
+        public long HomeTypeID { get; set; }
+        public string HomeTypeName { get; set; }
+    }
 }

@@ -294,5 +294,42 @@ namespace LocalConn.Entities.Dal
         //{
 
         //}
+
+
+        public List<OfferList> getOfferlist(string Date)
+        {
+            try
+            {
+                var parID = new SqlParameter("@Date", Date);
+                return  objDB.Database.SqlQuery<OfferList>("udspLCAppGetOfferList @Date", parID).ToList();
+            }
+            catch (Exception e)
+            {
+
+                throw e;
+            }
+        }
+
+        public async Task<List<HotelList>> getOfferHotellist(long OfferID)
+        {
+            try
+            {
+                var parID = new SqlParameter("@OfferID", OfferID);
+                return await objDB.Database.SqlQuery<HotelList>("udspLCAppGetOfferHotelList @OfferID", parID).ToListAsync();
+            }
+            catch (Exception e)
+            {
+
+                throw e;
+            }
+        }
+        public async Task<List<HomeTypeOnOffer>> getHomtTypeOnOffer(long OfferID)
+        {
+            var parOfferID = new SqlParameter("@OfferID", OfferID);
+            return await objDB.Database.SqlQuery<HomeTypeOnOffer>("udspLCAppGetOfferHomeTypeList @OfferID", parOfferID).ToListAsync();
+        }
+
+
+
     }
 }
