@@ -22,19 +22,19 @@ namespace LocalConn.API.Areas.General.Controllers
             return await objDal.getCityMenuList(StateID);
         }
 
-        [HttpGet]
-        [Route("getftHotellist")]
-        public async Task<List<HotelList>> getFtHotelList(string HomeTypeID)
-        {
-            return await objDal.getFtHotelList(HomeTypeID);
-        }
+        //[HttpGet]
+        //[Route("getftHotellist")]
+        //public async Task<List<HotelList>> getFtHotelList(string HomeTypeID)
+        //{
+        //    return await objDal.getFtHotelList(HomeTypeID);
+        //}
 
         [HttpGet]
         [Route("gethotellist")]
         public async Task<List<HotelList>> getHotelList(string HomeTypeID)
         {
             List<HotelList> obj = new List<HotelList>();
-            obj=  await objDal.getHotelMenuList(HomeTypeID);
+            obj = await objDal.getHotelMenuList(HomeTypeID);
             return obj;
         }
 
@@ -75,6 +75,12 @@ namespace LocalConn.API.Areas.General.Controllers
         {
             return await objDal.getAmnetieslist(HotelID);
         }
+        [HttpGet]
+        [Route("gethotelpremises")]
+        public async Task<List<HotelPremisesList>> getHotelPremises(string HotelID)
+        {
+            return await objDal.getPremMenu(HotelID);
+        }
 
         [HttpGet]
         [Route("gethotelroomlist")]
@@ -82,11 +88,15 @@ namespace LocalConn.API.Areas.General.Controllers
         {
             return await objDal.getHotelRoomList(HotelID);
         }
+        //tabbed
         [HttpGet]
         [Route("gethroomimglist")]
-        public async Task<List<HotelRoomImg>> getHRoomImgList(string HotelID)
+        public async Task<HotelRoomTab> getHRoomImgList(string HotelID)
         {
-            return await objDal.getHRoomImgList(HotelID);
+            HotelRoomTab obj = new HotelRoomTab();
+            obj.roomImgList = await objDal.getHRoomImgList(HotelID);
+            obj.premisesList = await objDal.getHPremList(HotelID);
+            return obj;
         }
         [HttpGet]
         [Route("gethotelvmlist")]
@@ -115,13 +125,16 @@ namespace LocalConn.API.Areas.General.Controllers
         {
             return await objDal.getBookingDtl(Dt);
         }
-        [Route("paynow")]
-        [HttpPost]
-        public async Task<string> PayNow(PreBookingDtl obj)
-        {
-       
-            return await objDal.preBooking(obj);
-        }
+        //[Route("paynow")]
+        //[HttpPost]
+        //public async Task<string> PayNow(PreBookingDtl obj)
+        //{
+
+        //    return  objDal.preBooking(obj);
+        //}
+
+
+
 
     }
 }
