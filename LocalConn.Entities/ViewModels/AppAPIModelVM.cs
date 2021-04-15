@@ -41,6 +41,7 @@ namespace LocalConn.Entities.ViewModels
         public string HotelAddress { get; set; }
         public string HotelDesc { get; set; }
         public string LocalityName { get; set; }
+        public decimal RoomTypePrice { get; set; }
         //public string StarRating { get; set; }
         //public decimal HotelBaseFare { get; set; }
         //public int TotalSingleRooms { get; set; }
