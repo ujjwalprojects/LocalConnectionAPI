@@ -10,7 +10,7 @@ namespace LocalConn.Entities.ViewModels
     {
         public long HotelID { get; set; }
         public string HotelName { get; set; }
-        public decimal HotelBaseFare { get; set; }
+        public decimal RoomTypePrice { get; set; }
         public string HotelDesc { get; set; }
         public string HotelAddress { get; set; }
         public long HomeTypeID { get; set; }
@@ -31,7 +31,6 @@ namespace LocalConn.Entities.ViewModels
         public long HotelID { get; set; }
         public string HotelName { get; set; }
         public string PhotoThumbPath { get; set; }
-        public decimal BaseFare { get; set; }
     }
 
     public class HotelDtl
@@ -42,15 +41,15 @@ namespace LocalConn.Entities.ViewModels
         public string HotelAddress { get; set; }
         public string HotelDesc { get; set; }
         public string LocalityName { get; set; }
-        public string StarRating { get; set; }
-        public decimal HotelBaseFare { get; set; }
-        public int TotalSingleRooms { get; set; }
-        public int TotalDoubleRooms { get; set; }
-        public decimal RoomTypePrice { get; set; }
-        public decimal RatePerRoom { get; set; }
-        public decimal RatePerNight { get; set; }
-        public decimal RatePerGuest { get; set; }
-        public decimal RatePerChild { get; set; }
+        //public string StarRating { get; set; }
+        //public decimal HotelBaseFare { get; set; }
+        //public int TotalSingleRooms { get; set; }
+        //public int TotalDoubleRooms { get; set; }
+        //public decimal RoomTypePrice { get; set; }
+        //public decimal RatePerRoom { get; set; }
+        //public decimal RatePerNight { get; set; }
+        //public decimal RatePerGuest { get; set; }
+        //public decimal RatePerChild { get; set; }
     }
     public class HotelRoomList
     {
@@ -66,10 +65,24 @@ namespace LocalConn.Entities.ViewModels
         public decimal RatePerGuest { get; set; }
         public decimal RatePerChild { get; set; }
     }
+    public class HotelPremisesList
+    {
+        public long HotelPremID { get; set; }
+        public long HotelID { get; set; }
+        public String HotelPremName { get; set; }
+    }
+
+    public class HotelRoomTab
+    {
+        public List<HotelPremisesList> premisesList { get; set; }
+        public List<HotelRoomImg> roomImgList { get; set; }
+    }
     public class HotelRoomImg
     {
         public long HotelImgID { get; set; }
         public long HotelID { get; set; }
+        public long HotelPremID { get; set; }
+        public string HotelPremName { get; set; }
         public string PhotoNormalPath { get; set; }
     }
 
@@ -87,6 +100,7 @@ namespace LocalConn.Entities.ViewModels
         public string CustDetails { get; set; }
         public string BookingStatus { get; set; }
         public string FinalFare { get; set; }
+        public string PaymentGatewayCode { get; set; }
     }
     public class OrderList
     {

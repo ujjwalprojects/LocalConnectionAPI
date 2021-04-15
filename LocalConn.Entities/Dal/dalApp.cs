@@ -26,7 +26,7 @@ namespace LocalConn.Entities.Dal
 
                 throw e;
             }
-            
+
 
         }
         public async Task<List<HotelList>> getFtHotelList(string HomeTypeID)
@@ -52,6 +52,20 @@ namespace LocalConn.Entities.Dal
             {
                 var parID = new SqlParameter("@HomeTypeID", HomeTypeID);
                 return await objDB.Database.SqlQuery<HotelList>("udspLCAppGetHotelList @HomeTypeID", parID).ToListAsync();
+
+            }
+            catch (Exception e)
+            {
+
+                throw e;
+            }
+        }
+        public async Task<List<HotelList>> getCityHotelList(string cityID)
+        {
+            try
+            {
+                var parID = new SqlParameter("@CityID", cityID);
+                return await objDB.Database.SqlQuery<HotelList>("udspLCAppGetCityHotelList @CityID", parID).ToListAsync();
 
             }
             catch (Exception e)
@@ -171,6 +185,33 @@ namespace LocalConn.Entities.Dal
                 throw e;
             }
         }
+        public async Task<List<HotelPremisesList>> getHPremList(string HotelID)
+        {
+            try
+            {
+                var parID = new SqlParameter("@HotelID", HotelID);
+                return await objDB.Database.SqlQuery<HotelPremisesList>("udspLCAppGetHotelPremName @HotelID", parID).ToListAsync();
+            }
+            catch (Exception e)
+            {
+
+                throw e;
+            }
+        }
+        public async Task<List<HotelPremisesList>> getPremMenu(string HotelID)
+        {
+            try
+            {
+                var parID = new SqlParameter("@HotelID", HotelID);
+                return await objDB.Database.SqlQuery<HotelPremisesList>("udspLCAppGetHotelPremName @HotelID", parID).ToListAsync();
+            }
+            catch (Exception e)
+            {
+
+                throw e;
+            }
+        }
+
         public async Task<List<HotelList>> gethotelvmlist(string HomeTypeID)
         {
             try
@@ -223,22 +264,23 @@ namespace LocalConn.Entities.Dal
                 throw e;
             }
         }
-        public async Task<string>preBooking(PreBookingDtl obj)
+        public string preBooking(PreBookingDtl obj)
         {
             try
             {
                 string Results = "";
                 var parCName = new SqlParameter("@CustName", obj.CustName);
                 var parCMail = new SqlParameter("@CustEmail", obj.CustEmail);
-                var parCustPhNo= new SqlParameter("@CustPhNo", obj.CustPhNo);
+                var parCustPhNo = new SqlParameter("@CustPhNo", obj.CustPhNo);
                 var parBHID = new SqlParameter("@HotelID", obj.HotelID);
-                var parBFrom = new SqlParameter("@BookingFrom",obj.BookingFrom);
-                var parBUpto = new SqlParameter("@BookingUpto",obj.BookingUpto);
+                var parBFrom = new SqlParameter("@BookingFrom", obj.BookingFrom);
+                var parBUpto = new SqlParameter("@BookingUpto", obj.BookingUpto);
                 var parCDtl = new SqlParameter("@CustDetails", obj.CustDetails);
                 var parBStatue = new SqlParameter("@BookingStatus", obj.BookingStatus);
-                var parFare= new SqlParameter("@FinalFare", obj.FinalFare);
-                Results = await objDB.Database.SqlQuery<string>("udspLCAppBookingRooms @CustName, @CustEmail,@CustPhNo,@HotelID,@BookingFrom,@BookingUpto,@CustDetails,@BookingStatus,@FinalFare",
-                    parCName, parCMail, parCustPhNo, parBHID, parBFrom, parBUpto, parCDtl, parBStatue, parFare).FirstOrDefaultAsync();
+                var parFare = new SqlParameter("@FinalFare", obj.FinalFare);
+                var parPGCode = new SqlParameter("@PaymentGatewayCode", obj.PaymentGatewayCode);
+                Results = objDB.Database.SqlQuery<string>("udspLCAppBookingRooms @CustName, @CustEmail,@CustPhNo,@HotelID,@BookingFrom,@BookingUpto,@CustDetails,@BookingStatus,@FinalFare,@PaymentGatewayCode",
+                    parCName, parCMail, parCustPhNo, parBHID, parBFrom, parBUpto, parCDtl, parBStatue, parFare, parPGCode).FirstOrDefault();
 
                 return Results;
             }
