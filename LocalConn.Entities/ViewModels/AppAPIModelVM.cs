@@ -42,15 +42,13 @@ namespace LocalConn.Entities.ViewModels
         public string HotelDesc { get; set; }
         public string LocalityName { get; set; }
         public decimal RoomTypePrice { get; set; }
-        //public string StarRating { get; set; }
-        //public decimal HotelBaseFare { get; set; }
-        //public int TotalSingleRooms { get; set; }
-        //public int TotalDoubleRooms { get; set; }
-        //public decimal RoomTypePrice { get; set; }
-        //public decimal RatePerRoom { get; set; }
-        //public decimal RatePerNight { get; set; }
-        //public decimal RatePerGuest { get; set; }
-        //public decimal RatePerChild { get; set; }
+        public Int16 MaxOccupant { get; set; }
+        public Int16 OverallOfferPercentage { get; set; }
+        public Int16 TwoOccupantPercentage { get; set; }
+        public Int16 ThreeOccupantPercentage { get; set; }
+        public Int16 FourPlusOccupantPercentage { get; set; }
+        public string ChildOccupantNote { get; set; }
+        public bool IsActive { get; set; }
     }
     public class HotelRoomList
     {
@@ -61,10 +59,12 @@ namespace LocalConn.Entities.ViewModels
         public int RoomCapacity { get; set; }
         public bool IsStandard { get; set; }
         public decimal RoomTypePrice { get; set; }
-        public decimal RatePerRoom { get; set; }
-        public decimal RatePerNight { get; set; }
-        public decimal RatePerGuest { get; set; }
-        public decimal RatePerChild { get; set; }
+        public string PhotoThumbPath { get; set; }
+        public Int16 MaxOccupant { get; set; }
+        public Int16 OverallOfferPercentage { get; set; }
+        public Int16 TwoOccupantPercentage { get; set; }
+        public Int16 ThreeOccupantPercentage { get; set; }
+        public Int16 FourPlusOccupantPercentage { get; set; }
     }
     public class HotelPremisesList
     {
@@ -129,6 +129,7 @@ namespace LocalConn.Entities.ViewModels
         public decimal AmenitiesBasePrice { get; set; }
     }
 
+  
     public class OfferList
     {
         public long OfferID { get; set; }

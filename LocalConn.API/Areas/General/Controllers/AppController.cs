@@ -67,7 +67,9 @@ namespace LocalConn.API.Areas.General.Controllers
         [Route("gethoteldtl")]
         public async Task<HotelDtl> getHotelDtl(string HotelID)
         {
-            return await objDal.getHotelDtl(HotelID);
+            HotelDtl obj = new HotelDtl();
+            obj = await objDal.getHotelDtl(HotelID);
+            return obj;
         }
         [HttpGet]
         [Route("gethamenitieslist")]
