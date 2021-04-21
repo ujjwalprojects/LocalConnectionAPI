@@ -118,4 +118,10 @@ namespace LocalConn.API.Models
         [Required]
         public string NewPassword { get; set; }
     }
+
+    public class ForgotPasswordModel
+    {
+        public string MobileNo { get; set; }
+        public string Password { get; set; }
+    }
 }

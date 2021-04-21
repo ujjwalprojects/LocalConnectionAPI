@@ -97,6 +97,7 @@
     <Compile Include="Models\utblTourPackage.cs" />
     <Compile Include="Models\utblTourPackageImage.cs" />
     <Compile Include="Models\utblTourPackageItinerary.cs" />
+    <Compile Include="Models\utblTrnUserOTP.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Utility\ConvertListToDT.cs" />
     <Compile Include="ViewModels\ActivitiesCustomModels.cs" />

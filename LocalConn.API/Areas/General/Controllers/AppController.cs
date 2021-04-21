@@ -1,4 +1,7 @@
-﻿using LocalConn.Entities.Dal;
+﻿using LocalConn.API.Helper;
+using LocalConn.API.Models;
+using LocalConn.Entities.Dal;
+using LocalConn.Entities.Models;
 using LocalConn.Entities.ViewModels;
 using System;
 using System.Collections.Generic;
@@ -18,6 +21,8 @@ namespace LocalConn.API.Areas.General.Controllers
     public class AppController : ApiController
     {
         dalApp objDal = new dalApp();
+
+   
 
         [HttpGet]
         [Route("getcitylist")]
@@ -261,6 +266,9 @@ namespace LocalConn.API.Areas.General.Controllers
         //    }
         //}
         #endregion
+
+        
+
 
     }
 }
