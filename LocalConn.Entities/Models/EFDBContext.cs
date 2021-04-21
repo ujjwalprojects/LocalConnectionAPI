@@ -54,5 +54,8 @@ namespace LocalConn.Entities.Models
 
         public DbSet<utblLCFeatureOffer> utblLCFeatureOffers { get; set; }
         public DbSet<utblLCMstHotelPremise> utblLCMstHotelPremises { get; set; }
+        public DbSet<utblLCHelpPage> utblLCHelpPages { get; set; }
+        public DbSet<utblLCNearByPoint> utblLCNearByPoints { get; set; }
+        public DbSet<utblLCNotification> utblLCNotifications { get; set; }
     }
 }

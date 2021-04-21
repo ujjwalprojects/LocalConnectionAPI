@@ -50,6 +50,7 @@ namespace LocalConn.Entities.ViewModels
         public long HomeTypeID { get; set; }
         public long StarRatingID { get; set; }
         public Int16 MaxOccupant { get; set; }
+        public Int16 MaxRooms { get; set; }
         public Int16 OverallOfferPercentage { get; set; }
         public Int16 TwoOccupantPercentage { get; set; }
         public Int16 ThreeOccupantPercentage { get; set; }
@@ -190,5 +191,33 @@ namespace LocalConn.Entities.ViewModels
     {
         public long HotelID { get; set; }
         public string HotelName { get; set; }
+    }
+
+    //LCNearByPoints
+    public class LCNearBysTypeDD
+    {
+        public long NearByID { get; set; }
+        public string NearByName { get; set; }
+    }
+    //public class LCNearByPoints
+    //{
+    //    public long NearbyPointsID { get; set; }
+    //    public long NearByID { get; set; }
+    //    public string NearByPoints { get; set; }
+    //    public string NearByDistance { get; set; }
+    //}
+    public class LCNearByPointsView
+    {
+        public long NearbyPointsID { get; set; }
+        public long NearByID { get; set; }
+        public string NearByName { get; set; }
+        public string NearByPoints { get; set; }
+        public string NearByDistance { get; set; }
+    }
+    public class LCNearByPointsVM
+    {
+        public IEnumerable<LCNearByPointsView> LCNearByPointView { get; set; }
+        public IEnumerable<LCNearBysTypeDD> NearBysDD { get; set; }
+        public int TotalRecords { get; set; }
     }
 }

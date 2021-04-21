@@ -66,6 +66,7 @@
     <Compile Include="Models\utblClientEnquiryItinerarie.cs" />
     <Compile Include="Models\utblLCFeaturedHotel.cs" />
     <Compile Include="Models\utblLCFeatureOffer.cs" />
+    <Compile Include="Models\utblLCHelpPage.cs" />
     <Compile Include="Models\utblLCHotel.cs" />
     <Compile Include="Models\utblLCHotelImage.cs" />
     <Compile Include="Models\utblLCMstAmenitie.cs" />
@@ -74,6 +75,8 @@
     <Compile Include="Models\utblLCMstHotelPremise.cs" />
     <Compile Include="Models\utblLCMstLocalitie.cs" />
     <Compile Include="Models\utblLCMstStarRating.cs" />
+    <Compile Include="Models\utblLCNearByPoint.cs" />
+    <Compile Include="Models\utblLCNotification.cs" />
     <Compile Include="Models\utblLCRoom.cs" />
     <Compile Include="Models\utblMstActivitie.cs" />
     <Compile Include="Models\utblMstBanner.cs" />
