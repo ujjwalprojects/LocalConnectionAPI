@@ -24,6 +24,7 @@ using System.Text;
 using System.Configuration;
 using System.Data.SqlClient;
 using LocalConn.Entities.Models;
+using LocalConn.API.Helper;
 
 namespace LocalConn.API.Controllers
 {
@@ -155,7 +156,7 @@ namespace LocalConn.API.Controllers
                 //    return "Account has not been activated, reset link cannot be sent";
                 if (!user.IsActive)
                     return "Account has been disabled by admin";
-                
+
                 string code = await UserManager.GeneratePasswordResetTokenAsync(user.Id);
                 var callbackUrl = domainUrl + "/Account/ResetPassword?userId=" + user.Id + "&code=" + System.Web.HttpUtility.UrlEncode(code);
                 string msg = "Please reset your password by clicking <a href=\"" + callbackUrl + "\">here</a>";
@@ -166,7 +167,7 @@ namespace LocalConn.API.Controllers
             {
                 return "Error: " + ex.Message;
             }
-        }
+        } 
         [AllowAnonymous]
         [HttpPost]
         [Route("ResetPassword")]
@@ -414,7 +415,7 @@ namespace LocalConn.API.Controllers
                 if (result.Succeeded)
                 {
                     await UserManager.AddToRoleAsync(user.Id, model.RoleName);
-                    
+
                     //send email..
                     //var code = await UserManager.GenerateUserTokenAsync("New", user.Id);
                     //var callbackUrl = domainUrl + "/Account/New?userId=" + user.Id + "&code=" + System.Web.HttpUtility.UrlEncode(code) + "&role=" + StringEncodeDecoder.Encrypt(model.RoleName, "userrole");
@@ -589,6 +590,7 @@ namespace LocalConn.API.Controllers
         [HttpGet]
         public async Task<UserDetailModel> getProfileDtl(string UserID)
         {
+            var user = User.Identity.GetUserId();
             UserDetailModel obj = new UserDetailModel();
             var parID = new SqlParameter("@UserID", UserID);
             obj = await db.Database.SqlQuery<UserDetailModel>("udspLCAppGetUserProfile @UserID", parID).FirstOrDefaultAsync();
@@ -607,7 +609,7 @@ namespace LocalConn.API.Controllers
                 var parPName = new SqlParameter("@ProfileName", obj.ProfileName);
                 var parEmail = new SqlParameter("@Email", obj.Email);
                 Results = await db.Database.SqlQuery<string>("udspLCAppUpdateProfile @UserID, @ProfileName,@Email",
-                    parID,parPName,parEmail).FirstOrDefaultAsync();
+                    parID, parPName, parEmail).FirstOrDefaultAsync();
 
                 return Results;
             }
@@ -626,8 +628,8 @@ namespace LocalConn.API.Controllers
             {
                 string Results = "";
                 var par = new SqlParameter("@UserName", DBNull.Value);
-                if (UserName!=null)
-                 par = new SqlParameter("@UserName", UserName);
+                if (UserName != null)
+                    par = new SqlParameter("@UserName", UserName);
                 var parDevice = new SqlParameter("@DeviceCode", DeviceID);
 
                 Results = await db.Database.SqlQuery<string>("utblLCMstUserDeviceCode @UserName, @DeviceCode", par, parDevice).FirstOrDefaultAsync();
@@ -661,7 +663,87 @@ namespace LocalConn.API.Controllers
 
         }
 
+        #region otp
+        [AllowAnonymous]
+        [Route("RequestOTP")]
+        public async Task<IHttpActionResult> RequestOTP(string MobileNo)
+        {
+            ApplicationUser user = await UserManager.FindByNameAsync(MobileNo);
+            if (user != null)
+            {
+                try
+                {
+                    string otp = OTPGenerator.GenerateRandomOTP(6);
+                    utblTrnUserOTP model = new utblTrnUserOTP()
+                    {
+                        UserMobileNo = MobileNo,
+                        OTPNo = otp,
+                        GeneratedDateTime = DateTime.Now,
+                        IsVerified = false
+                    };
+                    db.utblTrnUserOTPs.Add(model);
+                    await db.SaveChangesAsync();
+                    SendOTPMessage.SendHttpSMSRequest(otp, MobileNo);
+                    return Ok();
+                }
+                catch (Exception)
+                {
+                    return InternalServerError();
+                }
+            }
+            return BadRequest();
+        }
+        [AllowAnonymous]
+        [Route("VerifyOTP")]
+        public async Task<IHttpActionResult> VerifyOTP(string MobileNo, string OTP)
+        {
+            utblTrnUserOTP curOTP = db.utblTrnUserOTPs.Where(x => x.UserMobileNo == MobileNo && x.OTPNo == OTP).FirstOrDefault();
+            if (curOTP == null)
+            {
+                return NotFound();
+            }
+            else
+            {
+                TimeSpan timespan = DateTime.Now - curOTP.GeneratedDateTime;
+                int minDiff = timespan.Minutes;
+                if (minDiff > 60)
+                {
+                    return BadRequest("OTP_Expired");
+                }
+                curOTP.IsVerified = true;
+                await db.SaveChangesAsync();
+                ApplicationUser user = await UserManager.FindByNameAsync(MobileNo);
+                user.PhoneNumberConfirmed = true;
+                //user.isregistered = true;
+                await UserManager.UpdateAsync(user);
 
+                return Ok();
+            }
+        }
+
+        [Route("setpasswordapp")]
+        [HttpPost]
+        public async Task<IHttpActionResult> SetPasswordApp(ForgotPasswordModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            ApplicationUser user = UserManager.FindByName(model.MobileNo);
+            IdentityResult result;
+            result = await UserManager.RemovePasswordAsync(user.Id);
+            result = await UserManager.AddPasswordAsync(user.Id, model.Password);
+            IHttpActionResult errorResult = GetErrorResult(result);
+
+            if (errorResult != null)
+            {
+                return errorResult;
+            }
+
+            return Ok();
+        }
+
+        #endregion
         #endregion
 
 
