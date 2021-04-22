@@ -51,6 +51,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Dal\dalAgentConfig.cs" />
+    <Compile Include="Dal\dalApp.cs" />
     <Compile Include="Dal\dalCabConfig.cs" />
     <Compile Include="Dal\dalClientEnquiry.cs" />
     <Compile Include="Dal\dalConfigurations.cs" />
@@ -64,11 +65,13 @@
     <Compile Include="Models\utblClientEnquiryActivitie.cs" />
     <Compile Include="Models\utblClientEnquiryItinerarie.cs" />
     <Compile Include="Models\utblLCFeaturedHotel.cs" />
+    <Compile Include="Models\utblLCFeatureOffer.cs" />
     <Compile Include="Models\utblLCHotel.cs" />
     <Compile Include="Models\utblLCHotelImage.cs" />
     <Compile Include="Models\utblLCMstAmenitie.cs" />
     <Compile Include="Models\utblLCMstCitie.cs" />
     <Compile Include="Models\utblLCMstHomeType.cs" />
+    <Compile Include="Models\utblLCMstHotelPremise.cs" />
     <Compile Include="Models\utblLCMstLocalitie.cs" />
     <Compile Include="Models\utblLCMstStarRating.cs" />
     <Compile Include="Models\utblLCRoom.cs" />
@@ -94,11 +97,14 @@
     <Compile Include="Models\utblTourPackage.cs" />
     <Compile Include="Models\utblTourPackageImage.cs" />
     <Compile Include="Models\utblTourPackageItinerary.cs" />
+    <Compile Include="Models\utblTrnUserOTP.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Utility\ConvertListToDT.cs" />
     <Compile Include="ViewModels\ActivitiesCustomModels.cs" />
     <Compile Include="ViewModels\AgentCustomModels.cs" />
     <Compile Include="ViewModels\AmenitiesCustomModel.cs" />
+    <Compile Include="ViewModels\AppAPIModelVM.cs" />
+    <Compile Include="ViewModels\AppAPIVM.cs" />
     <Compile Include="ViewModels\BannerCustomModels.cs" />
     <Compile Include="ViewModels\CabCustomModels.cs" />
     <Compile Include="ViewModels\CitiesCustomModels.cs" />

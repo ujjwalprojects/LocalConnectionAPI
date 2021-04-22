@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
@@ -15,6 +17,7 @@ namespace LocalConn.API.Areas.Admin.Controllers
     [RoutePrefix("api/Admin/configuration")]
     public class ConfigurationController : ApiController
     {
+        private string FileUrl = ConfigurationManager.AppSettings["FileURL"];
         //
         // GET: /Admin/Configuration/
         dalConfigurations objDal = new dalConfigurations();
@@ -114,7 +117,29 @@ namespace LocalConn.API.Areas.Admin.Controllers
         {
             if (ModelState.IsValid)
             {
-                return await objDal.SaveCitiesAsync(model);
+                if(!model.CityIconPath.Contains(".jpg"))
+                {
+                    Random rand = new Random();
+                    string name = model.CityName + "_" + DateTime.Now.ToString("yyyyMMdd") + "_" + rand.Next(50) + ".jpg";
+                    string mappath = "~/Uploads/Cities";
+                    string normal_result = SaveImage(model.CityIconPath, name,mappath);
+                    if (normal_result.Contains("Error"))
+                    {
+                        string stringerror = normal_result;
+                        return "Unable to upload image" + stringerror;
+                    }
+                    model.CityIconPath = FileUrl + "Cities/" + normal_result;
+                }
+            
+
+                string result = await objDal.SaveCitiesAsync(model);
+                //if (result.ToLower().Contains("error"))
+                //{
+                //    DeleteFile(name);
+                //}
+                return result;
+
+                //return await objDal.SaveCitiesAsync(model);
             }
             string messages = string.Join("; ", ModelState.Values
                                          .SelectMany(x => x.Errors)
@@ -206,6 +231,28 @@ namespace LocalConn.API.Areas.Admin.Controllers
         {
             if (ModelState.IsValid)
             {
+                if (!model.AmenitiesIconPath.Contains(".jpg"))
+                {
+                    Random rand = new Random();
+                    string name = model.AmenitiesName + "_" + DateTime.Now.ToString("yyyyMMdd") + "_" + rand.Next(50) + ".jpg";
+                    string mappath = "~/Uploads/AmenitiesIcon";
+                    string normal_result = SaveImage(model.AmenitiesIconPath, name, mappath);
+                    if (normal_result.Contains("Error"))
+                    {
+                        string stringerror = normal_result;
+                        return "Unable to upload image" + stringerror;
+                    }
+                    model.AmenitiesIconPath = FileUrl + "AmenitiesIcon/" + normal_result;
+                }
+
+
+                //string result = await objDal.SaveCitiesAsync(model);
+                //if (result.ToLower().Contains("error"))
+                //{
+                //    DeleteFile(name);
+                //}
+                //return result;
+
                 return await objDal.SaveAmenitiesAsync(model);
             }
             string messages = string.Join("; ", ModelState.Values
@@ -315,7 +362,7 @@ namespace LocalConn.API.Areas.Admin.Controllers
         }
         #endregion
 
-        #region Rooms
+        #region LCRooms
         [HttpGet]
         [Route("Rooms")]
         public async Task<RoomsVM> Rooms(int PageNo, int PageSize, string SearchTerm)
@@ -347,11 +394,23 @@ namespace LocalConn.API.Areas.Admin.Controllers
         {
             return await objDal.GetAllRoomsAsync();
         }
+        [HttpGet]
+        [Route("RoomTypeDD")]
+        public List<RoomTypeDD> RoomTypeDD()
+        {
+            return objDal.GetRoomDDAsync();
+        }
         [HttpDelete]
         [Route("DeleteRooms")]
         public async Task<string> DeleteRooms(long id)
         {
             return await objDal.DeleteRoomsAsync(id);
+        }
+        [HttpGet]
+        [Route("HotelRoomTypeList")]
+        public async Task<IEnumerable<long>> HotelRoomTypeList(long id)
+        {
+            return await objDal.GetHotelRoomTypeAsync(id);
         }
         #endregion
 
@@ -696,6 +755,91 @@ namespace LocalConn.API.Areas.Admin.Controllers
         }
 
 
+        #endregion
+
+        #region Helper
+        private string SaveImage(string imageStrNormal, string name, string mappath)
+        {
+            try
+            {
+                var path = Path.Combine(System.Web.HttpContext.Current.Server.MapPath(mappath), name);
+                var folderpath = System.Web.HttpContext.Current.Server.MapPath(mappath);
+
+                //Check if normal directory exist
+                if (!System.IO.Directory.Exists(folderpath))
+                {
+                    System.IO.Directory.CreateDirectory(folderpath); //Create directory if it doesn't exist
+                }
+                string x = imageStrNormal.Replace("data:image/jpeg;base64,", "");
+                byte[] imageBytes = Convert.FromBase64String(x);
+
+                System.IO.File.WriteAllBytes(path, imageBytes);
+
+                //var thumb_path = Path.Combine(System.Web.HttpContext.Current.Server.MapPath("~/Uploads/Cities"), name);
+                //var thumb_folderpath = System.Web.HttpContext.Current.Server.MapPath("~/Uploads/Cities");
+
+                ////Check if thumb directory exist
+                //if (!System.IO.Directory.Exists(thumb_folderpath))
+                //{
+                //    System.IO.Directory.CreateDirectory(thumb_folderpath); //Create directory if it doesn't exist
+                //}
+                //string thumb_x = imageStrThumb.Replace("data:image/jpeg;base64,", "");
+                //byte[] thumb_imageBytes = Convert.FromBase64String(thumb_x);
+
+                //System.IO.File.WriteAllBytes(thumb_path, thumb_imageBytes);
+
+                return name;
+            }
+            catch (Exception ex)
+            {
+                return "Error: " + ex.Message;
+            }
+        }
+        private void DeleteFile(string filepath)
+        {
+            try
+            {
+                string[] fileArr = filepath.Split('/');
+                string filename = fileArr[fileArr.Length - 1];
+                string serverPath = "";
+                serverPath = Path.Combine(System.Web.HttpContext.Current.Server.MapPath("~/Uploads/HotelImages/Normal"), filename);
+                if (System.IO.File.Exists(serverPath))
+                {
+                    System.IO.File.Delete(serverPath);
+                }
+
+                string thumb_serverPath = "";
+                thumb_serverPath = Path.Combine(System.Web.HttpContext.Current.Server.MapPath("~/Uploads/Cities"), filename);
+                if (System.IO.File.Exists(thumb_serverPath))
+                {
+                    System.IO.File.Delete(thumb_serverPath);
+                }
+            }
+            catch (Exception)
+            {
+
+                //throw;
+            }
+        }
+        private void DeleteAlbumFiles(long id)
+        {
+            try
+            {
+                string serverNormalPath = @"" + System.Web.HttpContext.Current.Server.MapPath("~/Uploads/Cities");
+                string albumfilename = @"" + id + "_";
+                string[] NormalfileList = System.IO.Directory.GetFiles(serverNormalPath, albumfilename + "*.jpg");
+                foreach (string file in NormalfileList)
+                {
+                    //System.Diagnostics.Debug.WriteLine(file + "will be deleted");
+                    System.IO.File.Delete(file);
+                }
+            }
+            catch (Exception)
+            {
+
+                //throw;
+            }
+        }
         #endregion
     }
 }

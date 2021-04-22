@@ -185,9 +185,11 @@
     <Compile Include="Areas\Admin\Controllers\ClientController.cs" />
     <Compile Include="Areas\Admin\Controllers\ConfigurationController.cs" />
     <Compile Include="Areas\Admin\Controllers\HotelConfigController.cs" />
+    <Compile Include="Areas\Admin\Controllers\LCHotelOffersController.cs" />
     <Compile Include="Areas\Admin\Controllers\LCHotelsController.cs" />
     <Compile Include="Areas\Admin\Controllers\PackageConfigController.cs" />
     <Compile Include="Areas\Admin\Controllers\TourGuideController.cs" />
+    <Compile Include="Areas\General\Controllers\AppController.cs" />
     <Compile Include="Areas\General\Controllers\ClientEnquiryController.cs" />
     <Compile Include="Areas\General\Controllers\GenTourPackageController.cs" />
     <Compile Include="Areas\General\GeneralAreaRegistration.cs" />
@@ -211,6 +213,7 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Helper\OTPGenerator.cs" />
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountBindingModels.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
@@ -242,6 +245,7 @@
     <Content Include="Areas\HelpPage\Views\Help\Api.cshtml" />
     <Content Include="Areas\Admin\Views\web.config" />
     <Content Include="Areas\General\Views\web.config" />
+    <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
     <None Include="Properties\PublishProfiles\TourAPI Publish.pubxml" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\jquery-1.10.2.js" />
@@ -254,6 +258,12 @@
     <Content Include="Scripts\modernizr-2.6.2.js" />
     <Content Include="Scripts\respond.js" />
     <Content Include="Scripts\respond.min.js" />
+    <Content Include="Uploads\HotelImages\Normal\3_20210122_23.jpg" />
+    <Content Include="Uploads\HotelImages\Normal\3_20210122_24.jpg" />
+    <Content Include="Uploads\HotelImages\Normal\3_20210122_7.jpg" />
+    <Content Include="Uploads\HotelImages\Thumb\3_20210122_23.jpg" />
+    <Content Include="Uploads\HotelImages\Thumb\3_20210122_24.jpg" />
+    <Content Include="Uploads\HotelImages\Thumb\3_20210122_7.jpg" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
     </Content>
@@ -272,6 +282,14 @@
     <Content Include="Views\Shared\Error.cshtml" />
     <Content Include="Views\Shared\_Layout.cshtml" />
     <Content Include="Scripts\jquery-1.10.2.min.map" />
+    <Content Include="Uploads\HotelImages\Normal\3_20210120_3.webp" />
+    <Content Include="Uploads\HotelImages\Normal\3_20210120_31.webp" />
+    <Content Include="Uploads\HotelImages\Thumb\3_20210120_3.webp" />
+    <Content Include="Uploads\HotelImages\Thumb\3_20210120_31.webp" />
+    <Content Include="Uploads\HotelImages\Normal\3_20210122_22.webp" />
+    <Content Include="Uploads\HotelImages\Normal\3_20210122_24.webp" />
+    <Content Include="Uploads\HotelImages\Thumb\3_20210122_22.webp" />
+    <Content Include="Uploads\HotelImages\Thumb\3_20210122_24.webp" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -282,7 +300,9 @@
     <Folder Include="Areas\Admin\Views\Shared\" />
     <Folder Include="Areas\General\Models\" />
     <Folder Include="Areas\General\Views\Shared\" />
-    <Folder Include="Uploads\HotelImages\" />
+    <Folder Include="Uploads\AmenitiesIcon\" />
+    <Folder Include="Uploads\Cities\" />
+    <Folder Include="Uploads\FeatureOffers\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff" />

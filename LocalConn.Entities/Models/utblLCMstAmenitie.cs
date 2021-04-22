@@ -12,6 +12,7 @@ namespace LocalConn.Entities.Models
         [Key]
         public long AmenitiesID { get; set; }
         public string AmenitiesName { get; set; }
+        public string AmenitiesIconPath { get; set; }
         public decimal AmenitiesBasePrice { get; set; }
     }
 }

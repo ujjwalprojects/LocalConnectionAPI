@@ -21,6 +21,7 @@ namespace LocalConn.API.Models
         public string ProfileName { get; set; }
         public bool IsActive { get; set; }
         public string UserImage { get; set; }
+
     }
     public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     {

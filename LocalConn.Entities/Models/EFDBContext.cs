@@ -21,7 +21,9 @@ namespace LocalConn.Entities.Models
         public DbSet<utblLCHotel> utblLCHotels { get; set; }
         public DbSet<utblLCFeaturedHotel> utblLCFeaturedHotels { get; set; }
         public DbSet<utblLCHotelImage> utblLCHotelImages { get; set; }
+        
         public DbSet<utblMstActivitie> utblMstActivities { get; set; }
+        public DbSet<utblTrnUserOTP> utblTrnUserOTPs { get; set; }
 
         //package type
         public DbSet<utblMstPackageType> utblMstPackageTypes { get; set; }
@@ -50,5 +52,8 @@ namespace LocalConn.Entities.Models
         public DbSet<utblClientEnquiryActivitie> utblClientEnquiryActivites { get; set; }
 
         public DbSet<utblTourGuide> utblTourGuides { get; set; }
+
+        public DbSet<utblLCFeatureOffer> utblLCFeatureOffers { get; set; }
+        public DbSet<utblLCMstHotelPremise> utblLCMstHotelPremises { get; set; }
     }
 }

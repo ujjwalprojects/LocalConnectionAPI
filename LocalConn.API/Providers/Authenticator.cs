@@ -25,7 +25,7 @@ namespace LocalConn.API.Providers
             ApplicationUser user = await _userManager.FindAsync(userName, password);
             if (user == null)
             {
-                user = new ApplicationUser() { Email = userName,RoleName = "Customer", ProfileName = "", UserName = userName, PhoneNumber = userName, IsActive = true };
+                user = new ApplicationUser() { Email = null,RoleName = "Customer", ProfileName = null, UserName = userName, PhoneNumber = userName, IsActive = true };
                 IdentityResult result = await _userManager.CreateAsync(user,password);
             }
             return user;

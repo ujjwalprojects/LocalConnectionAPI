@@ -287,10 +287,11 @@ namespace LocalConn.Entities.Dal
             {
                 var parAmenitiesID = new SqlParameter("@AmenitiesID", model.AmenitiesID);
                 var parAmenitiesName = new SqlParameter("@AmenitiesName", model.AmenitiesName);
+                var parAmenitiesIconPath = new SqlParameter("@AmenitiesIconPath", model.AmenitiesIconPath);
                 var parAmenitiesBasePrice = new SqlParameter("@AmenitiesBasePrice", model.AmenitiesBasePrice);
 
-                return await objDB.Database.SqlQuery<string>("udspLCMstAmenitiesSave @AmenitiesID, @AmenitiesName, @AmenitiesBasePrice",
-                    parAmenitiesID, parAmenitiesName, parAmenitiesBasePrice).FirstOrDefaultAsync();
+                return await objDB.Database.SqlQuery<string>("udspLCMstAmenitiesSave @AmenitiesID, @AmenitiesName, @AmenitiesIconPath, @AmenitiesBasePrice",
+                    parAmenitiesID, parAmenitiesName, parAmenitiesIconPath, parAmenitiesBasePrice).FirstOrDefaultAsync();
             }
             catch (Exception ex)
             {
@@ -631,6 +632,17 @@ namespace LocalConn.Entities.Dal
         public async Task<IEnumerable<utblLCRoom>> GetAllRoomsAsync()
         {
             return await objDB.utblLCRooms.OrderBy(x => x.RoomType).ToListAsync();
+        }
+        public List<RoomTypeDD> GetRoomDDAsync()
+        {
+            List<RoomTypeDD> obj = new List<RoomTypeDD>();
+            obj = objDB.Database.SqlQuery<RoomTypeDD>("select RoomID,RoomType from utblLCRooms").ToList();
+            return obj;
+        }
+        public async Task<IEnumerable<long>> GetHotelRoomTypeAsync(long id)
+        {
+            string query = "select RoomID from utblLCHotelRoomTypeMaps where HotelID=" + id;
+            return await objDB.Database.SqlQuery<long>(query).ToListAsync();
         }
         public async Task<string> DeleteRoomsAsync(long id)
         {
