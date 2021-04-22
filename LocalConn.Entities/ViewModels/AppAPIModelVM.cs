@@ -149,4 +149,27 @@ namespace LocalConn.Entities.ViewModels
         public long HomeTypeID { get; set; }
         public string HomeTypeName { get; set; }
     }
+
+    public class TermsPolicyList
+    {
+        public long HotelTermsID { get; set; }
+        public long HotelID { get; set; }
+        public string TermName { get; set; }
+    }
+    public class CancellationPolicyList
+    {
+        public long CancellationID { get; set; }
+        public long HotelID { get; set; }
+        public string CancdellationDesc { get; set; }
+    }
+
+    public  class NotificationList
+    {
+        public long NotificationID { get; set; }
+        public string NotificationTitle { get; set; }
+        public string NotificationDesc { get; set; }
+        public string NotificationImagePath { get; set; }
+    }
+
+
 }

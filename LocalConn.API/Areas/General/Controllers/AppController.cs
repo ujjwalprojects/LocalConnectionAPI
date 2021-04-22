@@ -146,12 +146,42 @@ namespace LocalConn.API.Areas.General.Controllers
         {
             string Result = "";
             Result = objDal.preBooking(obj);
-            if (Result.Contains("B"))
-            {
-              Result= await SendMail(obj);
-            }
+            //if (Result.Contains("B"))
+            //{
+            //  Result= await SendMail(obj);
+            //}
             return Result;
         }
+        #region Terms and Cancellation Policy
+
+        [HttpGet]
+        [Route("gettermpolicylist")]
+        public async Task<List<TermsPolicyList>> GetTermPolicyList(string HotelID)
+        {
+            return await objDal.getTermPolicyList(HotelID);
+        }
+
+        [HttpGet]
+        [Route("getcancelpolicylist")]
+        public async Task<List<CancellationPolicyList>> GetCancelPolicyList(string HotelID)
+        {
+            return await objDal.getCancelPolicyList(HotelID);
+        }
+
+        #endregion
+
+        //notification
+
+        [HttpGet]
+        [Route("getnotificationlist")]
+        public async Task<List<NotificationList>> GetNotificationList()
+        {
+            return await objDal.getNotificationList();
+        }
+
+
+
+
         #region Offer
         [HttpGet]
         [Route("getofferlist")]
@@ -173,6 +203,9 @@ namespace LocalConn.API.Areas.General.Controllers
 
 
         #endregion
+
+
+
         #region Mail and SMS
         [Route("SendEmail")]
         [HttpPost]

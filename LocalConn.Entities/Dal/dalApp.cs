@@ -255,6 +255,11 @@ namespace LocalConn.Entities.Dal
                 throw e;
             }
         }
+
+
+
+
+
         public async Task<List<OrderList>> getOrderlist(string CustPhNo)
         {
             try
@@ -313,6 +318,10 @@ namespace LocalConn.Entities.Dal
         //}
 
 
+
+
+
+
         public List<OfferList> getOfferlist(string Date)
         {
             try
@@ -346,7 +355,43 @@ namespace LocalConn.Entities.Dal
             return await objDB.Database.SqlQuery<HomeTypeOnOffer>("udspLCAppGetOfferHomeTypeList @OfferID", parOfferID).ToListAsync();
         }
 
+        public async Task<List<TermsPolicyList>> getTermPolicyList(string HotelID)
+        {
+            try
+            {
+                var parID = new SqlParameter("@HotelID", HotelID);
+                return await objDB.Database.SqlQuery<TermsPolicyList>("udspLCAppGetTermPolicyList @HotelID", parID).ToListAsync();
+            }
+            catch (Exception e)
+            {
 
+                throw e;
+            }
+        }
+        public async Task<List<CancellationPolicyList>> getCancelPolicyList(string HotelID)
+        {
+            try
+            {
+                var parID = new SqlParameter("@HotelID", HotelID);
+                return await objDB.Database.SqlQuery<CancellationPolicyList>("udspLCAppGetCancelPolicyList @HotelID", parID).ToListAsync();
+            }
+            catch (Exception e)
+            {
 
+                throw e;
+            }
+        }
+        public async Task<List<NotificationList>> getNotificationList()
+        {
+            try
+            {
+                return await objDB.Database.SqlQuery<NotificationList>("udspLCAppGetNotificationList").ToListAsync();
+            }
+            catch (Exception e)
+            {
+
+                throw e;
+            }
+        }
     }
 }
