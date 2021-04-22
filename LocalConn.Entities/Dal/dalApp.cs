@@ -355,12 +355,12 @@ namespace LocalConn.Entities.Dal
             return await objDB.Database.SqlQuery<HomeTypeOnOffer>("udspLCAppGetOfferHomeTypeList @OfferID", parOfferID).ToListAsync();
         }
 
-        public async Task<List<TermsPolicyList>> getTermPolicyList(string HotelID)
+        public List<TermsPolicyList> getTermPolicyList(string HotelID)
         {
             try
             {
                 var parID = new SqlParameter("@HotelID", HotelID);
-                return await objDB.Database.SqlQuery<TermsPolicyList>("udspLCAppGetTermPolicyList @HotelID", parID).ToListAsync();
+                return objDB.Database.SqlQuery<TermsPolicyList>("udspLCAppGetTermPolicyList @HotelID", parID).ToList();
             }
             catch (Exception e)
             {
@@ -368,12 +368,12 @@ namespace LocalConn.Entities.Dal
                 throw e;
             }
         }
-        public async Task<List<CancellationPolicyList>> getCancelPolicyList(string HotelID)
+        public  List<CancellationPolicyList> getCancelPolicyList(string HotelID)
         {
             try
             {
                 var parID = new SqlParameter("@HotelID", HotelID);
-                return await objDB.Database.SqlQuery<CancellationPolicyList>("udspLCAppGetCancelPolicyList @HotelID", parID).ToListAsync();
+                return  objDB.Database.SqlQuery<CancellationPolicyList>("udspLCAppGetCancelPolicyList @HotelID", parID).ToList();
             }
             catch (Exception e)
             {
@@ -393,13 +393,25 @@ namespace LocalConn.Entities.Dal
                 throw e;
             }
         }
-        public async Task<List<NearbyList>> getNearByList(string HotelID,string NearByID)
+        public  List<NearbyList> getNearByList(string HotelID,string NearByID)
         {
             try
             {
-                var parHID = new SqlParameter("@HotelID", NearByID);
+                var parHID = new SqlParameter("@HotelID", HotelID);
                 var parNID = new SqlParameter("@NearByID", NearByID);
-                return await objDB.Database.SqlQuery<NearbyList>("udspLCAppGetNearbyList @HotelID,@NearByID", parHID,parNID).ToListAsync();
+                return  objDB.Database.SqlQuery<NearbyList>("udspLCAppGetNearbyList @HotelID,@NearByID", parHID,parNID).ToList();
+            }
+            catch (Exception e)
+            {
+
+                throw e;
+            }
+        }
+        public HelpPageDtl getHelpPage()
+        {
+            try
+            {
+                return  objDB.Database.SqlQuery<HelpPageDtl>("udspLCAppGetHelpPageDtl").FirstOrDefault();
             }
             catch (Exception e)
             {

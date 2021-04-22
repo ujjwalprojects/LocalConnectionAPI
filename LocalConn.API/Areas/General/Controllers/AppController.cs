@@ -160,18 +160,15 @@ namespace LocalConn.API.Areas.General.Controllers
         #region Terms and Cancellation Policy
 
         [HttpGet]
-        [Route("gettermpolicylist")]
-        public async Task<List<TermsPolicyList>> GetTermPolicyList(string HotelID)
+        [Route("gettermncondpolicylist")]
+        public TermCondPolicyVM getTermnCondPolicyList(string HotelID)
         {
-            return await objDal.getTermPolicyList(HotelID);
+            TermCondPolicyVM obj = new TermCondPolicyVM();
+            obj.termPolicyList = objDal.getTermPolicyList(HotelID);
+            obj.cancelPolicyList = objDal.getCancelPolicyList(HotelID);
+            return obj;
         }
 
-        [HttpGet]
-        [Route("getcancelpolicylist")]
-        public async Task<List<CancellationPolicyList>> GetCancelPolicyList(string HotelID)
-        {
-            return await objDal.getCancelPolicyList(HotelID);
-        }
 
         #endregion
 
@@ -187,15 +184,23 @@ namespace LocalConn.API.Areas.General.Controllers
 
         [HttpGet]
         [Route("getnearbylist")]
-        public async Task<NearbyVM> GetNearByList(string HotelID)
+        public NearbyVM GetNearByList(string HotelID)
         {
             NearbyVM obj = new NearbyVM();
-            obj.nearbyone =await  objDal.getNearByList(HotelID, "1");
-            obj.nearbytwo = await objDal.getNearByList(HotelID, "2");
+            obj.nearbyone =  objDal.getNearByList(HotelID, "1");
+            obj.nearbytwo =  objDal.getNearByList(HotelID, "2");
             return obj;
         }
 
-
+        //helppage
+        [HttpGet]
+        [Route("gethelpdtl")]
+        public HelpPageDtl getHelpDtl()
+        {
+            HelpPageDtl obj = new HelpPageDtl();
+            obj = objDal.getHelpPage();
+            return obj;
+        }
 
 
         #region Offer

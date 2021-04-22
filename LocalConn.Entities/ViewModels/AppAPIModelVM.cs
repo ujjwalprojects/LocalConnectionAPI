@@ -160,8 +160,14 @@ namespace LocalConn.Entities.ViewModels
     {
         public long CancellationID { get; set; }
         public long HotelID { get; set; }
-        public string CancdellationDesc { get; set; }
+        public string CancellationDesc { get; set; }
     }
+    public class TermCondPolicyVM
+    {
+        public List<TermsPolicyList> termPolicyList { get; set; }
+        public List<CancellationPolicyList> cancelPolicyList { get; set; }
+    }
+
 
     public  class NotificationList
     {
@@ -183,5 +189,12 @@ namespace LocalConn.Entities.ViewModels
         public List<NearbyList> nearbyone { get; set; }
         public List<NearbyList> nearbytwo { get; set; }
     }
-   
+   public class HelpPageDtl
+    {
+        public string HelpPageTitle { get; set; }
+        public string HelpPageContent { get; set; }
+        public string HelpPageImgPath { get; set; }
+        public int HelpPageContactNo { get; set; }
+        public string HelpPageEmailID { get; set; }
+    }
 }
