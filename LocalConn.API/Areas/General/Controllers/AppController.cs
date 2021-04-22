@@ -183,6 +183,17 @@ namespace LocalConn.API.Areas.General.Controllers
         {
             return await objDal.getNotificationList();
         }
+        //get nearby
+
+        [HttpGet]
+        [Route("getnearbylist")]
+        public async Task<NearbyVM> GetNearByList(string HotelID)
+        {
+            NearbyVM obj = new NearbyVM();
+            obj.nearbyone =await  objDal.getNearByList(HotelID, "1");
+            obj.nearbytwo = await objDal.getNearByList(HotelID, "2");
+            return obj;
+        }
 
 
 

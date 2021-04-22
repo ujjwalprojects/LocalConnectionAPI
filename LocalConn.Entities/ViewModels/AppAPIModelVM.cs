@@ -171,5 +171,17 @@ namespace LocalConn.Entities.ViewModels
         public string NotificationImagePath { get; set; }
     }
 
-
+    public class NearbyList
+    {
+        public long NearByID { get; set; }
+        public long HotelID { get; set; }
+        public string NearByPoints { get; set; }
+        public string NearByDistance { get; set; }
+    }
+    public class NearbyVM
+    {
+        public List<NearbyList> nearbyone { get; set; }
+        public List<NearbyList> nearbytwo { get; set; }
+    }
+   
 }

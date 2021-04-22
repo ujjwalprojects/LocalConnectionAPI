@@ -393,5 +393,19 @@ namespace LocalConn.Entities.Dal
                 throw e;
             }
         }
+        public async Task<List<NearbyList>> getNearByList(string HotelID,string NearByID)
+        {
+            try
+            {
+                var parHID = new SqlParameter("@HotelID", NearByID);
+                var parNID = new SqlParameter("@NearByID", NearByID);
+                return await objDB.Database.SqlQuery<NearbyList>("udspLCAppGetNearbyList @HotelID,@NearByID", parHID,parNID).ToListAsync();
+            }
+            catch (Exception e)
+            {
+
+                throw e;
+            }
+        }
     }
 }
