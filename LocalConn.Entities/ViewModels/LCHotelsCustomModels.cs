@@ -199,17 +199,19 @@ namespace LocalConn.Entities.ViewModels
         public long NearByID { get; set; }
         public string NearByName { get; set; }
     }
-    //public class LCNearByPoints
-    //{
-    //    public long NearbyPointsID { get; set; }
-    //    public long NearByID { get; set; }
-    //    public string NearByPoints { get; set; }
-    //    public string NearByDistance { get; set; }
-    //}
+    public class LCNearByPoints
+    {
+        public long NearbyPointsID { get; set; }
+        public long NearByID { get; set; }
+        public long HotelID { get; set; }
+        public string NearByPoints { get; set; }
+        public string NearByDistance { get; set; }
+    }
     public class LCNearByPointsView
     {
         public long NearbyPointsID { get; set; }
         public long NearByID { get; set; }
+        public long HotelID { get; set; }
         public string NearByName { get; set; }
         public string NearByPoints { get; set; }
         public string NearByDistance { get; set; }

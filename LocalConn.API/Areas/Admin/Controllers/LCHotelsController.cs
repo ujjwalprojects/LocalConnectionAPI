@@ -250,6 +250,8 @@ namespace LocalConn.API.Areas.Admin.Controllers
         #region NearByPoints
         [HttpGet]
         [Route("GetNearByPoints")]
+
+
         public async Task<LCNearByPointsVM> GetNearByPoints(int PageNo, int PageSize, string SearchTerm)
         {
             return await objLCHotel.GetLCNearByPointsAsync(PageNo, PageSize, SearchTerm);

@@ -560,11 +560,12 @@ namespace LocalConn.Entities.Dal
             {
                 var parNearbyPointsID = new SqlParameter("@NearbyPointsID", model.NearbyPointsID);
                 var parNearByID = new SqlParameter("@NearByID", model.NearByID);
+                var parHotelID = new SqlParameter("@HotelID", model.HotelID);
                 var parNearByPoints = new SqlParameter("@NearByPoints", model.NearByPoints);
                 var parNearByDistance = new SqlParameter("@NearByDistance", model.NearByDistance);
 
-                return await db.Database.SqlQuery<string>("udspLCNearByPointsSave @NearbyPointsID, @NearByID, @NearByPoints,@NearByDistance",
-                    parNearbyPointsID, parNearByID, parNearByPoints, parNearByDistance).FirstOrDefaultAsync();
+                return await db.Database.SqlQuery<string>("udspLCNearByPointsSave @NearbyPointsID, @NearByID,@HotelID, @NearByPoints,@NearByDistance",
+                    parNearbyPointsID, parNearByID, parHotelID, parNearByPoints, parNearByDistance).FirstOrDefaultAsync();
             }
             catch (Exception ex)
             {
