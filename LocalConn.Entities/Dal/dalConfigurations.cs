@@ -579,6 +579,7 @@ namespace LocalConn.Entities.Dal
             string query = "select LocalityID, LocalityName from utblLCMstLocalities where CityID=" + id;
             return await objDB.Database.SqlQuery<LocalitiesDD>(query).ToListAsync();
         }
+
         #endregion
 
         #region LCRooms

@@ -247,6 +247,54 @@ namespace LocalConn.API.Areas.Admin.Controllers
         }
         #endregion
 
+        #region NearByPoints
+        [HttpGet]
+        [Route("GetNearByPoints")]
+
+
+        public async Task<LCNearByPointsVM> GetNearByPoints(int PageNo, int PageSize, string SearchTerm)
+        {
+            return await objLCHotel.GetLCNearByPointsAsync(PageNo, PageSize, SearchTerm);
+        }
+        [HttpPost]
+        [Route("SaveNearByPoints")]
+        public async Task<string> SaveNearByPoints(utblLCNearByPoint model)
+        {
+            if (ModelState.IsValid)
+            {
+                return await objLCHotel.SaveLCNearByPointsAsync(model);
+            }
+            string messages = string.Join("; ", ModelState.Values
+                                         .SelectMany(x => x.Errors)
+                                         .Select(x => x.ErrorMessage));
+            return "Operation Error: " + messages;
+        }
+        [HttpGet]
+        [Route("NearByPointsByID")]
+        public async Task<utblLCNearByPoint> NearByPointsByID(long id)
+        {
+            return await objLCHotel.GetLCNearByPointsByIDAsync(id);
+        }
+        [HttpDelete]
+        [Route("DeleteNearByPoints")]
+        public async Task<string> DeleteNearByPoints(long id)
+        {
+            return await objLCHotel.DeleteLCNearByPointsAsync(id);
+        }
+        [HttpGet]
+        [Route("GetLCNearByPointsMapList")]
+        public async Task<IEnumerable<LCNearByPointsView>> GetLCNearByPointsMapList(long id)
+        {
+            return await objLCHotel.GetLCNearByPointsAsync(id);
+        }
+        [HttpGet]
+        [Route("NearByDD")]
+        public async Task<IEnumerable<LCNearBysTypeDD>> NearByDD()
+        {
+            return await objLCHotel.GetLCNearBysTypeDDAsync();
+        }
+        #endregion  
+
         #region Helper
         private string SaveImage(string imageStrNormal, string imageStrThumb, string name)
         {
