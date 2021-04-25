@@ -1326,6 +1326,160 @@ namespace LocalConn.Entities.Dal
         #endregion
 
 
+        #region Notification
+        public async Task<NotificationVM> GetNotificationAsync(int pageno, int pagesize, string sterm)
+        {
+            NotificationVM model = new NotificationVM();
+            var parStart = new SqlParameter("@Start", (pageno - 1) * pagesize);
+            var parEnd = new SqlParameter("@PageSize", pagesize);
+
+            var parSearchTerm = new SqlParameter("@SearchTerm", DBNull.Value);
+            if (!(sterm == null || sterm == ""))
+                parSearchTerm.Value = sterm;
+            // setting stored procedure OUTPUT value
+            // This return total number of rows, and avoid two database call for data and total number of rows 
+            var spOutput = new SqlParameter
+            {
+                ParameterName = "@TotalCount",
+                SqlDbType = System.Data.SqlDbType.BigInt,
+                Direction = System.Data.ParameterDirection.Output
+            };
+
+            model.Notification = await objDB.Database.SqlQuery<NotificationView>("udspLCNotificationPaged @Start, @PageSize,@SearchTerm, @TotalCount out",
+                parStart, parEnd, parSearchTerm, spOutput).ToListAsync();
+            model.TotalRecords = int.Parse(spOutput.Value.ToString());
+            return model;
+        }
+        public async Task<string> SaveNotificationAsync(utblLCNotification model)
+        {
+            try
+            {
+                var parNotificationID = new SqlParameter("@NotificationID", model.NotificationID);
+                var parNotificationTitle = new SqlParameter("@NotificationTitle", model.NotificationTitle);
+                var parNotificationDesc = new SqlParameter("@NotificationDesc", model.NotificationDesc);
+                var parNotificationImagePath = new SqlParameter("@NotificationImagePath", model.NotificationImagePath ?? "");
+
+                return await objDB.Database.SqlQuery<string>("udspLCNotificationSave @NotificationID, @NotificationTitle, @NotificationDesc, @NotificationImagePath",
+                    parNotificationID, parNotificationTitle, parNotificationDesc, parNotificationImagePath).FirstOrDefaultAsync();
+            }
+            catch (Exception ex)
+            {
+                return "Error: " + ex.Message;
+            }
+        }
+        public async Task<utblLCNotification> GetNotificationByIDAsync(long id)
+        {
+            return await objDB.utblLCNotifications.Where(x => x.NotificationID == id).FirstOrDefaultAsync();
+        }
+        public async Task<string> DeleteNotificationAsync(long id)
+        {
+            try
+            {
+                utblLCNotification curObj = await objDB.utblLCNotifications.FindAsync(id);
+                objDB.utblLCNotifications.Remove(curObj);
+                await objDB.SaveChangesAsync();
+                return "Notification" +
+                    " Details Removed";
+            }
+            catch (SqlException ex)
+            {
+                if (ex.Errors.Count > 0) // Assume the interesting stuff is in the first error
+                {
+                    switch (ex.Errors[0].Number)
+                    {
+                        case 547: // Foreign Key violation
+                            return "This record has dependencies on other records, so cannot be removed.";
+                        default:
+                            return "Error: " + ex.Message;
+                    }
+                }
+                return "Error while operation. Error Message: " + ex.Message;
+            }
+            catch (Exception ex)
+            {
+                return "Error: " + ex.Message;
+            }
+        }
+        #endregion
+
+        #region HelpPage
+        public async Task<HelpPageVM> GetHelpPageAsync(int pageno, int pagesize, string sterm)
+        {
+            HelpPageVM model = new HelpPageVM();
+            var parStart = new SqlParameter("@Start", (pageno - 1) * pagesize);
+            var parEnd = new SqlParameter("@PageSize", pagesize);
+
+            var parSearchTerm = new SqlParameter("@SearchTerm", DBNull.Value);
+            if (!(sterm == null || sterm == ""))
+                parSearchTerm.Value = sterm;
+            // setting stored procedure OUTPUT value
+            // This return total number of rows, and avoid two database call for data and total number of rows 
+            var spOutput = new SqlParameter
+            {
+                ParameterName = "@TotalCount",
+                SqlDbType = System.Data.SqlDbType.BigInt,
+                Direction = System.Data.ParameterDirection.Output
+            };
+
+            model.HelpPage = await objDB.Database.SqlQuery<HelpPageView>("udspLCHelpPagePaged @Start, @PageSize,@SearchTerm, @TotalCount out",
+                parStart, parEnd, parSearchTerm, spOutput).ToListAsync();
+            model.TotalRecords = int.Parse(spOutput.Value.ToString());
+            return model;
+        }
+        public async Task<string> SaveHelpPageAsync(utblLCHelpPage model)
+        {
+            try
+            {
+                var parHelpPageID = new SqlParameter("@HelpPageID", model.HelpPageID);
+                var parHelpPageTitle = new SqlParameter("@HelpPageTitle", model.HelpPageTitle);
+                var parHelpPageContent = new SqlParameter("@HelpPageContent", model.HelpPageContent);
+                var parHelpPageImgPath = new SqlParameter("@HelpPageImgPath", model.HelpPageImgPath ?? "");
+                var parHelpPageContactNo = new SqlParameter("@HelpPageContactNo", model.HelpPageContactNo);
+                var parHelpPageEmailID = new SqlParameter("@HelpPageEmailID", model.HelpPageEmailID);
+
+                return await objDB.Database.SqlQuery<string>("udspLCHelpPageSave @HelpPageID, @HelpPageTitle, @HelpPageContent, @HelpPageImgPath,@HelpPageContactNo,@HelpPageEmailID",
+                    parHelpPageID, parHelpPageTitle, parHelpPageContent, parHelpPageImgPath, parHelpPageContactNo, parHelpPageEmailID).FirstOrDefaultAsync();
+            }
+            catch (Exception ex)
+            {
+                return "Error: " + ex.Message;
+            }
+        }
+        public async Task<utblLCHelpPage> GetHelpPageByIDAsync(long id)
+        {
+            return await objDB.utblLCHelpPages.Where(x => x.HelpPageID == id).FirstOrDefaultAsync();
+        }
+        public async Task<string> DeleteHelpPagesAsync(long id)
+        {
+            try
+            {
+                utblLCHelpPage curObj = await objDB.utblLCHelpPages.FindAsync(id);
+                objDB.utblLCHelpPages.Remove(curObj);
+                await objDB.SaveChangesAsync();
+                return "Help Content" +
+                    " Details Removed";
+            }
+            catch (SqlException ex)
+            {
+                if (ex.Errors.Count > 0) // Assume the interesting stuff is in the first error
+                {
+                    switch (ex.Errors[0].Number)
+                    {
+                        case 547: // Foreign Key violation
+                            return "This record has dependencies on other records, so cannot be removed.";
+                        default:
+                            return "Error: " + ex.Message;
+                    }
+                }
+                return "Error while operation. Error Message: " + ex.Message;
+            }
+            catch (Exception ex)
+            {
+                return "Error: " + ex.Message;
+            }
+        }
+        #endregion
+
         #region Tour Cancellation
 
         public async Task<TourCancelVM> GetTourCancelListAsync(int pageno, int pagesize, string sterm)

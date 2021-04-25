@@ -114,6 +114,7 @@
     <Compile Include="ViewModels\ClientEnquiryCustomModels.cs" />
     <Compile Include="ViewModels\DestinationCustomModels.cs" />
     <Compile Include="ViewModels\ExclusionCustomModels.cs" />
+    <Compile Include="ViewModels\HelpPageCustomModels.cs" />
     <Compile Include="ViewModels\HomeTypeCustomModels.cs" />
     <Compile Include="ViewModels\HotelCustomModels.cs" />
     <Compile Include="ViewModels\InclusionCustomModels.cs" />
@@ -121,6 +122,7 @@
     <Compile Include="ViewModels\LCFeatHotelsCustomModels.cs" />
     <Compile Include="ViewModels\LCHotelsCustomModels.cs" />
     <Compile Include="ViewModels\LocalatiesCustomModels.cs" />
+    <Compile Include="ViewModels\NotificationCustomModels.cs" />
     <Compile Include="ViewModels\PackageCustomModels.cs" />
     <Compile Include="ViewModels\RoomsCustomModels.cs" />
     <Compile Include="ViewModels\RoutePrefix.cs" />

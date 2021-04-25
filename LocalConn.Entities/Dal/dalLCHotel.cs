@@ -616,6 +616,9 @@ namespace LocalConn.Entities.Dal
             string query = "select NearByID, NearByName from utblLCMstNearBys";
             return await db.Database.SqlQuery<LCNearBysTypeDD>(query).ToListAsync();
         }
-        #endregion  
+        #endregion
+
+       
+
     }
 }
