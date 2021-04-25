@@ -100,7 +100,7 @@ namespace LocalConn.Entities.ViewModels
         public DateTime BookingDate { get; set; }
         public string CustDetails { get; set; }
         public string BookingStatus { get; set; }
-        public string FinalFare { get; set; }
+        public decimal FinalFare { get; set; }
         public string PaymentGatewayCode { get; set; }
     }
     public class OrderList
@@ -119,6 +119,7 @@ namespace LocalConn.Entities.ViewModels
         public decimal FinalFare { get; set; }
         public string HotelName { get; set; }
         public string HotelAddress { get; set; }
+        public int IsValidCancel { get; set; }
     }
     public class HAmenitiesList
     {

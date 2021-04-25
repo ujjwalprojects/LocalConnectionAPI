@@ -134,20 +134,22 @@ namespace LocalConn.API.Areas.General.Controllers
         [Route("getorderlist")]
         public async Task<List<OrderList>> GetOrderList(string CustPhNo)
         {
-            return await objDal.getOrderlist(CustPhNo);
+            List<OrderList> obj = new List<OrderList>();
+            obj= await objDal.getOrderlist(CustPhNo);
+            return obj;
         }
 
         [HttpGet]
         [Route("getBookingDtl")]
-        public async Task<PreBookingDtl> getBookingDtl(string Dt)
+        public async Task<PreBookingDtl> getBookingDtl(string BookingID)
         {
-            return await objDal.getBookingDtl(Dt);
+            return await objDal.getBookingDtl(BookingID);
         }
 
 
         [Route("paynow")]
         [HttpPost]
-        public async Task<string> PayNow(PreBookingDtl obj)
+        public string PayNow(PreBookingDtl obj)
         {
             string Result = "";
             Result = objDal.preBooking(obj);
