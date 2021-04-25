@@ -146,7 +146,7 @@ namespace LocalConn.API.Areas.General.Controllers
             return await objDal.getBookingDtl(BookingID);
         }
 
-
+        //final booking with payment
         [Route("paynow")]
         [HttpPost]
         public string PayNow(PreBookingDtl obj)
@@ -159,6 +159,22 @@ namespace LocalConn.API.Areas.General.Controllers
             //}
             return Result;
         }
+
+        //cancelbooking
+
+        [Route("cancelbooking")]
+        [HttpPost]
+        public string CancelBooking(string BookingID)
+        {
+            string Result = "";
+            Result = objDal.cancelBooking(BookingID);
+            //if (Result.Contains("B"))
+            //{
+            //  Result= await SendMail(obj);
+            //}
+            return Result;
+        }
+
         #region Terms and Cancellation Policy
 
         [HttpGet]

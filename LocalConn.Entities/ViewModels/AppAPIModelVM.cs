@@ -18,6 +18,8 @@ namespace LocalConn.Entities.ViewModels
         public bool IsHotelCover { get; set; }
         public string PhotoThumbPath { get; set; }
         public string PhotoCaption { get; set; }
+        public Int16 OverallOfferPercentage { get; set; }
+        public decimal OfferPrice { get; set; }
     }
     public class CityList
     {
@@ -43,6 +45,7 @@ namespace LocalConn.Entities.ViewModels
         public string LocalityName { get; set; }
         public decimal RoomTypePrice { get; set; }
         public Int16 MaxOccupant { get; set; }
+        public Int16 MaxRooms { get; set; }
         public Int16 OverallOfferPercentage { get; set; }
         public Int16 TwoOccupantPercentage { get; set; }
         public Int16 ThreeOccupantPercentage { get; set; }
@@ -60,6 +63,7 @@ namespace LocalConn.Entities.ViewModels
         public bool IsStandard { get; set; }
         public decimal RoomTypePrice { get; set; }
         public string PhotoThumbPath { get; set; }
+        public string PhotoCaption { get; set; }
         public Int16 MaxOccupant { get; set; }
         public Int16 OverallOfferPercentage { get; set; }
         public Int16 TwoOccupantPercentage { get; set; }
@@ -195,7 +199,7 @@ namespace LocalConn.Entities.ViewModels
         public string HelpPageTitle { get; set; }
         public string HelpPageContent { get; set; }
         public string HelpPageImgPath { get; set; }
-        public int HelpPageContactNo { get; set; }
+        public string HelpPageContactNo { get; set; }
         public string HelpPageEmailID { get; set; }
     }
 }
