@@ -641,28 +641,7 @@ namespace LocalConn.API.Controllers
                 throw e;
             }
         }
-
-        [HttpGet]
-        [Route("VersionCodeUpdate")]
-        public string GetVersionCode(int ObjVersion)
-        {
-            //1st parameter set 0 if update is to be made 1 if no update is to be make
-            //2nt parameter - Version Code to display to the user
-            //3rd Parameter = Type of Prompt to update app force or optional
-            if (ObjVersion == 12)
-            {
-                return "1/1.0.4/Optional";
-            }
-            else
-            {
-                // return "0/1.1.0/Force";
-                return "0/1.0.4/Optional";
-            }
-
-            // return "0/1.1.8/Optional";
-
-        }
-
+   
         #region otp
         [AllowAnonymous]
         [Route("RequestOTP")]
@@ -742,6 +721,26 @@ namespace LocalConn.API.Controllers
 
             return Ok();
         }
+        //version code checker
+        [HttpGet]
+        [Route("VersionCodeUpdate")]
+        public string GetVersionCode(int ObjVersion)
+        {
+            //1st parameter set 0 if update is to be made 1 if no update is to be make
+            //2nt parameter - Version Code to display to the user
+            //3rd Parameter = Type of Prompt to update app force or optional
+            if (ObjVersion == 2)
+            {
+                return "2/1.0.4/Optional";
+            }
+            else
+            {
+                // return "0/1.1.0/Force";
+                return "2/1.0.4/Optional";
+            }
+        }
+
+
 
         #endregion
         #endregion

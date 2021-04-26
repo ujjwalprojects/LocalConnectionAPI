@@ -312,10 +312,21 @@ namespace LocalConn.Entities.Dal
             }
         }
 
-        //public async Task<string> confirmBooking()
-        //{
+        public string cancelBooking(string BookingID)
+        {
+            try
+            {
+                var parID = new SqlParameter("@BookingID", BookingID);
+                return objDB.Database.SqlQuery<string>("udspLCAppCancelBooking @BookingID", parID).FirstOrDefault();
+            }
+            catch (Exception e)
+            {
 
-        //}
+                throw e;
+            }
+            
+
+        }
 
 
 
