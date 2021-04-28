@@ -52,6 +52,7 @@ namespace LocalConn.Entities.ViewModels
         public Int16 FourPlusOccupantPercentage { get; set; }
         public string ChildOccupantNote { get; set; }
         public bool IsActive { get; set; }
+        public string LatLong { get; set; }
     }
     public class HotelRoomList
     {
