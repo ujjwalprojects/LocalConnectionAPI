@@ -254,6 +254,12 @@ namespace LocalConn.Entities.Dal
         #endregion
 
         #region LCAmenities
+        public List<AmenitiesDD> GetAmenitiesDDAsync()
+        {
+            List<AmenitiesDD> obj = new List<AmenitiesDD>();
+            obj = objDB.Database.SqlQuery<AmenitiesDD>("select AmenitiesID,AmenitiesName from utblLCMstAmenitie").ToList();
+            return obj;
+        }
         public async Task<IEnumerable<utblLCMstAmenitie>> getAmenitiesAsync()
         {
             return await objDB.utblLCMstAmenities.ToListAsync();

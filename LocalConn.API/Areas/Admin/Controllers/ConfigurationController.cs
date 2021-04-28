@@ -278,6 +278,12 @@ namespace LocalConn.API.Areas.Admin.Controllers
         {
             return await objDal.DeleteAmenitiesAsync(id);
         }
+        [HttpGet]
+        [Route("AmenitiesDD")]
+        public List<AmenitiesDD> AmenitiesDD()
+        {
+            return objDal.GetAmenitiesDDAsync();
+        }
         #endregion
 
         #region StarRating

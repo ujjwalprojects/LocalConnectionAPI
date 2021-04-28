@@ -326,7 +326,7 @@ namespace LocalConn.Entities.Dal
         public async Task<IEnumerable<HotelRoomTypeMapView>> GetAllHotelRoomTypeMap(long id)
         {
             var parHotelID = new SqlParameter("@HotelID", id);
-            return await db.Database.SqlQuery<HotelRoomTypeMapView>("udspLCHotelDelete @HotelID", parHotelID).ToListAsync();
+            return await db.Database.SqlQuery<HotelRoomTypeMapView>("udspLCHotelRoomTypeMapList @HotelID", parHotelID).ToListAsync();
         }
         public async Task<string> SaveHotelRoomTypeMapAsync(HotelRoomTypeMap model)
         {
@@ -618,7 +618,61 @@ namespace LocalConn.Entities.Dal
         }
         #endregion
 
-       
+        #region HotelAmenitiesMap
+        public async Task<IEnumerable<HotelAmenitiesMapView>> GetAllHotelAmenitiesMap(long id)
+        {
+            var parHotelID = new SqlParameter("@HotelID", id);
+            return await db.Database.SqlQuery<HotelAmenitiesMapView>("udspLCHotelAmenitiesMapList @HotelID", parHotelID).ToListAsync();
+        }
+        public async Task<string> SaveHotelAmenitiesMapAsync(utblLCHotelAmenitiesMap model)
+        {
+            try
+            {
+                var parHotelAmenitiesMapID = new SqlParameter("@HotelAmenitiesMapID", model.HotelAmenitiesMapID);
+                var parHotelID = new SqlParameter("@HotelID", model.HotelID);
+                var parAmenitiesID = new SqlParameter("@AmenitiesID", model.AmenitiesID);
+
+                return await db.Database.SqlQuery<string>("udspLCHotelAmenitiesMapSave @HotelAmenitiesMapID, @HotelID, @AmenitiesID",
+                    parHotelAmenitiesMapID, parHotelID, parAmenitiesID).FirstOrDefaultAsync();
+            }
+            catch (Exception ex)
+            {
+                return "Error: " + ex.Message;
+            }
+        }
+        public async Task<utblLCHotelAmenitiesMap> GetHotelAmenitiesMapByIDAsync(long id)
+        {
+            return await db.utblLCHotelAmenitiesMaps.Where(x => x.HotelAmenitiesMapID == id).FirstOrDefaultAsync();
+        }
+        public async Task<string> DeleteHotelAmenitiesMapAsync(long id)
+        {
+            try
+            {
+                utblLCHotelAmenitiesMap curObj = await db.utblLCHotelAmenitiesMaps.FindAsync(id);
+                db.utblLCHotelAmenitiesMaps.Remove(curObj);
+                await db.SaveChangesAsync();
+                return "Hotel Amenities Mapping Removed";
+            }
+            catch (SqlException ex)
+            {
+                if (ex.Errors.Count > 0) // Assume the interesting stuff is in the first error
+                {
+                    switch (ex.Errors[0].Number)
+                    {
+                        case 547: // Foreign Key violation
+                            return "This record has dependencies on other records, so cannot be removed.";
+                        default:
+                            return "Error: " + ex.Message;
+                    }
+                }
+                return "Error while operation. Error Message: " + ex.Message;
+            }
+            catch (Exception ex)
+            {
+                return "Error: " + ex.Message;
+            }
+        }
+        #endregion  
 
     }
 }

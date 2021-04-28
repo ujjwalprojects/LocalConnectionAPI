@@ -219,6 +219,40 @@ namespace LocalConn.API.Areas.Admin.Controllers
         }
         #endregion
 
+        #region HotelAmenitiesMap
+        [HttpGet]
+        [Route("GetHotelAmenitiesMapList")]
+        public async Task<IEnumerable<HotelAmenitiesMapView>> GetHotelAmenitiesMapList(long id)
+        {
+            return await objLCHotel.GetAllHotelAmenitiesMap(id);
+        }
+        [HttpPost]
+        [Route("SaveHotelAmenitiesMap")]
+        public async Task<string> SaveHotelAmenitiesMap(utblLCHotelAmenitiesMap model)
+        {
+            if (ModelState.IsValid)
+            {
+                return await objLCHotel.SaveHotelAmenitiesMapAsync(model);
+            }
+            string messages = string.Join("; ", ModelState.Values
+                                         .SelectMany(x => x.Errors)
+                                         .Select(x => x.ErrorMessage));
+            return "Operation Error: " + messages;
+        }
+        [Route("GetHotelAmenitiesMapByID")]
+        public async Task<utblLCHotelAmenitiesMap> GetHotelAmenitiesMapByID(long id)
+        {
+            return await objLCHotel.GetHotelAmenitiesMapByIDAsync(id);
+        }
+        [HttpDelete]
+        [Route("DeleteHotelAmenitiesMap")]
+        public async Task<string> DeleteHotelAmenitiesMap(long id)
+        {
+            return await objLCHotel.DeleteHotelAmenitiesMapAsync(id);
+        }
+         
+        #endregion
+
         #region HotelTerms&Cancellations
         [HttpGet]
         [Route("HotelTerms")]
