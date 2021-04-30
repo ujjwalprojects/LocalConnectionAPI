@@ -222,4 +222,27 @@ namespace LocalConn.Entities.ViewModels
         public IEnumerable<LCNearBysTypeDD> NearBysDD { get; set; }
         public int TotalRecords { get; set; }
     }
+
+    //LCHotelAmenitiesMap
+    public class HotelAmenitiesSave
+    {
+        public long HotelAmenitiesMapID { get; set; }
+        public long HotelID { get; set; }
+        public long AmenitiesID { get; set; }
+    }
+    public class HotelAmenitiesSaveModel
+    {
+        [Required]
+        public long HotelID { get; set; }
+        public List<HotelAmenitiesSave> HotelAmenitiesMapView { get; set; }
+    }
+    public class HotelAmenitiesMapView
+    {
+        public long HotelAmenitiesMapID { get; set; }
+        public long HotelID { get; set; }
+        public long AmenitiesID { get; set; }
+        public string AmenitiesName { get; set; }
+        public decimal AmenitiesBasePrice { get; set; }
+        public bool IsSelected { get; set; }
+    }
 }

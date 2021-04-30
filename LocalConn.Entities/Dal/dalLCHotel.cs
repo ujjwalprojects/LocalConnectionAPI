@@ -622,18 +622,42 @@ namespace LocalConn.Entities.Dal
         public async Task<IEnumerable<HotelAmenitiesMapView>> GetAllHotelAmenitiesMap(long id)
         {
             var parHotelID = new SqlParameter("@HotelID", id);
-            return await db.Database.SqlQuery<HotelAmenitiesMapView>("udspLCHotelAmenitiesMapList @HotelID", parHotelID).ToListAsync();
+            return await db.Database.SqlQuery<HotelAmenitiesMapView>("select * from dbo.udfGetLCHotelAmenitiesMap (@HotelID)", parHotelID).ToListAsync();
         }
-        public async Task<string> SaveHotelAmenitiesMapAsync(utblLCHotelAmenitiesMap model)
+        public async Task<string> SaveHotelAmenitiesMapAsync(HotelAmenitiesSaveModel model)
         {
             try
             {
-                var parHotelAmenitiesMapID = new SqlParameter("@HotelAmenitiesMapID", model.HotelAmenitiesMapID);
                 var parHotelID = new SqlParameter("@HotelID", model.HotelID);
-                var parAmenitiesID = new SqlParameter("@AmenitiesID", model.AmenitiesID);
+                ConvertListToDT objList = new ConvertListToDT();
+                DataTable candt = new DataTable();
 
-                return await db.Database.SqlQuery<string>("udspLCHotelAmenitiesMapSave @HotelAmenitiesMapID, @HotelID, @AmenitiesID",
-                    parHotelAmenitiesMapID, parHotelID, parAmenitiesID).FirstOrDefaultAsync();
+                if (model.HotelAmenitiesMapView != null)
+                {
+                    candt = objList.ConvertIEnumerableToDataTable(model.HotelAmenitiesMapView);
+                }
+                else
+                {
+                    if (candt.Columns.Count == 0)
+                    {
+                        DataColumn col = new DataColumn();
+                        col.ColumnName = "HotelAmenitiesMapID";
+                        candt.Columns.Add(col);
+                        DataColumn col1 = new DataColumn();
+                        col1.ColumnName = "HotelID";
+                        candt.Columns.Add(col1);
+                        DataColumn col2 = new DataColumn();
+                        col2.ColumnName = "AmenitiesID";
+                        candt.Columns.Add(col2);
+                    }
+                }
+
+                var parCanDT = new SqlParameter("@LCHotelAmenitiesMaps", candt);
+                parCanDT.SqlDbType = SqlDbType.Structured;
+                parCanDT.TypeName = "dbo.LCHotelAmenitiesMaps";
+
+                return await db.Database.SqlQuery<string>("udspLCHotelAmenitiesMapSave @HotelID,@LCHotelAmenitiesMaps",
+                    parHotelID, parCanDT).FirstOrDefaultAsync();
             }
             catch (Exception ex)
             {

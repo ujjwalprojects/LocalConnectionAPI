@@ -221,14 +221,14 @@ namespace LocalConn.API.Areas.Admin.Controllers
 
         #region HotelAmenitiesMap
         [HttpGet]
-        [Route("GetHotelAmenitiesMapList")]
-        public async Task<IEnumerable<HotelAmenitiesMapView>> GetHotelAmenitiesMapList(long id)
+        [Route("HotelAmenities")]
+        public async Task<IEnumerable<HotelAmenitiesMapView>> HotelAmenitiesMap(long id)
         {
             return await objLCHotel.GetAllHotelAmenitiesMap(id);
         }
         [HttpPost]
         [Route("SaveHotelAmenitiesMap")]
-        public async Task<string> SaveHotelAmenitiesMap(utblLCHotelAmenitiesMap model)
+        public async Task<string> SaveHotelAmenitiesMap(HotelAmenitiesSaveModel model)
         {
             if (ModelState.IsValid)
             {
