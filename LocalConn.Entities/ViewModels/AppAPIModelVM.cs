@@ -19,6 +19,7 @@ namespace LocalConn.Entities.ViewModels
         public string PhotoThumbPath { get; set; }
         public string PhotoCaption { get; set; }
         public Int16 OverallOfferPercentage { get; set; }
+        public bool IsActive { get; set; }
         public decimal OfferPrice { get; set; }
     }
     public class CityList
@@ -33,6 +34,7 @@ namespace LocalConn.Entities.ViewModels
         public long HotelID { get; set; }
         public string HotelName { get; set; }
         public string PhotoThumbPath { get; set; }
+        public bool IsActive { get; set; }
     }
 
     public class HotelDtl
