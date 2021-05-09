@@ -18,4 +18,17 @@ namespace LocalConn.Entities.ViewModels
         public IEnumerable<AmenitiesView> Amenities { get; set; }
         public int TotalRecords { get; set; }
     }
+
+   
+    public class HotelAmenitiesVM
+    {
+        public IEnumerable<HotelAmenitiesMapView> HAmenitiesView { get; set; }
+        public int TotalRecords { get; set; }
+    }
+
+    public class AmenitiesDD
+    {
+        public long AmenitiesID { get; set; }
+        public string AmenitiesName { get; set; }
+    }
 }

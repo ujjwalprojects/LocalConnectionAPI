@@ -60,13 +60,16 @@
     <Compile Include="Dal\dalTourGuide.cs" />
     <Compile Include="Dal\dalTourPackage.cs" />
     <Compile Include="Models\EFDBContext.cs" />
+    <Compile Include="Models\utblAboutU.cs" />
     <Compile Include="Models\utblAgent.cs" />
     <Compile Include="Models\utblClientEnquirie.cs" />
     <Compile Include="Models\utblClientEnquiryActivitie.cs" />
     <Compile Include="Models\utblClientEnquiryItinerarie.cs" />
     <Compile Include="Models\utblLCFeaturedHotel.cs" />
     <Compile Include="Models\utblLCFeatureOffer.cs" />
+    <Compile Include="Models\utblLCHelpPage.cs" />
     <Compile Include="Models\utblLCHotel.cs" />
+    <Compile Include="Models\utblLCHotelAmenitiesMap.cs" />
     <Compile Include="Models\utblLCHotelImage.cs" />
     <Compile Include="Models\utblLCMstAmenitie.cs" />
     <Compile Include="Models\utblLCMstCitie.cs" />
@@ -74,6 +77,8 @@
     <Compile Include="Models\utblLCMstHotelPremise.cs" />
     <Compile Include="Models\utblLCMstLocalitie.cs" />
     <Compile Include="Models\utblLCMstStarRating.cs" />
+    <Compile Include="Models\utblLCNearByPoint.cs" />
+    <Compile Include="Models\utblLCNotification.cs" />
     <Compile Include="Models\utblLCRoom.cs" />
     <Compile Include="Models\utblMstActivitie.cs" />
     <Compile Include="Models\utblMstBanner.cs" />
@@ -93,6 +98,8 @@
     <Compile Include="Models\utblMstTerm.cs" />
     <Compile Include="Models\utblMstTourCancellation.cs" />
     <Compile Include="Models\utblPackageOffer.cs" />
+    <Compile Include="Models\utblPolicie.cs" />
+    <Compile Include="Models\utblPolicyPoint.cs" />
     <Compile Include="Models\utblTourGuide.cs" />
     <Compile Include="Models\utblTourPackage.cs" />
     <Compile Include="Models\utblTourPackageImage.cs" />
@@ -100,6 +107,7 @@
     <Compile Include="Models\utblTrnUserOTP.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Utility\ConvertListToDT.cs" />
+    <Compile Include="ViewModels\AboutPolicyCustomModels.cs" />
     <Compile Include="ViewModels\ActivitiesCustomModels.cs" />
     <Compile Include="ViewModels\AgentCustomModels.cs" />
     <Compile Include="ViewModels\AmenitiesCustomModel.cs" />
@@ -111,6 +119,7 @@
     <Compile Include="ViewModels\ClientEnquiryCustomModels.cs" />
     <Compile Include="ViewModels\DestinationCustomModels.cs" />
     <Compile Include="ViewModels\ExclusionCustomModels.cs" />
+    <Compile Include="ViewModels\HelpPageCustomModels.cs" />
     <Compile Include="ViewModels\HomeTypeCustomModels.cs" />
     <Compile Include="ViewModels\HotelCustomModels.cs" />
     <Compile Include="ViewModels\InclusionCustomModels.cs" />
@@ -118,6 +127,7 @@
     <Compile Include="ViewModels\LCFeatHotelsCustomModels.cs" />
     <Compile Include="ViewModels\LCHotelsCustomModels.cs" />
     <Compile Include="ViewModels\LocalatiesCustomModels.cs" />
+    <Compile Include="ViewModels\NotificationCustomModels.cs" />
     <Compile Include="ViewModels\PackageCustomModels.cs" />
     <Compile Include="ViewModels\RoomsCustomModels.cs" />
     <Compile Include="ViewModels\RoutePrefix.cs" />

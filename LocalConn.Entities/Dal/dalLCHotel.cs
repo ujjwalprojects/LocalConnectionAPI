@@ -59,6 +59,7 @@ namespace LocalConn.Entities.Dal
                 var parHomeTypeID = new SqlParameter("@HomeTypeID", model.LCHotel.HomeTypeID);
                 var parStarRatingID = new SqlParameter("@StarRatingID", model.LCHotel.StarRatingID);
                 var parMaxOccupant = new SqlParameter("@MaxOccupant", model.LCHotel.MaxOccupant);
+                var parMaxRooms = new SqlParameter("@MaxRooms", model.LCHotel.MaxRooms);
                 var parOverallOfferPercentage = new SqlParameter("@OverallOfferPercentage", model.LCHotel.OverallOfferPercentage);
                 var parTwoOccupantPercentage = new SqlParameter("@TwoOccupantPercentage", model.LCHotel.TwoOccupantPercentage);
                 var parThreeOccupantPercentage = new SqlParameter("@ThreeOccupantPercentage", model.LCHotel.ThreeOccupantPercentage);
@@ -67,8 +68,8 @@ namespace LocalConn.Entities.Dal
                 var parIsActive = new SqlParameter("@IsActive", model.LCHotel.IsActive);
 
 
-                return await db.Database.SqlQuery<string>("udspLCHotelSave @HotelID, @HotelName, @HotelAddress, @HotelDesc, @HotelContactNo, @HotelEmail, @CountryID,@StateID,@CityID,@LocalityID,@HomeTypeID,@StarRatingID,@MaxOccupant,@OverallOfferPercentage,@TwoOccupantPercentage,@ThreeOccupantPercentage,@FourPlusOccupantPercentage,@ChildOccupantNote,@IsActive",
-                    parHotelID, parHotelName, parHotelAddress, parHotelDesc, parHotelContactNo, parHotelEmail, parCountryID, parStateID, parCityID, parLocalityID, parHomeTypeID, parStarRatingID, parMaxOccupant, parOverallOfferPercentage, parTwoOccupantPercentage, parThreeOccupantPercentage, parFourPlusOccupantPercentage, parChildOccupantNote,parIsActive).FirstOrDefaultAsync();
+                return await db.Database.SqlQuery<string>("udspLCHotelSave @HotelID, @HotelName, @HotelAddress, @HotelDesc, @HotelContactNo, @HotelEmail, @CountryID,@StateID,@CityID,@LocalityID,@HomeTypeID,@StarRatingID,@MaxOccupant,@MaxRooms,@OverallOfferPercentage,@TwoOccupantPercentage,@ThreeOccupantPercentage,@FourPlusOccupantPercentage,@ChildOccupantNote,@IsActive",
+                    parHotelID, parHotelName, parHotelAddress, parHotelDesc, parHotelContactNo, parHotelEmail, parCountryID, parStateID, parCityID, parLocalityID, parHomeTypeID, parStarRatingID, parMaxOccupant,parMaxRooms, parOverallOfferPercentage, parTwoOccupantPercentage, parThreeOccupantPercentage, parFourPlusOccupantPercentage, parChildOccupantNote,parIsActive).FirstOrDefaultAsync();
             }
             catch (Exception ex)
             {
@@ -325,7 +326,7 @@ namespace LocalConn.Entities.Dal
         public async Task<IEnumerable<HotelRoomTypeMapView>> GetAllHotelRoomTypeMap(long id)
         {
             var parHotelID = new SqlParameter("@HotelID", id);
-            return await db.Database.SqlQuery<HotelRoomTypeMapView>("udspLCHotelDelete @HotelID", parHotelID).ToListAsync();
+            return await db.Database.SqlQuery<HotelRoomTypeMapView>("udspLCHotelRoomTypeMapList @HotelID", parHotelID).ToListAsync();
         }
         public async Task<string> SaveHotelRoomTypeMapAsync(HotelRoomTypeMap model)
         {
@@ -528,5 +529,174 @@ namespace LocalConn.Entities.Dal
         }
 
         #endregion
+
+        #region LCNearByPoints
+        public async Task<LCNearByPointsVM> GetLCNearByPointsAsync(int pageno, int pagesize, string sterm)
+        {
+            LCNearByPointsVM model = new LCNearByPointsVM();
+            var parStart = new SqlParameter("@Start", (pageno - 1) * pagesize);
+            var parEnd = new SqlParameter("@PageSize", pagesize);
+
+            var parSearchTerm = new SqlParameter("@SearchTerm", DBNull.Value);
+            if (!(sterm == null || sterm == ""))
+                parSearchTerm.Value = sterm;
+            // setting stored procedure OUTPUT value
+            // This return total number of rows, and avoid two database call for data and total number of rows 
+            var spOutput = new SqlParameter
+            {
+                ParameterName = "@TotalCount",
+                SqlDbType = System.Data.SqlDbType.BigInt,
+                Direction = System.Data.ParameterDirection.Output
+            };
+
+            model.LCNearByPointView = await db.Database.SqlQuery<LCNearByPointsView>("udspLCNearByPointsPaged @Start, @PageSize,@SearchTerm, @TotalCount out",
+                parStart, parEnd, parSearchTerm, spOutput).ToListAsync();
+            model.TotalRecords = int.Parse(spOutput.Value.ToString());
+            return model;
+        }
+        public async Task<string> SaveLCNearByPointsAsync(utblLCNearByPoint model)
+        {
+            try
+            {
+                var parNearbyPointsID = new SqlParameter("@NearbyPointsID", model.NearbyPointsID);
+                var parNearByID = new SqlParameter("@NearByID", model.NearByID);
+                var parHotelID = new SqlParameter("@HotelID", model.HotelID);
+                var parNearByPoints = new SqlParameter("@NearByPoints", model.NearByPoints);
+                var parNearByDistance = new SqlParameter("@NearByDistance", model.NearByDistance);
+
+                return await db.Database.SqlQuery<string>("udspLCNearByPointsSave @NearbyPointsID, @NearByID,@HotelID, @NearByPoints,@NearByDistance",
+                    parNearbyPointsID, parNearByID, parHotelID, parNearByPoints, parNearByDistance).FirstOrDefaultAsync();
+            }
+            catch (Exception ex)
+            {
+                return "Error: " + ex.Message;
+            }
+        }
+        public async Task<utblLCNearByPoint> GetLCNearByPointsByIDAsync(long id)
+        {
+            return await db.utblLCNearByPoints.Where(x => x.NearbyPointsID == id).FirstOrDefaultAsync();
+        }
+        public async Task<string> DeleteLCNearByPointsAsync(long id)
+        {
+            try
+            {
+                utblLCNearByPoint obj = await db.utblLCNearByPoints.FindAsync(id);
+                db.utblLCNearByPoints.Remove(obj);
+                await db.SaveChangesAsync();
+                return "Near Point Details Removed";
+            }
+            catch (SqlException ex)
+            {
+                if (ex.Errors.Count > 0) // Assume the interesting stuff is in the first error
+                {
+                    switch (ex.Errors[0].Number)
+                    {
+                        case 547: // Foreign Key violation
+                            return "This record has dependencies on other records, so cannot be removed.";
+                        default:
+                            return "Error: " + ex.Message;
+                    }
+                }
+                return "Error while operation. Error Message: " + ex.Message;
+            }
+            catch (Exception ex)
+            {
+                return "Error: " + ex.Message;
+            }
+        }
+        public async Task<IEnumerable<LCNearByPointsView>> GetLCNearByPointsAsync(long id)
+        {
+            var parHotelID = new SqlParameter("@HotelID", id);
+            List<LCNearByPointsView> model = new List<LCNearByPointsView>();
+            model = await db.Database.SqlQuery<LCNearByPointsView>("udspLCHotelNearByPointMapList @HotelID", parHotelID).ToListAsync();
+            return model;
+        }
+        public async Task<IEnumerable<LCNearBysTypeDD>> GetLCNearBysTypeDDAsync()
+        {
+            string query = "select NearByID, NearByName from utblLCMstNearBys";
+            return await db.Database.SqlQuery<LCNearBysTypeDD>(query).ToListAsync();
+        }
+        #endregion
+
+        #region HotelAmenitiesMap
+        public async Task<IEnumerable<HotelAmenitiesMapView>> GetAllHotelAmenitiesMap(long id)
+        {
+            var parHotelID = new SqlParameter("@HotelID", id);
+            return await db.Database.SqlQuery<HotelAmenitiesMapView>("select * from dbo.udfGetLCHotelAmenitiesMap (@HotelID)", parHotelID).ToListAsync();
+        }
+        public async Task<string> SaveHotelAmenitiesMapAsync(HotelAmenitiesSaveModel model)
+        {
+            try
+            {
+                var parHotelID = new SqlParameter("@HotelID", model.HotelID);
+                ConvertListToDT objList = new ConvertListToDT();
+                DataTable candt = new DataTable();
+
+                if (model.HotelAmenitiesMapView != null)
+                {
+                    candt = objList.ConvertIEnumerableToDataTable(model.HotelAmenitiesMapView);
+                }
+                else
+                {
+                    if (candt.Columns.Count == 0)
+                    {
+                        DataColumn col = new DataColumn();
+                        col.ColumnName = "HotelAmenitiesMapID";
+                        candt.Columns.Add(col);
+                        DataColumn col1 = new DataColumn();
+                        col1.ColumnName = "HotelID";
+                        candt.Columns.Add(col1);
+                        DataColumn col2 = new DataColumn();
+                        col2.ColumnName = "AmenitiesID";
+                        candt.Columns.Add(col2);
+                    }
+                }
+
+                var parCanDT = new SqlParameter("@LCHotelAmenitiesMaps", candt);
+                parCanDT.SqlDbType = SqlDbType.Structured;
+                parCanDT.TypeName = "dbo.LCHotelAmenitiesMaps";
+
+                return await db.Database.SqlQuery<string>("udspLCHotelAmenitiesMapSave @HotelID,@LCHotelAmenitiesMaps",
+                    parHotelID, parCanDT).FirstOrDefaultAsync();
+            }
+            catch (Exception ex)
+            {
+                return "Error: " + ex.Message;
+            }
+        }
+        public async Task<utblLCHotelAmenitiesMap> GetHotelAmenitiesMapByIDAsync(long id)
+        {
+            return await db.utblLCHotelAmenitiesMaps.Where(x => x.HotelAmenitiesMapID == id).FirstOrDefaultAsync();
+        }
+        public async Task<string> DeleteHotelAmenitiesMapAsync(long id)
+        {
+            try
+            {
+                utblLCHotelAmenitiesMap curObj = await db.utblLCHotelAmenitiesMaps.FindAsync(id);
+                db.utblLCHotelAmenitiesMaps.Remove(curObj);
+                await db.SaveChangesAsync();
+                return "Hotel Amenities Mapping Removed";
+            }
+            catch (SqlException ex)
+            {
+                if (ex.Errors.Count > 0) // Assume the interesting stuff is in the first error
+                {
+                    switch (ex.Errors[0].Number)
+                    {
+                        case 547: // Foreign Key violation
+                            return "This record has dependencies on other records, so cannot be removed.";
+                        default:
+                            return "Error: " + ex.Message;
+                    }
+                }
+                return "Error while operation. Error Message: " + ex.Message;
+            }
+            catch (Exception ex)
+            {
+                return "Error: " + ex.Message;
+            }
+        }
+        #endregion  
+
     }
 }

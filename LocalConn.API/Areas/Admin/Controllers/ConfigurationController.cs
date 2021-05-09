@@ -278,6 +278,12 @@ namespace LocalConn.API.Areas.Admin.Controllers
         {
             return await objDal.DeleteAmenitiesAsync(id);
         }
+        [HttpGet]
+        [Route("AmenitiesDD")]
+        public List<AmenitiesDD> AmenitiesDD()
+        {
+            return objDal.GetAmenitiesDDAsync();
+        }
         #endregion
 
         #region StarRating
@@ -756,6 +762,227 @@ namespace LocalConn.API.Areas.Admin.Controllers
 
 
         #endregion
+
+        #region Notification
+        [HttpGet]
+        [Route("Notification")]
+        public async Task<NotificationVM> Notification(int PageNo, int PageSize, string SearchTerm)
+        {
+            return await objDal.GetNotificationAsync(PageNo, PageSize, SearchTerm);
+        }
+        [HttpPost]
+        [Route("SaveNotification")]
+        public async Task<string> SaveNotification(utblLCNotification model)
+        {
+            if (ModelState.IsValid)
+            {
+                if (!model.NotificationImagePath.Contains(".jpg"))
+                {
+                    Random rand = new Random();
+                    string name = "Notification" + "_" + DateTime.Now.ToString("yyyyMMdd") + "_" + rand.Next(50) + ".jpg";
+                    string mappath = "~/Uploads/Notification";
+                    string normal_result = SaveImage(model.NotificationImagePath, name, mappath);
+                    if (normal_result.Contains("Error"))
+                    {
+                        string stringerror = normal_result;
+                        return "Unable to upload image" + stringerror;
+                    }
+                    model.NotificationImagePath = FileUrl + "Notification/" + normal_result;
+                }
+
+
+                string result = await objDal.SaveNotificationAsync(model);
+                //if (result.ToLower().Contains("error"))
+                //{
+                //    DeleteFile(name);
+                //}
+                return result;
+
+                //return await objDal.SaveCitiesAsync(model);
+            }
+            string messages = string.Join("; ", ModelState.Values
+                                         .SelectMany(x => x.Errors)
+                                         .Select(x => x.ErrorMessage));
+            return "Operation Error: " + messages;
+        }
+        [HttpGet]
+        [Route("NotificationByID")]
+        public async Task<utblLCNotification> NotificationByID(long id)
+        {
+            return await objDal.GetNotificationByIDAsync(id);
+        }
+        [HttpDelete]
+        [Route("DeleteNotification")]
+        public async Task<string> DeleteNotification(long id)
+        {
+            return await objDal.DeleteNotificationAsync(id);
+        }
+        #endregion
+
+        #region HelpPage
+        [Route("HelpPageList")]
+
+        [HttpGet]
+        [Route("HelpPage")]
+        public async Task<HelpPageVM> HelpPage(int PageNo, int PageSize, string SearchTerm)
+        {
+            return await objDal.GetHelpPageAsync(PageNo, PageSize, SearchTerm);
+        }
+        [HttpPost]
+        [Route("SaveHelpPage")]
+        public async Task<string> SaveHelpPage(utblLCHelpPage model)
+        {
+            if (ModelState.IsValid)
+            {
+                if (!model.HelpPageImgPath.Contains(".jpg"))
+                {
+                    Random rand = new Random();
+                    string name = "HelpPage" + "_" + DateTime.Now.ToString("yyyyMMdd") + "_" + rand.Next(50) + ".jpg";
+                    string mappath = "~/Uploads/HelpPage";
+                    string normal_result = SaveImage(model.HelpPageImgPath, name, mappath);
+                    if (normal_result.Contains("Error"))
+                    {
+                        string stringerror = normal_result;
+                        return "Unable to upload image" + stringerror;
+                    }
+                    model.HelpPageImgPath = FileUrl + "HelpPage/" + normal_result;
+                }
+
+
+                string result = await objDal.SaveHelpPageAsync(model);
+                //if (result.ToLower().Contains("error"))
+                //{
+                //    DeleteFile(name);
+                //}
+                return result;
+
+                //return await objDal.SaveCitiesAsync(model);
+            }
+            string messages = string.Join("; ", ModelState.Values
+                                         .SelectMany(x => x.Errors)
+                                         .Select(x => x.ErrorMessage));
+            return "Operation Error: " + messages;
+        }
+        [HttpGet]
+        [Route("HelpPageByID")]
+        public async Task<utblLCHelpPage> HelpPageByID(long id)
+        {
+            return await objDal.GetHelpPageByIDAsync(id);
+        }
+        [HttpDelete]
+        [Route("DeleteHelpPage")]
+        public async Task<string> DeleteHelpPage(long id)
+        {
+            return await objDal.DeleteHelpPagesAsync(id);
+        }
+        #endregion
+
+        #region About
+        [HttpGet]
+        [Route("AboutByID")]
+        public async Task<utblAboutU> AboutByID()
+        {
+            return await objDal.GetAboutByIDAsync();
+        }
+        [HttpPost]
+        [Route("SaveAbout")]
+        public async Task<string> SaveAbout(utblAboutU model)
+        {
+            if (ModelState.IsValid)
+            {
+
+                string result = await objDal.SaveAboutAsync(model);
+                return result;
+            }
+            string messages = string.Join("; ", ModelState.Values
+                                         .SelectMany(x => x.Errors)
+                                         .Select(x => x.ErrorMessage));
+            return "Operation Error: " + messages;
+        }
+        #endregion
+
+        #region Policy
+        [HttpGet]
+        [Route("PolicyList")]
+        public async Task<AboutPolicyVM> PolicyList(int PageNo, int PageSize, string SearchTerm)
+        {
+            return await objDal.GetPolicylistAsync(PageNo, PageSize, SearchTerm);
+        }
+        [HttpPost]
+        [Route("SavePolicy")]
+        public async Task<string> SavePolicy(utblPolicie model)
+        {
+            if (ModelState.IsValid)
+            {
+                string result = await objDal.SavePolicyAsync(model);
+                return result;
+            }
+            string messages = string.Join("; ", ModelState.Values
+                                         .SelectMany(x => x.Errors)
+                                         .Select(x => x.ErrorMessage));
+            return "Operation Error: " + messages;
+        }
+        [HttpGet]
+        [Route("PolicyByID")]
+        public async Task<utblPolicie> PolicyByID(long id)
+        {
+            return await objDal.GetPolicyByIDAsync(id);
+        }
+        [HttpGet]
+        [Route("PolicyDD")]
+        public async Task<IEnumerable<utblPolicie>> PolicyDD()
+        {
+            return await objDal.GetALLPolicyAsync();
+        }
+        [HttpDelete]
+        [Route("DeletePolicy")]
+        public async Task<string> DeletePolicy(long id)
+        {
+            return await objDal.DeletePolicyAsync(id);
+        }
+        #endregion
+
+        #region policy Points
+        [HttpGet]
+        [Route("PolicyPtList")]
+        public async Task<AboutPolicyVM> PolicyPtList(int PageNo, int PageSize, string SearchTerm)
+        {
+            return await objDal.GetPolicyPtlistAsync(PageNo, PageSize, SearchTerm);
+        }
+        [HttpPost]
+        [Route("SavePolicyPt")]
+        public async Task<string> SavePolicyPt(utblPolicyPoint model)
+        {
+            if (ModelState.IsValid)
+            {
+                string result = await objDal.SavePolicyPtAsync(model);
+                return result;
+            }
+            string messages = string.Join("; ", ModelState.Values
+                                         .SelectMany(x => x.Errors)
+                                         .Select(x => x.ErrorMessage));
+            return "Operation Error: " + messages;
+        }
+        [HttpGet]
+        [Route("PolicyPtByID")]
+        public async Task<utblPolicyPoint> utblPolicyPoint(long id)
+        {
+            return await objDal.GetPolicyPtByIDAsync(id);
+        }
+        [HttpGet]
+        [Route("PointByPolicyID")]
+        public async Task<utblPolicyPoint> PointByPolicyID(long id)
+        {
+            return await objDal.GetPolicyIDAsync(id);
+        }
+        [HttpDelete]
+        [Route("DeletePolicyPt")]
+        public async Task<string> DeletePolicyPt(long id)
+        {
+            return await objDal.DeletePolicyPtAsync(id);
+        }
+        #endregion
+
 
         #region Helper
         private string SaveImage(string imageStrNormal, string name, string mappath)
