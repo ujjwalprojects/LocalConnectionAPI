@@ -219,6 +219,24 @@ namespace LocalConn.API.Areas.General.Controllers
             obj = objDal.getHelpPage();
             return obj;
         }
+        //About
+        [HttpGet]
+        [Route("getaboutusdtl")]
+        public AboutUsDetails getDtl()
+        {
+            AboutUsDetails obj = new AboutUsDetails();
+            obj = objDal.getAboutUs();
+            return obj;
+        }
+        //Policy
+        [HttpGet]
+        [Route("getpolicylist")]
+        public PolicyList getPolicyList()
+        {
+            PolicyList obj = new PolicyList();
+            obj = objDal.getPolicyList();
+            return obj;
+        }
 
 
         #region Offer

@@ -205,4 +205,30 @@ namespace LocalConn.Entities.ViewModels
         public string HelpPageContactNo { get; set; }
         public string HelpPageEmailID { get; set; }
     }
+
+    public class AboutUsDetails
+    {
+        public long AboutID { get; set; }
+        public String AboutContent { get; set; }
+    }
+
+    public class PolicyList
+    {
+        public List<PolicyTitle> PolicyTitle { get; set; }
+        public List<PolicyData> PolicyData { get; set; }
+
+    }
+    public class PolicyData
+    {
+        public long PolicyPointID { get; set; }
+        public long PolicyID { get; set; }
+        public String PolicyPoints { get; set; }
+    }
+    public class PolicyTitle
+    {
+        public long PolicyID { get; set; }
+        public String PolicyTitleName { get; set; }
+    }
+
+
 }

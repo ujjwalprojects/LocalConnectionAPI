@@ -430,5 +430,33 @@ namespace LocalConn.Entities.Dal
                 throw e;
             }
         }
+        public AboutUsDetails getAboutUs()
+        {
+            try
+            {
+                return objDB.Database.SqlQuery<AboutUsDetails>("udspLCAppGetDtl").FirstOrDefault();
+            }
+            catch (Exception e)
+            {
+
+                throw e;
+            }
+        }
+
+        public PolicyList getPolicyList()
+        {
+            try
+            {
+                PolicyList obj = new PolicyList();
+                obj.PolicyTitle = objDB.Database.SqlQuery<PolicyTitle>("udspLCAppGetPolicyTitle").ToList();
+                obj.PolicyData = objDB.Database.SqlQuery<PolicyData>("udspLCAppGetPolicyData").ToList();
+                return obj;
+            }
+            catch (Exception e)
+            {
+
+                throw e;
+            }
+        }
     }
 }
