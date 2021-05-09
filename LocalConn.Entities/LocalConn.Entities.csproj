@@ -60,6 +60,7 @@
     <Compile Include="Dal\dalTourGuide.cs" />
     <Compile Include="Dal\dalTourPackage.cs" />
     <Compile Include="Models\EFDBContext.cs" />
+    <Compile Include="Models\utblAboutU.cs" />
     <Compile Include="Models\utblAgent.cs" />
     <Compile Include="Models\utblClientEnquirie.cs" />
     <Compile Include="Models\utblClientEnquiryActivitie.cs" />
@@ -97,6 +98,8 @@
     <Compile Include="Models\utblMstTerm.cs" />
     <Compile Include="Models\utblMstTourCancellation.cs" />
     <Compile Include="Models\utblPackageOffer.cs" />
+    <Compile Include="Models\utblPolicie.cs" />
+    <Compile Include="Models\utblPolicyPoint.cs" />
     <Compile Include="Models\utblTourGuide.cs" />
     <Compile Include="Models\utblTourPackage.cs" />
     <Compile Include="Models\utblTourPackageImage.cs" />
@@ -104,6 +107,7 @@
     <Compile Include="Models\utblTrnUserOTP.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Utility\ConvertListToDT.cs" />
+    <Compile Include="ViewModels\AboutPolicyCustomModels.cs" />
     <Compile Include="ViewModels\ActivitiesCustomModels.cs" />
     <Compile Include="ViewModels\AgentCustomModels.cs" />
     <Compile Include="ViewModels\AmenitiesCustomModel.cs" />

@@ -1562,5 +1562,184 @@ namespace LocalConn.Entities.Dal
         }
         #endregion
 
+        #region About
+        public async Task<string> SaveAboutAsync(utblAboutU model)
+        {
+            try
+            {
+                var parAboutID = new SqlParameter("@AboutID", model.AboutID);
+                var parAboutContent = new SqlParameter("@AboutContent", model.AboutContent);
+
+                return await objDB.Database.SqlQuery<string>("udspLCAboutUsSave @AboutID, @AboutContent",
+                    parAboutID, parAboutContent).FirstOrDefaultAsync();
+            }
+            catch (Exception ex)
+            {
+                return "Error: " + ex.Message;
+            }
+        }
+        public async Task<utblAboutU> GetAboutByIDAsync()
+        {
+            return await objDB.utblAboutUs.FirstOrDefaultAsync();
+        }
+        #endregion
+
+        #region Policy
+        public async Task<AboutPolicyVM> GetPolicylistAsync(int pageno, int pagesize, string sterm)
+        {
+            AboutPolicyVM model = new AboutPolicyVM();
+            var parStart = new SqlParameter("@Start", (pageno - 1) * pagesize);
+            var parEnd = new SqlParameter("@PageSize", pagesize);
+
+            var parSearchTerm = new SqlParameter("@SearchTerm", DBNull.Value);
+            if (!(sterm == null || sterm == ""))
+                parSearchTerm.Value = sterm;
+            // setting stored procedure OUTPUT value
+            // This return total number of rows, and avoid two database call for data and total number of rows 
+            var spOutput = new SqlParameter
+            {
+                ParameterName = "@TotalCount",
+                SqlDbType = System.Data.SqlDbType.BigInt,
+                Direction = System.Data.ParameterDirection.Output
+            };
+
+            model.PolicyList = await objDB.Database.SqlQuery<utblPolicie>("udspLCPolicyPaged @Start, @PageSize,@SearchTerm, @TotalCount out",
+                parStart, parEnd, parSearchTerm, spOutput).ToListAsync();
+            model.TotalRecords = int.Parse(spOutput.Value.ToString());
+            return model;
+        }
+        public async Task<string> SavePolicyAsync(utblPolicie model)
+        {
+            try
+            {
+                var parPolicyID = new SqlParameter("@PolicyID", model.PolicyID);
+                var parPolicyTitle = new SqlParameter("@PolicyTitle", model.PolicyTitle);
+          
+                return await objDB.Database.SqlQuery<string>("udspLCPolicySave @PolicyID, @PolicyTitle",
+                    parPolicyID, parPolicyTitle).FirstOrDefaultAsync();
+            }
+            catch (Exception ex)
+            {
+                return "Error: " + ex.Message;
+            }
+        }
+        public async Task<utblPolicie> GetPolicyByIDAsync(long id)
+        {
+            return await objDB.utblPolicies.Where(x => x.PolicyID == id).FirstOrDefaultAsync();
+        }
+        public async Task<IEnumerable<utblPolicie>> GetALLPolicyAsync()
+        {
+            return await objDB.utblPolicies.ToListAsync();
+        }
+        public async Task<string> DeletePolicyAsync(long id)
+        {
+            try
+            {
+                utblPolicie curObj = await objDB.utblPolicies.FindAsync(id);
+                objDB.utblPolicies.Remove(curObj);
+                await objDB.SaveChangesAsync();
+                return "policy" +
+                    " Details Removed";
+            }
+            catch (SqlException ex)
+            {
+                if (ex.Errors.Count > 0) // Assume the interesting stuff is in the first error
+                {
+                    switch (ex.Errors[0].Number)
+                    {
+                        case 547: // Foreign Key violation
+                            return "This record has dependencies on other records, so cannot be removed.";
+                        default:
+                            return "Error: " + ex.Message;
+                    }
+                }
+                return "Error while operation. Error Message: " + ex.Message;
+            }
+            catch (Exception ex)
+            {
+                return "Error: " + ex.Message;
+            }
+        }
+        #endregion
+
+        #region Policy Point
+        public async Task<AboutPolicyVM> GetPolicyPtlistAsync(int pageno, int pagesize, string sterm)
+        {
+            AboutPolicyVM model = new AboutPolicyVM();
+            var parStart = new SqlParameter("@Start", (pageno - 1) * pagesize);
+            var parEnd = new SqlParameter("@PageSize", pagesize);
+
+            var parSearchTerm = new SqlParameter("@SearchTerm", DBNull.Value);
+            if (!(sterm == null || sterm == ""))
+                parSearchTerm.Value = sterm;
+            // setting stored procedure OUTPUT value
+            // This return total number of rows, and avoid two database call for data and total number of rows 
+            var spOutput = new SqlParameter
+            {
+                ParameterName = "@TotalCount",
+                SqlDbType = System.Data.SqlDbType.BigInt,
+                Direction = System.Data.ParameterDirection.Output
+            };
+
+            model.PolicyPointView = await objDB.Database.SqlQuery<PolicyPointView>("udspLCPolicyPointPaged @Start, @PageSize,@SearchTerm, @TotalCount out",
+                parStart, parEnd, parSearchTerm, spOutput).ToListAsync();
+            model.TotalRecords = int.Parse(spOutput.Value.ToString());
+            return model;
+        }
+        public async Task<string> SavePolicyPtAsync(utblPolicyPoint model)
+        {
+            try
+            {
+                var parPolicyPointID = new SqlParameter("@PolicyPointID", model.PolicyPointID);
+                var parPolicyID = new SqlParameter("@PolicyID", model.PolicyID);
+                var parPolicyPoints = new SqlParameter("@PolicyPoints", model.PolicyPoints);
+
+                return await objDB.Database.SqlQuery<string>("udspLCPolicyPointsSave @PolicyPointID, @PolicyID,@PolicyPoints",
+                   parPolicyPointID, parPolicyID, parPolicyPoints).FirstOrDefaultAsync();
+            }
+            catch (Exception ex)
+            {
+                return "Error: " + ex.Message;
+            }
+        }
+        public async Task<utblPolicyPoint> GetPolicyPtByIDAsync(long id)
+        {
+            return await objDB.utblPolicyPoints.Where(x => x.PolicyPointID == id).FirstOrDefaultAsync();
+        }
+        public async Task<utblPolicyPoint> GetPolicyIDAsync(long id)
+        {
+            return await objDB.utblPolicyPoints.Where(x => x.PolicyID == id).FirstOrDefaultAsync();
+        }
+        public async Task<string> DeletePolicyPtAsync(long id)
+        {
+            try
+            {
+                utblPolicyPoint curObj = await objDB.utblPolicyPoints.FindAsync(id);
+                objDB.utblPolicyPoints.Remove(curObj);
+                await objDB.SaveChangesAsync();
+                return "policy pt" +
+                    " Details Removed";
+            }
+            catch (SqlException ex)
+            {
+                if (ex.Errors.Count > 0) // Assume the interesting stuff is in the first error
+                {
+                    switch (ex.Errors[0].Number)
+                    {
+                        case 547: // Foreign Key violation
+                            return "This record has dependencies on other records, so cannot be removed.";
+                        default:
+                            return "Error: " + ex.Message;
+                    }
+                }
+                return "Error while operation. Error Message: " + ex.Message;
+            }
+            catch (Exception ex)
+            {
+                return "Error: " + ex.Message;
+            }
+        }
+        #endregion
+
     }
 }

@@ -764,8 +764,6 @@ namespace LocalConn.API.Areas.Admin.Controllers
         #endregion
 
         #region Notification
-        [Route("NotificationList")]
-        
         [HttpGet]
         [Route("Notification")]
         public async Task<NotificationVM> Notification(int PageNo, int PageSize, string SearchTerm)
@@ -878,6 +876,113 @@ namespace LocalConn.API.Areas.Admin.Controllers
             return await objDal.DeleteHelpPagesAsync(id);
         }
         #endregion
+
+        #region About
+        [HttpGet]
+        [Route("AboutByID")]
+        public async Task<utblAboutU> AboutByID()
+        {
+            return await objDal.GetAboutByIDAsync();
+        }
+        [HttpPost]
+        [Route("SaveAbout")]
+        public async Task<string> SaveAbout(utblAboutU model)
+        {
+            if (ModelState.IsValid)
+            {
+
+                string result = await objDal.SaveAboutAsync(model);
+                return result;
+            }
+            string messages = string.Join("; ", ModelState.Values
+                                         .SelectMany(x => x.Errors)
+                                         .Select(x => x.ErrorMessage));
+            return "Operation Error: " + messages;
+        }
+        #endregion
+
+        #region Policy
+        [HttpGet]
+        [Route("PolicyList")]
+        public async Task<AboutPolicyVM> PolicyList(int PageNo, int PageSize, string SearchTerm)
+        {
+            return await objDal.GetPolicylistAsync(PageNo, PageSize, SearchTerm);
+        }
+        [HttpPost]
+        [Route("SavePolicy")]
+        public async Task<string> SavePolicy(utblPolicie model)
+        {
+            if (ModelState.IsValid)
+            {
+                string result = await objDal.SavePolicyAsync(model);
+                return result;
+            }
+            string messages = string.Join("; ", ModelState.Values
+                                         .SelectMany(x => x.Errors)
+                                         .Select(x => x.ErrorMessage));
+            return "Operation Error: " + messages;
+        }
+        [HttpGet]
+        [Route("PolicyByID")]
+        public async Task<utblPolicie> PolicyByID(long id)
+        {
+            return await objDal.GetPolicyByIDAsync(id);
+        }
+        [HttpGet]
+        [Route("PolicyDD")]
+        public async Task<IEnumerable<utblPolicie>> PolicyDD()
+        {
+            return await objDal.GetALLPolicyAsync();
+        }
+        [HttpDelete]
+        [Route("DeletePolicy")]
+        public async Task<string> DeletePolicy(long id)
+        {
+            return await objDal.DeletePolicyAsync(id);
+        }
+        #endregion
+
+        #region policy Points
+        [HttpGet]
+        [Route("PolicyPtList")]
+        public async Task<AboutPolicyVM> PolicyPtList(int PageNo, int PageSize, string SearchTerm)
+        {
+            return await objDal.GetPolicyPtlistAsync(PageNo, PageSize, SearchTerm);
+        }
+        [HttpPost]
+        [Route("SavePolicyPt")]
+        public async Task<string> SavePolicyPt(utblPolicyPoint model)
+        {
+            if (ModelState.IsValid)
+            {
+                string result = await objDal.SavePolicyPtAsync(model);
+                return result;
+            }
+            string messages = string.Join("; ", ModelState.Values
+                                         .SelectMany(x => x.Errors)
+                                         .Select(x => x.ErrorMessage));
+            return "Operation Error: " + messages;
+        }
+        [HttpGet]
+        [Route("PolicyPtByID")]
+        public async Task<utblPolicyPoint> utblPolicyPoint(long id)
+        {
+            return await objDal.GetPolicyPtByIDAsync(id);
+        }
+        [HttpGet]
+        [Route("PointByPolicyID")]
+        public async Task<utblPolicyPoint> PointByPolicyID(long id)
+        {
+            return await objDal.GetPolicyIDAsync(id);
+        }
+        [HttpDelete]
+        [Route("DeletePolicyPt")]
+        public async Task<string> DeletePolicyPt(long id)
+        {
+            return await objDal.DeletePolicyPtAsync(id);
+        }
+        #endregion
+
 
         #region Helper
         private string SaveImage(string imageStrNormal, string name, string mappath)
