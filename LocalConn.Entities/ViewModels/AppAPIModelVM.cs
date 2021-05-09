@@ -46,6 +46,7 @@ namespace LocalConn.Entities.ViewModels
         public string HotelDesc { get; set; }
         public string LocalityName { get; set; }
         public decimal RoomTypePrice { get; set; }
+        public string DefaultRoomType { get; set; }
         public Int16 MaxOccupant { get; set; }
         public Int16 MaxRooms { get; set; }
         public Int16 OverallOfferPercentage { get; set; }
