@@ -312,10 +312,21 @@ namespace LocalConn.Entities.Dal
             }
         }
 
-        //public async Task<string> confirmBooking()
-        //{
+        public string cancelBooking(string BookingID)
+        {
+            try
+            {
+                var parID = new SqlParameter("@BookingID", BookingID);
+                return objDB.Database.SqlQuery<string>("udspLCAppCancelBooking @BookingID", parID).FirstOrDefault();
+            }
+            catch (Exception e)
+            {
 
-        //}
+                throw e;
+            }
+            
+
+        }
 
 
 
@@ -412,6 +423,34 @@ namespace LocalConn.Entities.Dal
             try
             {
                 return  objDB.Database.SqlQuery<HelpPageDtl>("udspLCAppGetHelpPageDtl").FirstOrDefault();
+            }
+            catch (Exception e)
+            {
+
+                throw e;
+            }
+        }
+        public AboutUsDetails getAboutUs()
+        {
+            try
+            {
+                return objDB.Database.SqlQuery<AboutUsDetails>("udspLCAppGetDtl").FirstOrDefault();
+            }
+            catch (Exception e)
+            {
+
+                throw e;
+            }
+        }
+
+        public PolicyList getPolicyList()
+        {
+            try
+            {
+                PolicyList obj = new PolicyList();
+                obj.PolicyTitle = objDB.Database.SqlQuery<PolicyTitle>("udspLCAppGetPolicyTitle").ToList();
+                obj.PolicyData = objDB.Database.SqlQuery<PolicyData>("udspLCAppGetPolicyData").ToList();
+                return obj;
             }
             catch (Exception e)
             {

@@ -134,20 +134,22 @@ namespace LocalConn.API.Areas.General.Controllers
         [Route("getorderlist")]
         public async Task<List<OrderList>> GetOrderList(string CustPhNo)
         {
-            return await objDal.getOrderlist(CustPhNo);
+            List<OrderList> obj = new List<OrderList>();
+            obj= await objDal.getOrderlist(CustPhNo);
+            return obj;
         }
 
         [HttpGet]
         [Route("getBookingDtl")]
-        public async Task<PreBookingDtl> getBookingDtl(string Dt)
+        public async Task<PreBookingDtl> getBookingDtl(string BookingID)
         {
-            return await objDal.getBookingDtl(Dt);
+            return await objDal.getBookingDtl(BookingID);
         }
 
-
+        //final booking with payment
         [Route("paynow")]
         [HttpPost]
-        public async Task<string> PayNow(PreBookingDtl obj)
+        public string PayNow(PreBookingDtl obj)
         {
             string Result = "";
             Result = objDal.preBooking(obj);
@@ -157,6 +159,22 @@ namespace LocalConn.API.Areas.General.Controllers
             //}
             return Result;
         }
+
+        //cancelbooking
+
+        [Route("cancelbooking")]
+        [HttpPost]
+        public string CancelBooking(string BookingID)
+        {
+            string Result = "";
+            Result = objDal.cancelBooking(BookingID);
+            //if (Result.Contains("B"))
+            //{
+            //  Result= await SendMail(obj);
+            //}
+            return Result;
+        }
+
         #region Terms and Cancellation Policy
 
         [HttpGet]
@@ -199,6 +217,24 @@ namespace LocalConn.API.Areas.General.Controllers
         {
             HelpPageDtl obj = new HelpPageDtl();
             obj = objDal.getHelpPage();
+            return obj;
+        }
+        //About
+        [HttpGet]
+        [Route("getaboutusdtl")]
+        public AboutUsDetails getDtl()
+        {
+            AboutUsDetails obj = new AboutUsDetails();
+            obj = objDal.getAboutUs();
+            return obj;
+        }
+        //Policy
+        [HttpGet]
+        [Route("getpolicylist")]
+        public PolicyList getPolicyList()
+        {
+            PolicyList obj = new PolicyList();
+            obj = objDal.getPolicyList();
             return obj;
         }
 

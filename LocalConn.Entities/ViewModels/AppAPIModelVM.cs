@@ -18,6 +18,9 @@ namespace LocalConn.Entities.ViewModels
         public bool IsHotelCover { get; set; }
         public string PhotoThumbPath { get; set; }
         public string PhotoCaption { get; set; }
+        public Int16 OverallOfferPercentage { get; set; }
+        public bool IsActive { get; set; }
+        public decimal OfferPrice { get; set; }
     }
     public class CityList
     {
@@ -31,6 +34,7 @@ namespace LocalConn.Entities.ViewModels
         public long HotelID { get; set; }
         public string HotelName { get; set; }
         public string PhotoThumbPath { get; set; }
+        public bool IsActive { get; set; }
     }
 
     public class HotelDtl
@@ -43,12 +47,14 @@ namespace LocalConn.Entities.ViewModels
         public string LocalityName { get; set; }
         public decimal RoomTypePrice { get; set; }
         public Int16 MaxOccupant { get; set; }
+        public Int16 MaxRooms { get; set; }
         public Int16 OverallOfferPercentage { get; set; }
         public Int16 TwoOccupantPercentage { get; set; }
         public Int16 ThreeOccupantPercentage { get; set; }
         public Int16 FourPlusOccupantPercentage { get; set; }
         public string ChildOccupantNote { get; set; }
         public bool IsActive { get; set; }
+        public string LatLong { get; set; }
     }
     public class HotelRoomList
     {
@@ -60,6 +66,7 @@ namespace LocalConn.Entities.ViewModels
         public bool IsStandard { get; set; }
         public decimal RoomTypePrice { get; set; }
         public string PhotoThumbPath { get; set; }
+        public string PhotoCaption { get; set; }
         public Int16 MaxOccupant { get; set; }
         public Int16 OverallOfferPercentage { get; set; }
         public Int16 TwoOccupantPercentage { get; set; }
@@ -100,7 +107,7 @@ namespace LocalConn.Entities.ViewModels
         public DateTime BookingDate { get; set; }
         public string CustDetails { get; set; }
         public string BookingStatus { get; set; }
-        public string FinalFare { get; set; }
+        public decimal FinalFare { get; set; }
         public string PaymentGatewayCode { get; set; }
     }
     public class OrderList
@@ -119,6 +126,7 @@ namespace LocalConn.Entities.ViewModels
         public decimal FinalFare { get; set; }
         public string HotelName { get; set; }
         public string HotelAddress { get; set; }
+        public int IsValidCancel { get; set; }
     }
     public class HAmenitiesList
     {
@@ -194,7 +202,33 @@ namespace LocalConn.Entities.ViewModels
         public string HelpPageTitle { get; set; }
         public string HelpPageContent { get; set; }
         public string HelpPageImgPath { get; set; }
-        public int HelpPageContactNo { get; set; }
+        public string HelpPageContactNo { get; set; }
         public string HelpPageEmailID { get; set; }
     }
+
+    public class AboutUsDetails
+    {
+        public long AboutID { get; set; }
+        public String AboutContent { get; set; }
+    }
+
+    public class PolicyList
+    {
+        public List<PolicyTitle> PolicyTitle { get; set; }
+        public List<PolicyData> PolicyData { get; set; }
+
+    }
+    public class PolicyData
+    {
+        public long PolicyPointID { get; set; }
+        public long PolicyID { get; set; }
+        public String PolicyPoints { get; set; }
+    }
+    public class PolicyTitle
+    {
+        public long PolicyID { get; set; }
+        public String PolicyTitleName { get; set; }
+    }
+
+
 }
