@@ -650,59 +650,80 @@ namespace LocalConn.API.Controllers
         #region otp
         [AllowAnonymous]
         [Route("RequestOTP")]
-        public async Task<IHttpActionResult> RequestOTP(string MobileNo)
+        [HttpPost]
+        public async Task<IHttpActionResult> RequestOTP(string MobileNo,string Type)
         {
-            ApplicationUser user = await UserManager.FindByNameAsync(MobileNo);
-            if (user != null)
+            try
             {
-                try
+                string otp = OTPGenerator.GenerateRandomOTP(6);
+                utblTrnUserOTP model = new utblTrnUserOTP()
                 {
-                    string otp = OTPGenerator.GenerateRandomOTP(6);
-                    utblTrnUserOTP model = new utblTrnUserOTP()
+                    UserMobileNo = MobileNo,
+                    OTPNo = otp,
+                    GeneratedDateTime = DateTime.Now,
+                    IsVerified = false
+                };
+                if (Type == "ForgotPass")
+                {
+                    ApplicationUser user = UserManager.FindByName(MobileNo);
+                    if (user == null)
                     {
-                        UserMobileNo = MobileNo,
-                        OTPNo = otp,
-                        GeneratedDateTime = DateTime.Now,
-                        IsVerified = false
-                    };
+                        return BadRequest("User Not Register");
+                    }
                     db.utblTrnUserOTPs.Add(model);
                     await db.SaveChangesAsync();
-                    SendOTPMessage.SendHttpSMSRequest(otp, MobileNo);
-                    return Ok();
+
                 }
-                catch (Exception)
+                else if(Type=="Register")
                 {
-                    return InternalServerError();
+                    db.utblTrnUserOTPs.Add(model);
+                    await db.SaveChangesAsync();
                 }
+                
+                SendOTPMessage.SendHttpSMSRequest(otp, MobileNo, Type);
+                return Ok();
             }
-            return BadRequest();
+            catch (Exception)
+            {
+                return InternalServerError();
+            }
         }
         [AllowAnonymous]
         [Route("VerifyOTP")]
+        [HttpPost]
         public async Task<IHttpActionResult> VerifyOTP(string MobileNo, string OTP)
         {
-            utblTrnUserOTP curOTP = db.utblTrnUserOTPs.Where(x => x.UserMobileNo == MobileNo && x.OTPNo == OTP).FirstOrDefault();
-            if (curOTP == null)
+            try
             {
-                return NotFound();
-            }
-            else
-            {
-                TimeSpan timespan = DateTime.Now - curOTP.GeneratedDateTime;
-                int minDiff = timespan.Minutes;
-                if (minDiff > 60)
+                utblTrnUserOTP curOTP = db.utblTrnUserOTPs.Where(x => x.UserMobileNo == MobileNo && x.OTPNo == OTP).FirstOrDefault();
+                if (curOTP == null)
                 {
-                    return BadRequest("OTP_Expired");
+                    return NotFound();
                 }
-                curOTP.IsVerified = true;
-                await db.SaveChangesAsync();
-                ApplicationUser user = await UserManager.FindByNameAsync(MobileNo);
-                user.PhoneNumberConfirmed = true;
-                //user.isregistered = true;
-                await UserManager.UpdateAsync(user);
+                else
+                {
+                    TimeSpan timespan = DateTime.Now - curOTP.GeneratedDateTime;
+                    int minDiff = timespan.Seconds;
+                    if (minDiff > 300)
+                    {
+                        return BadRequest("OTP_Expired");
+                    }
+                    curOTP.IsVerified = true;
+                    await db.SaveChangesAsync();
+                    ApplicationUser user = await UserManager.FindByNameAsync(MobileNo);
+                    user.PhoneNumberConfirmed = true;
+                    //user.isregistered = true;
+                    await UserManager.UpdateAsync(user);
 
-                return Ok();
+                    return Ok();
+                }
             }
+            catch (Exception e)
+            {
+
+                return InternalServerError(e);
+            }
+          
         }
 
         [Route("setpasswordapp")]
@@ -746,6 +767,9 @@ namespace LocalConn.API.Controllers
 
             return "Error while changing password. Try again later";
         }
+
+
+
 
         //version code checker
         [HttpGet]

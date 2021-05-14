@@ -22,7 +22,7 @@ namespace LocalConn.API.Areas.General.Controllers
     {
         dalApp objDal = new dalApp();
 
-   
+
 
         [HttpGet]
         [Route("getcitylist")]
@@ -135,7 +135,7 @@ namespace LocalConn.API.Areas.General.Controllers
         public async Task<List<OrderList>> GetOrderList(string CustPhNo)
         {
             List<OrderList> obj = new List<OrderList>();
-            obj= await objDal.getOrderlist(CustPhNo);
+            obj = await objDal.getOrderlist(CustPhNo);
             return obj;
         }
 
@@ -153,10 +153,11 @@ namespace LocalConn.API.Areas.General.Controllers
         {
             string Result = "";
             Result = objDal.preBooking(obj);
-            //if (Result.Contains("B"))
-            //{
-            //  Result= await SendMail(obj);
-            //}
+            if (Result.Contains("B"))
+            {
+                obj.BookingID = Result;
+                Result = SendMail(obj);
+            }
             return Result;
         }
 
@@ -167,11 +168,12 @@ namespace LocalConn.API.Areas.General.Controllers
         public string CancelBooking(string BookingID)
         {
             string Result = "";
-            Result = objDal.cancelBooking(BookingID);
-            //if (Result.Contains("B"))
-            //{
-            //  Result= await SendMail(obj);
-            //}
+            
+            string[] subs = Result.Split('%');
+            PreBookingDtl obj = new PreBookingDtl();
+            obj = objDal.cancelBooking(BookingID);
+            if (obj.BookingStatus == "Cancelled") 
+            Result = SendMail(obj);
             return Result;
         }
 
@@ -205,8 +207,8 @@ namespace LocalConn.API.Areas.General.Controllers
         public NearbyVM GetNearByList(string HotelID)
         {
             NearbyVM obj = new NearbyVM();
-            obj.nearbyone =  objDal.getNearByList(HotelID, "1");
-            obj.nearbytwo =  objDal.getNearByList(HotelID, "2");
+            obj.nearbyone = objDal.getNearByList(HotelID, "1");
+            obj.nearbytwo = objDal.getNearByList(HotelID, "2");
             return obj;
         }
 
@@ -250,7 +252,7 @@ namespace LocalConn.API.Areas.General.Controllers
         }
         [HttpGet]
         [Route("getofferhotellist")]
-        public  async Task<OfferHotelsList> getOfferHotelList(string OfferID)
+        public async Task<OfferHotelsList> getOfferHotelList(string OfferID)
         {
             OfferHotelsList obj = new OfferHotelsList();
             obj.hotelList = await objDal.getOfferHotellist(Convert.ToInt64(OfferID));
@@ -266,7 +268,7 @@ namespace LocalConn.API.Areas.General.Controllers
         #region Mail and SMS
         [Route("SendEmail")]
         [HttpPost]
-        public async Task<string> SendMail(PreBookingDtl obj)
+        public string SendMail(PreBookingDtl obj)
         {
             //MailDetails email = objDal.getEmailByApplication(applicationcode);
             //email.EmailID = email.EmailID;
@@ -291,25 +293,19 @@ namespace LocalConn.API.Areas.General.Controllers
                 case "Booked":
                     mail.Subject = "Booking Details";
                     mailbody.Append("<p>Dear " + obj.CustName + ",</p>");
-                    mailbody.Append("<p>" +"You have successfully Booked your stay.... please check your order details in the apps Booking Section or Order List section " + "</p>");
+                    mailbody.Append("<p>" + "You have successfully Booked your stay.... please check your order details in the apps Booking Section or Order List section " + "</p>");
                     mailbody.Append("<p>Timestamp: " + DateTime.Now.ToString("dd MMM yyyy HH:mm tt") + "</p>");
                     mailbody.Append("<i>This is an auto generated mail, please do not reply.</i>");
-                    //await SendSMS(obj.CustPhNo, "Your Booking Has been Made "+"Successfully with Payment Code" + obj.PaymentGatewayCode);
+                    SendSMS(obj.FinalFare.ToString(), obj.BookingID, obj.CustPhNo, "Booked");
                     break;
-                //case "Rejected":
-                //    mail.Subject = "Booking Details";
-                //    mailbody.Append("<p>Dear " + obj.CustName + ",</p>");
-                //    mailbody.Append("<p>" + "You have c" + "</p>");
-                //    mailbody.Append("<p>Timestamp: " + DateTime.Now.ToString("dd MMM yyyy HH:mm tt") + "</p>");
-                //    mailbody.Append("<i>This is an auto generated mail, please do not reply.</i>");
-                //    break;
-                //case "Approved":
-                //    mail.Subject = "TET Sikkim - Approved";
-                //    mailbody.Append("<p>Dear " + email.ApplicantName + ",</p>");
-                //    mailbody.Append("<p>" + msg + "</p>");
-                //    mailbody.Append("<p>Timestamp: " + DateTime.Now.ToString("dd MMM yyyy HH:mm tt") + "</p>");
-                //    mailbody.Append("<i>This is an auto generated mail, please do not reply.</i>");
-                //    break;
+                case "Cancelled":
+                    mail.Subject = "Booking Details";
+                    mailbody.Append("<p>Dear " + obj.CustName + ",</p>");
+                    mailbody.Append("<p>" + "Your Booking Has been Cancelled" + "</p>");
+                    mailbody.Append("<p>Timestamp: " + DateTime.Now.ToString("dd MMM yyyy HH:mm tt") + "</p>");
+                    mailbody.Append("<i>This is an auto generated mail, please do not reply.</i>");
+                    SendSMS(obj.PaymentGatewayCode, obj.BookingID, obj.CustPhNo, "Cancelled");
+                    break;
 
                 default:
                     break;
@@ -321,38 +317,34 @@ namespace LocalConn.API.Areas.General.Controllers
 
             try
             {
-                await client.SendMailAsync(mail);
+                client.Send(mail);
 
-                return "success";
+                return obj.BookingID;
             }
             catch (Exception e)
             {
 
-                return "Error: Something Went Wrong"+e;
+                return "Error: Something Went Wrong" + e;
             }
 
         }
-        //public async Task<bool> SendSMS(string mobno, string message)
-        //{
-        //    bool sms = false;
-        //    try
-        //    {
-        //        SendSMS objSMS = new SendSMS();
-        //        await objSMS.SendHttpSMSRequest("TET", message, mobno);
-        //        //objSMS.sendSingleSMS("skmportalsms", "s1Kk1m@12", "SKMGOV", mobno, message, "");
-        //        //SMSConfirmation.SendSMS(mobno, message);
-        //        sms = true;
-        //        return sms;
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        sms = false;
-        //        throw ex;
-        //    }
-        //}
+
+        public IHttpActionResult SendSMS(string amount, string bookingID, string mobno, string Type)
+        {
+            try
+            {
+
+                SendConfirmationmessage.SendHttpSMSConfirmation(amount, bookingID, mobno, Type);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return InternalServerError(ex);
+            }
+        }
         #endregion
 
-        
+
 
 
     }
