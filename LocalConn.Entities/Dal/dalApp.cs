@@ -312,12 +312,12 @@ namespace LocalConn.Entities.Dal
             }
         }
 
-        public string cancelBooking(string BookingID)
+        public PreBookingDtl cancelBooking(string BookingID)
         {
             try
             {
                 var parID = new SqlParameter("@BookingID", BookingID);
-                return objDB.Database.SqlQuery<string>("udspLCAppCancelBooking @BookingID", parID).FirstOrDefault();
+                return objDB.Database.SqlQuery<PreBookingDtl>("udspLCAppCancelBooking @BookingID", parID).FirstOrDefault();
             }
             catch (Exception e)
             {

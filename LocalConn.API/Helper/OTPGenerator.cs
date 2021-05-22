@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -36,37 +37,85 @@ namespace LocalConn.API.Helper
     }
     public static class SendOTPMessage
     {
-        public static void SendHttpSMSRequest(string otp, string mobNo)
+        public static string SendHttpSMSRequest(string otp, string mobNo,string type)
         {
-            string messageID = "";
-            string message = "OTP to Login in Mall App is - " + otp + ". Do not share it with anyone. Valid for 1 hour.";
-            string url = "http://login.netspeq.com/api/sendsms.php?user=hrdd&apikey=qvUXYp4BgVImGlsUWkpQ&mobile=" + mobNo + "&message=" + message + "&senderid=HRDSAM&type=txt";
+            string message = "";
+            if (type == "Register")
+            {
+               message = HttpUtility.UrlEncode("Your OTP for LocalConnection is "+otp+ "%nRegards,%nLocalConnection");
+            }
+            if (type == "ForgotPass")
+            {
+                message = HttpUtility.UrlEncode("Your OTP for LocalConnection is " + otp + "%nRegards,%nLocalConnection");
+            }
             try
             {
-                HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
-                request.AutomaticDecompression = DecompressionMethods.GZip;
-
-                using (HttpWebResponse response = (HttpWebResponse)request.GetResponse())
+                using (var wb = new WebClient())
                 {
-                    if (response.StatusCode == HttpStatusCode.OK)
-                    {
-                        using (Stream stream = response.GetResponseStream())
-                        using (StreamReader reader = new StreamReader(stream))
-                        {
-                            messageID = reader.ReadToEnd();
-                        }
-                    }
-
+                    byte[] response = wb.UploadValues("https://api.textlocal.in/send/", new NameValueCollection()
+                {
+                {"apikey" , "NzE4ZTJlZTAyOTBlNjgyZjNkZGMwNmY0YzBhYjE1ZjY="},
+                {"numbers" , "91"+mobNo},
+                {"message" , message},
+                {"sender" , "LocCon"}
+                });
+                    string result = System.Text.Encoding.UTF8.GetString(response);
+                    return result;
                 }
 
             }
-            catch (Exception)
+            catch (Exception e)
             {
 
-                messageID = "error";
+                return e +"error";
             }
 
 
         }
+
+
+   
+    }
+
+    public static class SendConfirmationmessage
+    {
+        public static string SendHttpSMSConfirmation(string amount,string bookingid, string mobNo, string type)
+        {
+            string message = "";
+            if (type == "Booked")
+            {
+                message = HttpUtility.UrlEncode("Your Payment of "+amount+" has been made successfully with BookingID: "+bookingid+". Enjoy you stay !");
+            }
+            if (type == "Cancelled")
+            {
+                message = HttpUtility.UrlEncode("Your Bookiing for "+ amount + " has been successfully cancelled. Your refund will be initiated within 24 hrs. Regards LocalConnection");
+            }
+            try
+            {
+                using (var wb = new WebClient())
+                {
+                    byte[] response = wb.UploadValues("https://api.textlocal.in/send/", new NameValueCollection()
+                {
+                {"apikey" , "NzE4ZTJlZTAyOTBlNjgyZjNkZGMwNmY0YzBhYjE1ZjY="},
+                {"numbers" , "91"+mobNo},
+                {"message" , message},
+                {"sender" , "LocCon"}
+                });
+                    string result = System.Text.Encoding.UTF8.GetString(response);
+                    return result;
+                }
+
+            }
+            catch (Exception e)
+            {
+
+                return e + "error";
+            }
+
+
+        }
+
+
+
     }
 }
