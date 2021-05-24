@@ -111,14 +111,23 @@ namespace LocalConn.API.Areas.Admin.Controllers
                     return "Email already in use by other user, please choose another email";
                 }
 
-                ApplicationUser user = new ApplicationUser() { Email = Email, ProfileName = ProfileName, UserName = Email, PhoneNumber = MobileNo, IsActive = true };
+                ApplicationUser user = new ApplicationUser() { Email = Email, ProfileName = ProfileName, UserName = Email, RoleName = "Admin", PhoneNumber = MobileNo, IsActive = true };
 
                 //string password = Membership.GeneratePassword(6, 1);
 
-                IdentityResult result = await UserManager.CreateAsync(user, Email);
+                //ApplicationDbContext context = new ApplicationDbContext();
+                //var roleManager = new RoleManager<IdentityRole>(new RoleStore<IdentityRole>(context));
+                //if (!roleManager.RoleExists("Admin"))
+                //{
+                //    var role = new IdentityRole();
+                //    role.Name = "Admin";
+                //    roleManager.Create(role);
+                //}
+
+                    IdentityResult result = await UserManager.CreateAsync(user, Email);
                 if (result.Succeeded)
                 {
-                    await UserManager.AddToRoleAsync(user.Id, "Agent");
+                    await UserManager.AddToRoleAsync(user.Id, "Admin");
 
                     //send email..
                     //var code = await UserManager.GenerateUserTokenAsync("New", user.Id);

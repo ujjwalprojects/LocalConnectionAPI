@@ -559,7 +559,7 @@ namespace LocalConn.Entities.Dal
                 utblLCMstLocalitie curObj = await objDB.utblLCMstLocalities.FindAsync(id);
                 objDB.utblLCMstLocalities.Remove(curObj);
                 await objDB.SaveChangesAsync();
-                return "Cities Details Removed";
+                return "locality Details Removed";
             }
             catch (SqlException ex)
             {
