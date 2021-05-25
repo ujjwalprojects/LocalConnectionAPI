@@ -651,7 +651,7 @@ namespace LocalConn.API.Controllers
         [AllowAnonymous]
         [Route("RequestOTP")]
         [HttpPost]
-        public async Task<IHttpActionResult> RequestOTP(string MobileNo,string Type)
+        public async Task<string> RequestOTP(string MobileNo,string Type)
         {
             try
             {
@@ -668,7 +668,7 @@ namespace LocalConn.API.Controllers
                     ApplicationUser user = UserManager.FindByName(MobileNo);
                     if (user == null)
                     {
-                        return BadRequest("User Not Register");
+                        return "User Not Registered";
                     }
                     db.utblTrnUserOTPs.Add(model);
                     await db.SaveChangesAsync();
@@ -681,11 +681,11 @@ namespace LocalConn.API.Controllers
                 }
                 
                 SendOTPMessage.SendHttpSMSRequest(otp, MobileNo, Type);
-                return Ok();
+                return "Success";
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                return InternalServerError();
+                return ex.ToString();
             }
         }
         [AllowAnonymous]
