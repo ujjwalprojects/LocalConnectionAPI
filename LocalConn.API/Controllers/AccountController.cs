@@ -776,17 +776,19 @@ namespace LocalConn.API.Controllers
         [Route("VersionCodeUpdate")]
         public string GetVersionCode(int ObjVersion)
         {
-            //1st parameter set 0 if update is to be made 1 if no update is to be make
+            //1st parameter set less than 2 if update pop up to show to user
             //2nt parameter - Version Code to display to the user
             //3rd Parameter = Type of Prompt to update app force or optional
+            //manipulate from here not from the  app optional if minor changes 
             if (ObjVersion == 2)
             {
-                return "2/1.0.4/Optional";
+                return "2/1.0.4/Force";
+                //return "2/1.0.4/Optional";
             }
             else
             {
-                // return "0/1.1.0/Force";
-                return "2/1.0.4/Optional";
+                return "2/1.1.0/Force";
+                //return "2/1.0.4/Optional";
             }
         }
 
