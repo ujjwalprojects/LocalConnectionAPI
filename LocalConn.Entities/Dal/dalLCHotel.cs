@@ -615,6 +615,64 @@ namespace LocalConn.Entities.Dal
         }
         #endregion
 
+        #region hotelAmenities
+        public async Task<IEnumerable<HotelAmenitiesMapView>> GetAllHotelAmenitiesMap(long id)
+        {
+            var parHotelID = new SqlParameter("@HotelID", id);
+            return await db.Database.SqlQuery<HotelAmenitiesMapView>("select * from dbo.udfGetLCHotelAmenitiesMap(@HotelID)", parHotelID).ToListAsync();
+        }
+        public async Task<string> SaveHotelAmenitiesMapAsync(HotelAmenitiesSaveModel model)
+        {
+            try
+            {
+                var parHotelID = new SqlParameter("@HotelID", model.HotelID);
+                ConvertListToDT objList = new ConvertListToDT();
+                DataTable amenitydt = new DataTable();
+               
+
+                //Converting subject list to datatable if record is present else send empty datatable
+                if (model.HotelAmenitiesMapView != null)
+                {
+                    List<HotelAmenitiesMapSave> savemodel = new List<HotelAmenitiesMapSave>();
+                    savemodel = model.HotelAmenitiesMapView.Select(x => new HotelAmenitiesMapSave {
+                        HotelAmenitiesMapID = x.HotelAmenitiesMapID,
+                        HotelID = x.HotelID,
+                        AmenitiesID = x.AmenitiesID
+                    }).ToList();
+
+                    amenitydt = objList.ConvertIEnumerableToDataTable(savemodel);
+                }
+                else
+                {
+                    if (amenitydt.Columns.Count == 0)
+                    {
+                        DataColumn col = new DataColumn();
+                        col.ColumnName = "HotelAmenitiesMapID";
+                        amenitydt.Columns.Add(col);
+                        DataColumn col1 = new DataColumn();
+                        col1.ColumnName = "HotelID";
+                        amenitydt.Columns.Add(col1);
+                        DataColumn col2 = new DataColumn();
+                        col2.ColumnName = "AmenitiesID";
+                        amenitydt.Columns.Add(col2);
+                    }
+                }
+
+                var parAmeDT = new SqlParameter("@LCHotelAmenitiesMaps", amenitydt);
+                parAmeDT.SqlDbType = SqlDbType.Structured;
+                parAmeDT.TypeName = "dbo.LCHotelAmenitiesMaps";
+
+                return await db.Database.SqlQuery<string>("udspLCHotelAmenitiesMapSave @HotelID,@LCHotelAmenitiesMaps",
+                    parHotelID, parAmeDT).FirstOrDefaultAsync();
+
+            }
+            catch (Exception ex)
+            {
+                return "Error: " + ex.Message;
+            }
+        }
+        #endregion
+
         #region LClongLats
         public async Task<utblLCHotelLatLong> GetLCHotelLatLongByIDAsync(long id)
         {

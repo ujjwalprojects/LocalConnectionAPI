@@ -239,17 +239,17 @@ namespace LocalConn.API.Areas.Admin.Controllers
                                          .Select(x => x.ErrorMessage));
             return "Operation Error: " + messages;
         }
-        [Route("GetHotelAmenitiesMapByID")]
-        public async Task<utblLCHotelAmenitiesMap> GetHotelAmenitiesMapByID(long id)
-        {
-            return await objLCHotel.GetHotelAmenitiesMapByIDAsync(id);
-        }
-        [HttpDelete]
-        [Route("DeleteHotelAmenitiesMap")]
-        public async Task<string> DeleteHotelAmenitiesMap(long id)
-        {
-            return await objLCHotel.DeleteHotelAmenitiesMapAsync(id);
-        }
+        //[Route("GetHotelAmenitiesMapByID")]
+        //public async Task<utblLCHotelAmenitiesMap> GetHotelAmenitiesMapByID(long id)
+        //{
+        //    return await objLCHotel.GetHotelAmenitiesMapByIDAsync(id);
+        //}
+        //[HttpDelete]
+        //[Route("DeleteHotelAmenitiesMap")]
+        //public async Task<string> DeleteHotelAmenitiesMap(long id)
+        //{
+        //    return await objLCHotel.DeleteHotelAmenitiesMapAsync(id);
+        //}
          
         #endregion
 

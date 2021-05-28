@@ -59,5 +59,11 @@ namespace LocalConn.Entities.Models
         public DbSet<utblLCNotification> utblLCNotifications { get; set; }
 
         public DbSet<utblLCHotelLatLong> utblLCHotelLatLongs { get; set; }
+
+        public DbSet<utblAboutU> utblAboutUs { get; set; }
+        public DbSet<utblPolicie> utblPolicies { get; set; }
+        public DbSet<utblPolicyPoint> utblPolicyPoints { get; set; }
+
+        public DbSet<utblTrnUserOTP> utblTrnUserOTPs { get; set; }
     }
 }
