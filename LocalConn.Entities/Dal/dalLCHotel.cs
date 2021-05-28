@@ -65,11 +65,12 @@ namespace LocalConn.Entities.Dal
                 var parThreeOccupantPercentage = new SqlParameter("@ThreeOccupantPercentage", model.LCHotel.ThreeOccupantPercentage);
                 var parFourPlusOccupantPercentage = new SqlParameter("@FourPlusOccupantPercentage", model.LCHotel.FourPlusOccupantPercentage);
                 var parChildOccupantNote = new SqlParameter("@ChildOccupantNote", model.LCHotel.ChildOccupantNote);
+                var parLatLong = new SqlParameter("@LatLong", model.LCHotel.LatLong);
                 var parIsActive = new SqlParameter("@IsActive", model.LCHotel.IsActive);
 
 
-                return await db.Database.SqlQuery<string>("udspLCHotelSave @HotelID, @HotelName, @HotelAddress, @HotelDesc, @HotelContactNo, @HotelEmail, @CountryID,@StateID,@CityID,@LocalityID,@HomeTypeID,@StarRatingID,@MaxOccupant,@MaxRooms,@OverallOfferPercentage,@TwoOccupantPercentage,@ThreeOccupantPercentage,@FourPlusOccupantPercentage,@ChildOccupantNote,@IsActive",
-                    parHotelID, parHotelName, parHotelAddress, parHotelDesc, parHotelContactNo, parHotelEmail, parCountryID, parStateID, parCityID, parLocalityID, parHomeTypeID, parStarRatingID, parMaxOccupant,parMaxRooms, parOverallOfferPercentage, parTwoOccupantPercentage, parThreeOccupantPercentage, parFourPlusOccupantPercentage, parChildOccupantNote,parIsActive).FirstOrDefaultAsync();
+                return await db.Database.SqlQuery<string>("udspLCHotelSave @HotelID, @HotelName, @HotelAddress, @HotelDesc, @HotelContactNo, @HotelEmail, @CountryID,@StateID,@CityID,@LocalityID,@HomeTypeID,@StarRatingID,@MaxOccupant,@MaxRooms,@OverallOfferPercentage,@TwoOccupantPercentage,@ThreeOccupantPercentage,@FourPlusOccupantPercentage,@ChildOccupantNote,@LatLong,@IsActive",
+                    parHotelID, parHotelName, parHotelAddress, parHotelDesc, parHotelContactNo, parHotelEmail, parCountryID, parStateID, parCityID, parLocalityID, parHomeTypeID, parStarRatingID, parMaxOccupant,parMaxRooms, parOverallOfferPercentage, parTwoOccupantPercentage, parThreeOccupantPercentage, parFourPlusOccupantPercentage, parChildOccupantNote,parLatLong,parIsActive).FirstOrDefaultAsync();
             }
             catch (Exception ex)
             {
@@ -250,12 +251,8 @@ namespace LocalConn.Entities.Dal
                 {
                     parRoomsID = new SqlParameter("@RoomID", model.RoomID);
                 }
-                var parIsRoomCover = new SqlParameter("@IsRoomCover", DBNull.Value);
-                //if(model.IsRoomCover != false)
-                //{
-                    
-                //}
-                parIsRoomCover = new SqlParameter("@IsRoomCover", model.IsRoomCover);
+               
+                var parIsRoomCover = new SqlParameter("@IsRoomCover", model.IsRoomCover);
                 var parIsHotelCover = new SqlParameter("@IsHotelCover", model.IsHotelCover);
                 var parPhotoThumbPath = new SqlParameter("@PhotoThumbPath", model.PhotoThumbPath);
                 var parPhotoNormalPath = new SqlParameter("@PhotoNormalPath", model.PhotoNormalPath);
@@ -616,6 +613,61 @@ namespace LocalConn.Entities.Dal
             string query = "select NearByID, NearByName from utblLCMstNearBys";
             return await db.Database.SqlQuery<LCNearBysTypeDD>(query).ToListAsync();
         }
-        #endregion  
+        #endregion
+
+        #region LClongLats
+        public async Task<utblLCHotelLatLong> GetLCHotelLatLongByIDAsync(long id)
+        {
+            try
+            {
+                return await db.utblLCHotelLatLongs.Where(x => x.HotelID == id).FirstOrDefaultAsync();
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+        }
+        #endregion
+
+        #region Customer Booking Details
+        public async Task<LCCustomerBookingVM> GetLCCustBookingAsync(int pageno, int pagesize, string sterm)
+        {
+            LCCustomerBookingVM model = new LCCustomerBookingVM();
+            var parStart = new SqlParameter("@Start", (pageno - 1) * pagesize);
+            var parEnd = new SqlParameter("@PageSize", pagesize);
+
+            var parSearchTerm = new SqlParameter("@SearchTerm", DBNull.Value);
+            if (!(sterm == null || sterm == ""))
+                parSearchTerm.Value = sterm;
+            // setting stored procedure OUTPUT value
+            // This return total number of rows, and avoid two database call for data and total number of rows 
+            var spOutput = new SqlParameter
+            {
+                ParameterName = "@TotalCount",
+                SqlDbType = System.Data.SqlDbType.BigInt,
+                Direction = System.Data.ParameterDirection.Output
+            };
+
+            model.LCCustomerBookingView = await db.Database.SqlQuery<LCCustomerBookingView>("udspLCCustBookingsPaged @Start, @PageSize,@SearchTerm, @TotalCount out",
+                parStart, parEnd, parSearchTerm, spOutput).ToListAsync();
+            model.TotalRecords = int.Parse(spOutput.Value.ToString());
+            return model;
+        }
+        public async Task<LCCustomerBookingView> GetLCCustBookingByIDAsync(string id)
+        {
+            try
+            {
+                var parBookingID = new SqlParameter("@BookingID", id);
+                return await db.Database.SqlQuery<LCCustomerBookingView>("udspLCCustBookingsByID @BookingID", parBookingID).FirstOrDefaultAsync();
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+
+        }
+        #endregion
     }
 }

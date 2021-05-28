@@ -293,7 +293,31 @@ namespace LocalConn.API.Areas.Admin.Controllers
         {
             return await objLCHotel.GetLCNearBysTypeDDAsync();
         }
+        #endregion
+
+        #region HotelLatLong
+        [HttpGet]
+        [Route("LCHotelLatLongByID")]
+        public async Task<utblLCHotelLatLong> LCHotelLatLongByID(long id)
+        {
+            return await objLCHotel.GetLCHotelLatLongByIDAsync(id);
+        }
         #endregion  
+
+        #region LCCustomerBookingDetails
+        [HttpGet]
+        [Route("LCCustBookingDtl")]
+        public async Task<LCCustomerBookingVM> LCCustBookingDtl(int PageNo, int PageSize, string SearchTerm)
+        {
+            return await objLCHotel.GetLCCustBookingAsync(PageNo, PageSize, SearchTerm);
+        }
+        [HttpGet]
+        [Route("LCCustBookingByID")]
+        public async Task<LCCustomerBookingView> LCCustBookingByID(string id)
+        {
+            return await objLCHotel.GetLCCustBookingByIDAsync(id);
+        }
+        #endregion
 
         #region Helper
         private string SaveImage(string imageStrNormal, string imageStrThumb, string name)

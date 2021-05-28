@@ -57,5 +57,7 @@ namespace LocalConn.Entities.Models
         public DbSet<utblLCHelpPage> utblLCHelpPages { get; set; }
         public DbSet<utblLCNearByPoint> utblLCNearByPoints { get; set; }
         public DbSet<utblLCNotification> utblLCNotifications { get; set; }
+
+        public DbSet<utblLCHotelLatLong> utblLCHotelLatLongs { get; set; }
     }
 }
