@@ -23,7 +23,6 @@ namespace LocalConn.Entities.Models
         public DbSet<utblLCHotelImage> utblLCHotelImages { get; set; }
         
         public DbSet<utblMstActivitie> utblMstActivities { get; set; }
-        public DbSet<utblTrnUserOTP> utblTrnUserOTPs { get; set; }
 
         //package type
         public DbSet<utblMstPackageType> utblMstPackageTypes { get; set; }
@@ -58,10 +57,7 @@ namespace LocalConn.Entities.Models
         public DbSet<utblLCHelpPage> utblLCHelpPages { get; set; }
         public DbSet<utblLCNearByPoint> utblLCNearByPoints { get; set; }
         public DbSet<utblLCNotification> utblLCNotifications { get; set; }
-        public DbSet<utblLCHotelAmenitiesMap> utblLCHotelAmenitiesMaps { get; set; }
 
-        public DbSet<utblAboutU> utblAboutUs { get; set; }
-        public DbSet<utblPolicie> utblPolicies { get; set; }
-        public DbSet<utblPolicyPoint> utblPolicyPoints { get; set; }
+        public DbSet<utblLCHotelLatLong> utblLCHotelLatLongs { get; set; }
     }
 }

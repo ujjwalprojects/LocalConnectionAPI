@@ -71,6 +71,7 @@
     <Compile Include="Models\utblLCHotel.cs" />
     <Compile Include="Models\utblLCHotelAmenitiesMap.cs" />
     <Compile Include="Models\utblLCHotelImage.cs" />
+    <Compile Include="Models\utblLCHotelLatLong.cs" />
     <Compile Include="Models\utblLCMstAmenitie.cs" />
     <Compile Include="Models\utblLCMstCitie.cs" />
     <Compile Include="Models\utblLCMstHomeType.cs" />
