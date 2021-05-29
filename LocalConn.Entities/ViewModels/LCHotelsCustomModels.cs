@@ -56,6 +56,7 @@ namespace LocalConn.Entities.ViewModels
         public Int16 ThreeOccupantPercentage { get; set; }
         public Int16 FourPlusOccupantPercentage { get; set; }
         public string ChildOccupantNote { get; set; }
+        public string LatLong { get; set; }
         public bool IsActive { get; set; }
     }
     public class LCHotelManageModel
@@ -223,26 +224,27 @@ namespace LocalConn.Entities.ViewModels
         public int TotalRecords { get; set; }
     }
 
-    //LCHotelAmenitiesMap
-    public class HotelAmenitiesSave
+    //customer booking model
+    public class LCCustomerBookingVM
     {
-        public long HotelAmenitiesMapID { get; set; }
-        public long HotelID { get; set; }
-        public long AmenitiesID { get; set; }
+        public IEnumerable<LCCustomerBookingView> LCCustomerBookingView { get; set; }
+        public int TotalRecords { get; set; }
     }
-    public class HotelAmenitiesSaveModel
+    public class LCCustomerBookingView
     {
-        [Required]
+        public string BookingID { get; set; }
+        public string CustName { get; set; }
+        public string CustEmail { get; set; }
+        public string CustPhNo { get; set; }
         public long HotelID { get; set; }
-        public List<HotelAmenitiesSave> HotelAmenitiesMapView { get; set; }
-    }
-    public class HotelAmenitiesMapView
-    {
-        public long HotelAmenitiesMapID { get; set; }
-        public long HotelID { get; set; }
-        public long AmenitiesID { get; set; }
-        public string AmenitiesName { get; set; }
-        public decimal AmenitiesBasePrice { get; set; }
-        public bool IsSelected { get; set; }
+        public string HotelName { get; set; }
+        public DateTime BookingFrom { get; set; }
+        public DateTime BookingUpto { get; set; }
+        public DateTime BookingDate { get; set; }
+        public string CustDetails { get; set; }
+        public string BookingStatus { get; set; }
+        public decimal FinalFare { get; set; }
+        public string paymentstatus { get; set; }
+        public DateTime PaymentDate { get; set; }
     }
 }

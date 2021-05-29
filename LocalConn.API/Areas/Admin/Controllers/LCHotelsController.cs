@@ -239,17 +239,17 @@ namespace LocalConn.API.Areas.Admin.Controllers
                                          .Select(x => x.ErrorMessage));
             return "Operation Error: " + messages;
         }
-        [Route("GetHotelAmenitiesMapByID")]
-        public async Task<utblLCHotelAmenitiesMap> GetHotelAmenitiesMapByID(long id)
-        {
-            return await objLCHotel.GetHotelAmenitiesMapByIDAsync(id);
-        }
-        [HttpDelete]
-        [Route("DeleteHotelAmenitiesMap")]
-        public async Task<string> DeleteHotelAmenitiesMap(long id)
-        {
-            return await objLCHotel.DeleteHotelAmenitiesMapAsync(id);
-        }
+        //[Route("GetHotelAmenitiesMapByID")]
+        //public async Task<utblLCHotelAmenitiesMap> GetHotelAmenitiesMapByID(long id)
+        //{
+        //    return await objLCHotel.GetHotelAmenitiesMapByIDAsync(id);
+        //}
+        //[HttpDelete]
+        //[Route("DeleteHotelAmenitiesMap")]
+        //public async Task<string> DeleteHotelAmenitiesMap(long id)
+        //{
+        //    return await objLCHotel.DeleteHotelAmenitiesMapAsync(id);
+        //}
          
         #endregion
 
@@ -327,7 +327,31 @@ namespace LocalConn.API.Areas.Admin.Controllers
         {
             return await objLCHotel.GetLCNearBysTypeDDAsync();
         }
+        #endregion
+
+        #region HotelLatLong
+        [HttpGet]
+        [Route("LCHotelLatLongByID")]
+        public async Task<utblLCHotelLatLong> LCHotelLatLongByID(long id)
+        {
+            return await objLCHotel.GetLCHotelLatLongByIDAsync(id);
+        }
         #endregion  
+
+        #region LCCustomerBookingDetails
+        [HttpGet]
+        [Route("LCCustBookingDtl")]
+        public async Task<LCCustomerBookingVM> LCCustBookingDtl(int PageNo, int PageSize, string SearchTerm)
+        {
+            return await objLCHotel.GetLCCustBookingAsync(PageNo, PageSize, SearchTerm);
+        }
+        [HttpGet]
+        [Route("LCCustBookingByID")]
+        public async Task<LCCustomerBookingView> LCCustBookingByID(string id)
+        {
+            return await objLCHotel.GetLCCustBookingByIDAsync(id);
+        }
+        #endregion
 
         #region Helper
         private string SaveImage(string imageStrNormal, string imageStrThumb, string name)
