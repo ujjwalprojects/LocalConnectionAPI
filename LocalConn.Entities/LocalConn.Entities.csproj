@@ -59,6 +59,7 @@
     <Compile Include="Dal\dalLCHotel.cs" />
     <Compile Include="Dal\dalTourGuide.cs" />
     <Compile Include="Dal\dalTourPackage.cs" />
+    <Compile Include="Dal\dalWebRequest.cs" />
     <Compile Include="Models\EFDBContext.cs" />
     <Compile Include="Models\utblAboutU.cs" />
     <Compile Include="Models\utblAgent.cs" />
