@@ -19,56 +19,56 @@ namespace LocalConn.API.Areas.General.Controllers
     [RoutePrefix("api/general/webrequest")]
     public class WebRequestController : ApiController
     {
-        dalApp objDal = new dalApp();
+        dalWebRequest objDal = new dalWebRequest();
 
 
 
         [HttpGet]
-        [Route("getcitylist")]
-        public async Task<List<CityList>> getCityList(string StateID)
+        [Route("getcitylist")]//state id
+        public async Task<List<CityList>> getCityList(string id)
         {
-            return await objDal.getCityMenuList(StateID);
+            return await objDal.getCityMenuList(id);
         }
 
         [HttpGet]
-        [Route("getcityhotelvmlist")]
-        public async Task<List<HotelList>> getCityHotelList(string CityID)
+        [Route("getcityhotelvmlist")]//city id
+        public async Task<List<HotelList>> getCityHotelList(string id)
         {
-            return await objDal.getCityHotelList(CityID);
+            return await objDal.getCityHotelList(id);
         }
 
         [HttpGet]
-        [Route("gethotellist")]
-        public async Task<List<HotelList>> getHotelList(string HomeTypeID)
+        [Route("gethotellist")]//hometypeid
+        public async Task<List<HotelList>> getHotelList(string id)
         {
             List<HotelList> obj = new List<HotelList>();
-            obj = await objDal.getHotelMenuList(HomeTypeID);
+            obj = await objDal.getHotelMenuList(id);
             return obj;
         }
 
         [HttpGet]
-        [Route("getresortlist")]
-        public async Task<List<HotelList>> getResortList(string HomeTypeID)
-        {
-            return await objDal.getResortMenuList(HomeTypeID);
+        [Route("getresortlist")]//hometypeid
+        public async Task<List<HotelList>> getResortList(string id)
+        {   
+            return await objDal.getResortMenuList(id);
         }
         [HttpGet]
-        [Route("getlodgelist")]
-        public async Task<List<HotelList>> getLodgeList(string HomeTypeID)
+        [Route("getlodgelist")]//hometypeid
+        public async Task<List<HotelList>> getLodgeList(string id)
         {
-            return await objDal.getLodgeMenuList(HomeTypeID);
+            return await objDal.getLodgeMenuList(id);
         }
         [HttpGet]
-        [Route("gethomestaylist")]
-        public async Task<List<HotelList>> getHomestayList(string HomeTypeID)
+        [Route("gethomestaylist")]//homeytypeid
+        public async Task<List<HotelList>> getHomestayList(string id)
         {
-            return await objDal.getHomestayMenuList(HomeTypeID);
+            return await objDal.getHomestayMenuList(id);
         }
         [HttpGet]
-        [Route("getghouselist")]
-        public async Task<List<HotelList>> getGHouseList(string HomeTypeID)
+        [Route("getghouselist")]//hometypeid
+        public async Task<List<HotelList>> getGHouseList(string id)
         {
-            return await objDal.getGHouseMenuList(HomeTypeID);
+            return await objDal.getGHouseMenuList(id);
         }
         //search
         [HttpGet]
