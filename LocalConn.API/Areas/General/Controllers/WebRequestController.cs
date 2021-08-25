@@ -80,30 +80,30 @@ namespace LocalConn.API.Areas.General.Controllers
 
         [HttpGet]
         [Route("gethoteldtl")]
-        public async Task<HotelDtl> getHotelDtl(string HotelID)
+        public async Task<HotelDtl> getHotelDtl(long HotelID)
         {
             HotelDtl obj = new HotelDtl();
-            obj = await objDal.getHotelDtl(HotelID);
+            obj = await objDal.getHotelDtl(Convert.ToString(HotelID));
             return obj;
         }
         [HttpGet]
-        [Route("gethamenitieslist")]
-        public async Task<List<HAmenitiesList>> getAmenitiesList(string HotelID)
+        [Route("gethamenitieslist")]//hotelid
+        public async Task<List<HAmenitiesList>> getAmenitiesList(string id)
         {
-            return await objDal.getAmnetieslist(HotelID);
+            return await objDal.getAmnetieslist(id);
         }
         [HttpGet]
         [Route("gethotelpremises")]
-        public async Task<List<HotelPremisesList>> getHotelPremises(string HotelID)
+        public async Task<List<HotelPremisesList>> getHotelPremises(string id)
         {
-            return await objDal.getPremMenu(HotelID);
+            return await objDal.getPremMenu(id);
         }
 
         [HttpGet]
         [Route("gethotelroomlist")]
-        public async Task<List<HotelRoomList>> getHotelRoomList(string HotelID)
+        public async Task<List<HotelRoomList>> getHotelRoomList(long id)
         {
-            return await objDal.getHotelRoomList(HotelID);
+            return await objDal.getHotelRoomList(Convert.ToString(id));
         }
         //tabbed
         [HttpGet]
