@@ -51,13 +51,11 @@ namespace LocalConn.API.Models
     }
     public class RegisterModel
     {
-        [Required]
         public string Email { get; set; }
         public string MobileNo { get; set; }
-        [Required]
         public string ProfileName { get; set; }
-        [Required]
-        public string RoleName { get; set; }
+        public string Password { get; set; }
+        //public string RoleName { get; set; }
     }
 
     public class RegisterExternalBindingModel
@@ -111,7 +109,6 @@ namespace LocalConn.API.Models
     public class ChangePasswordModel
     {
         [Required]
-        [EmailAddress]
         public string Email { get; set; }
         [Required]
         public string OldPassword { get; set; }

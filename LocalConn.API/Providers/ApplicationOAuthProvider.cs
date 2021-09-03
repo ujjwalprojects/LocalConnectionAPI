@@ -44,12 +44,12 @@ namespace LocalConn.API.Providers
 
                     if (user == null)
                     {
-                        context.SetError("invalid_grant", "The email or password is incorrect.");
+                        context.SetError("error_description", "The email or password is incorrect.");
                         return;
                     }
                     else if (!user.IsActive)
                     {
-                        context.SetError("disabled", "Sorry, your account has been disabled by admin.");
+                        context.SetError("error_description", "Sorry, your account has been disabled by admin.");
                         return;
                     }
                    ClaimsIdentity oAuthIdentity = await _repo._userManager.CreateIdentityAsync(user,
@@ -124,7 +124,7 @@ namespace LocalConn.API.Providers
                 {"userName", user.UserName },
                 {"profileName", user.ProfileName==null?"":user.ProfileName},
                 {"role", user.RoleName??""},
-                //{"email", user.Email},
+                {"PhoneNumberConfirmed", user.PhoneNumberConfirmed.ToString()},
                 {"userImage", user.UserImage==null?"":user.UserImage}
             };
             return new AuthenticationProperties(data);

@@ -333,9 +333,10 @@ namespace LocalConn.Entities.Dal
                 var parRoomID = new SqlParameter("@RoomID", model.RoomID);
                 var parRoomTypePrice = new SqlParameter("@RoomTypePrice", model.RoomTypePrice);
                 var parIsStandard = new SqlParameter("@IsStandard", model.IsStandard);
+                var parIsActive = new SqlParameter("@IsActive", model.IsActive);
 
-                return await db.Database.SqlQuery<string>("udspLCHotelRoomTypeMapSave @HotelID, @RoomID, @RoomTypePrice,@IsStandard ",
-                    parHotelID, parRoomID, parRoomTypePrice, parIsStandard).FirstOrDefaultAsync();
+                return await db.Database.SqlQuery<string>("udspLCHotelRoomTypeMapSave @HotelID, @RoomID, @RoomTypePrice,@IsStandard,@IsActive ",
+                    parHotelID, parRoomID, parRoomTypePrice, parIsStandard, parIsActive).FirstOrDefaultAsync();
             }
             catch (Exception ex)
             {
@@ -353,7 +354,7 @@ namespace LocalConn.Entities.Dal
         {
             try
             {
-                string query = "select HotelID, RoomID, RoomTypePrice, IsStandard from utblLCHotelRoomTypeMaps where HotelID=" + id + "and RoomID =" + rid;
+                string query = "select HotelID, RoomID, RoomTypePrice, IsStandard, IsActive from utblLCHotelRoomTypeMaps where HotelID=" + id + "and RoomID =" + rid;
                 return await db.Database.SqlQuery<HotelRoomTypeMap>(query).FirstOrDefaultAsync();
 
             }
@@ -612,6 +613,68 @@ namespace LocalConn.Entities.Dal
         {
             string query = "select NearByID, NearByName from utblLCMstNearBys";
             return await db.Database.SqlQuery<LCNearBysTypeDD>(query).ToListAsync();
+        }
+        #endregion
+
+        #region hotelAmenities
+        public async Task<IEnumerable<HotelAmenitiesMapView>> GetAllHotelAmenitiesMap(long id)
+        {
+            var parHotelID = new SqlParameter("@HotelID", id);
+            return await db.Database.SqlQuery<HotelAmenitiesMapView>("select * from dbo.udfGetLCHotelAmenitiesMap(@HotelID)", parHotelID).ToListAsync();
+        }
+        public async Task<string> SaveHotelAmenitiesMapAsync(HotelAmenitiesSaveModel model)
+        {
+            try
+            {
+                var parHotelID = new SqlParameter("@HotelID", model.HotelID);
+                ConvertListToDT objList = new ConvertListToDT();
+                DataTable amenitydt = new DataTable();
+               
+
+                //Converting subject list to datatable if record is present else send empty datatable
+                if (model.HotelAmenitiesMapView != null)
+                {
+                    List<HotelAmenitiesMapSave> savemodel = new List<HotelAmenitiesMapSave>();
+                    savemodel = model.HotelAmenitiesMapView.Select(x => new HotelAmenitiesMapSave {
+                        HotelAmenitiesMapID = x.HotelAmenitiesMapID,
+                        HotelID = x.HotelID,
+                        AmenitiesID = x.AmenitiesID,
+                        AmenitiesBasePrice = x.AmenitiesBasePrice
+                    }).ToList();
+
+                    amenitydt = objList.ConvertIEnumerableToDataTable(savemodel);
+                }
+                else
+                {
+                    if (amenitydt.Columns.Count == 0)
+                    {
+                        DataColumn col = new DataColumn();
+                        col.ColumnName = "HotelAmenitiesMapID";
+                        amenitydt.Columns.Add(col);
+                        DataColumn col1 = new DataColumn();
+                        col1.ColumnName = "HotelID";
+                        amenitydt.Columns.Add(col1);
+                        DataColumn col2 = new DataColumn();
+                        col2.ColumnName = "AmenitiesID";
+                        amenitydt.Columns.Add(col2);
+                        DataColumn col3 = new DataColumn();
+                        col3.ColumnName = "AmenitiesPrice";
+                        amenitydt.Columns.Add(col3);
+                    }
+                }
+
+                var parAmeDT = new SqlParameter("@LCHotelAmenitiesMaps", amenitydt);
+                parAmeDT.SqlDbType = SqlDbType.Structured;
+                parAmeDT.TypeName = "dbo.LCHotelAmenitiesMaps2";
+
+                return await db.Database.SqlQuery<string>("udspLCHotelAmenitiesMapSave @HotelID,@LCHotelAmenitiesMaps",
+                    parHotelID, parAmeDT).FirstOrDefaultAsync();
+
+            }
+            catch (Exception ex)
+            {
+                return "Error: " + ex.Message;
+            }
         }
         #endregion
 

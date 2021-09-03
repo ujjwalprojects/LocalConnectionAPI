@@ -19,6 +19,7 @@ namespace LocalConn.Entities.ViewModels
         public string PhotoThumbPath { get; set; }
         public string PhotoCaption { get; set; }
         public Int16 OverallOfferPercentage { get; set; }
+        public bool IsActive { get; set; }
         public decimal OfferPrice { get; set; }
     }
     public class CityList
@@ -33,6 +34,7 @@ namespace LocalConn.Entities.ViewModels
         public long HotelID { get; set; }
         public string HotelName { get; set; }
         public string PhotoThumbPath { get; set; }
+        public bool IsActive { get; set; }
     }
 
     public class HotelDtl
@@ -44,6 +46,7 @@ namespace LocalConn.Entities.ViewModels
         public string HotelDesc { get; set; }
         public string LocalityName { get; set; }
         public decimal RoomTypePrice { get; set; }
+        public string DefaultRoomType { get; set; }
         public Int16 MaxOccupant { get; set; }
         public Int16 MaxRooms { get; set; }
         public Int16 OverallOfferPercentage { get; set; }
@@ -203,4 +206,30 @@ namespace LocalConn.Entities.ViewModels
         public string HelpPageContactNo { get; set; }
         public string HelpPageEmailID { get; set; }
     }
+
+    public class AboutUsDetails
+    {
+        public long AboutID { get; set; }
+        public String AboutContent { get; set; }
+    }
+
+    public class PolicyList
+    {
+        public List<PolicyTitle> PolicyTitle { get; set; }
+        public List<PolicyData> PolicyData { get; set; }
+
+    }
+    public class PolicyData
+    {
+        public long PolicyPointID { get; set; }
+        public long PolicyID { get; set; }
+        public String PolicyPoints { get; set; }
+    }
+    public class PolicyTitle
+    {
+        public long PolicyID { get; set; }
+        public String PolicyTitleName { get; set; }
+    }
+
+
 }
