@@ -10,7 +10,7 @@ namespace LocalConn.Entities.ViewModels
     {
         public long HotelID { get; set; }
         public string HotelName { get; set; }
-        public decimal HotelBaseFare { get; set; }
+        public decimal RoomTypePrice { get; set; }
         public string HotelDesc { get; set; }
         public string HotelAddress { get; set; }
         public long HomeTypeID { get; set; }
@@ -18,6 +18,8 @@ namespace LocalConn.Entities.ViewModels
         public bool IsHotelCover { get; set; }
         public string PhotoThumbPath { get; set; }
         public string PhotoCaption { get; set; }
+        public Int16 OverallOfferPercentage { get; set; }
+        public decimal OfferPrice { get; set; }
     }
     public class CityList
     {
@@ -31,7 +33,6 @@ namespace LocalConn.Entities.ViewModels
         public long HotelID { get; set; }
         public string HotelName { get; set; }
         public string PhotoThumbPath { get; set; }
-        public decimal BaseFare { get; set; }
     }
 
     public class HotelDtl
@@ -42,15 +43,16 @@ namespace LocalConn.Entities.ViewModels
         public string HotelAddress { get; set; }
         public string HotelDesc { get; set; }
         public string LocalityName { get; set; }
-        public string StarRating { get; set; }
-        public decimal HotelBaseFare { get; set; }
-        public int TotalSingleRooms { get; set; }
-        public int TotalDoubleRooms { get; set; }
         public decimal RoomTypePrice { get; set; }
-        public decimal RatePerRoom { get; set; }
-        public decimal RatePerNight { get; set; }
-        public decimal RatePerGuest { get; set; }
-        public decimal RatePerChild { get; set; }
+        public Int16 MaxOccupant { get; set; }
+        public Int16 MaxRooms { get; set; }
+        public Int16 OverallOfferPercentage { get; set; }
+        public Int16 TwoOccupantPercentage { get; set; }
+        public Int16 ThreeOccupantPercentage { get; set; }
+        public Int16 FourPlusOccupantPercentage { get; set; }
+        public string ChildOccupantNote { get; set; }
+        public bool IsActive { get; set; }
+        public string LatLong { get; set; }
     }
     public class HotelRoomList
     {
@@ -61,15 +63,32 @@ namespace LocalConn.Entities.ViewModels
         public int RoomCapacity { get; set; }
         public bool IsStandard { get; set; }
         public decimal RoomTypePrice { get; set; }
-        public decimal RatePerRoom { get; set; }
-        public decimal RatePerNight { get; set; }
-        public decimal RatePerGuest { get; set; }
-        public decimal RatePerChild { get; set; }
+        public string PhotoThumbPath { get; set; }
+        public string PhotoCaption { get; set; }
+        public Int16 MaxOccupant { get; set; }
+        public Int16 OverallOfferPercentage { get; set; }
+        public Int16 TwoOccupantPercentage { get; set; }
+        public Int16 ThreeOccupantPercentage { get; set; }
+        public Int16 FourPlusOccupantPercentage { get; set; }
+    }
+    public class HotelPremisesList
+    {
+        public long HotelPremID { get; set; }
+        public long HotelID { get; set; }
+        public String HotelPremName { get; set; }
+    }
+
+    public class HotelRoomTab
+    {
+        public List<HotelPremisesList> premisesList { get; set; }
+        public List<HotelRoomImg> roomImgList { get; set; }
     }
     public class HotelRoomImg
     {
         public long HotelImgID { get; set; }
         public long HotelID { get; set; }
+        public long HotelPremID { get; set; }
+        public string HotelPremName { get; set; }
         public string PhotoNormalPath { get; set; }
     }
 
@@ -86,7 +105,8 @@ namespace LocalConn.Entities.ViewModels
         public DateTime BookingDate { get; set; }
         public string CustDetails { get; set; }
         public string BookingStatus { get; set; }
-        public string FinalFare { get; set; }
+        public decimal FinalFare { get; set; }
+        public string PaymentGatewayCode { get; set; }
     }
     public class OrderList
     {
@@ -104,6 +124,7 @@ namespace LocalConn.Entities.ViewModels
         public decimal FinalFare { get; set; }
         public string HotelName { get; set; }
         public string HotelAddress { get; set; }
+        public int IsValidCancel { get; set; }
     }
     public class HAmenitiesList
     {
@@ -112,5 +133,74 @@ namespace LocalConn.Entities.ViewModels
         public string AmenitiesName { get; set; }
         public string AmenitiesIconPath { get; set; }
         public decimal AmenitiesBasePrice { get; set; }
+    }
+
+  
+    public class OfferList
+    {
+        public long OfferID { get; set; }
+        public string OfferTagLine { get; set; }
+        public string OfferImagePath { get; set; }
+     
+    }
+
+    public class OfferHotelsList
+    {
+       public List<HomeTypeOnOffer> homeTypeList { get; set; }
+       public List<HotelList> hotelList { get; set; }
+    }
+    public class HomeTypeOnOffer
+    {
+        public long OfferID { get; set; }
+        public long HomeTypeID { get; set; }
+        public string HomeTypeName { get; set; }
+    }
+
+    public class TermsPolicyList
+    {
+        public long HotelTermsID { get; set; }
+        public long HotelID { get; set; }
+        public string TermName { get; set; }
+    }
+    public class CancellationPolicyList
+    {
+        public long CancellationID { get; set; }
+        public long HotelID { get; set; }
+        public string CancellationDesc { get; set; }
+    }
+    public class TermCondPolicyVM
+    {
+        public List<TermsPolicyList> termPolicyList { get; set; }
+        public List<CancellationPolicyList> cancelPolicyList { get; set; }
+    }
+
+
+    public  class NotificationList
+    {
+        public long NotificationID { get; set; }
+        public string NotificationTitle { get; set; }
+        public string NotificationDesc { get; set; }
+        public string NotificationImagePath { get; set; }
+    }
+
+    public class NearbyList
+    {
+        public long NearByID { get; set; }
+        public long HotelID { get; set; }
+        public string NearByPoints { get; set; }
+        public string NearByDistance { get; set; }
+    }
+    public class NearbyVM
+    {
+        public List<NearbyList> nearbyone { get; set; }
+        public List<NearbyList> nearbytwo { get; set; }
+    }
+   public class HelpPageDtl
+    {
+        public string HelpPageTitle { get; set; }
+        public string HelpPageContent { get; set; }
+        public string HelpPageImgPath { get; set; }
+        public string HelpPageContactNo { get; set; }
+        public string HelpPageEmailID { get; set; }
     }
 }

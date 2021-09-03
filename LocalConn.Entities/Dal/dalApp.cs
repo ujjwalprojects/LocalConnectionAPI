@@ -26,7 +26,7 @@ namespace LocalConn.Entities.Dal
 
                 throw e;
             }
-            
+
 
         }
         public async Task<List<HotelList>> getFtHotelList(string HomeTypeID)
@@ -52,6 +52,20 @@ namespace LocalConn.Entities.Dal
             {
                 var parID = new SqlParameter("@HomeTypeID", HomeTypeID);
                 return await objDB.Database.SqlQuery<HotelList>("udspLCAppGetHotelList @HomeTypeID", parID).ToListAsync();
+
+            }
+            catch (Exception e)
+            {
+
+                throw e;
+            }
+        }
+        public async Task<List<HotelList>> getCityHotelList(string cityID)
+        {
+            try
+            {
+                var parID = new SqlParameter("@CityID", cityID);
+                return await objDB.Database.SqlQuery<HotelList>("udspLCAppGetCityHotelList @CityID", parID).ToListAsync();
 
             }
             catch (Exception e)
@@ -117,6 +131,23 @@ namespace LocalConn.Entities.Dal
             }
         }
 
+        //search
+        public async Task<List<HotelList>> getHotelSearchList(string query)
+        {
+            try
+            {
+                var parID = new SqlParameter("@query", query);
+                return await objDB.Database.SqlQuery<HotelList>("udspLCAppGetHotelSearchList @query", parID).ToListAsync();
+
+            }
+            catch (Exception e)
+            {
+
+                throw e;
+            }
+        }
+
+
         public async Task<HotelDtl> getHotelDtl(string HotelID)
         {
             try
@@ -171,6 +202,33 @@ namespace LocalConn.Entities.Dal
                 throw e;
             }
         }
+        public async Task<List<HotelPremisesList>> getHPremList(string HotelID)
+        {
+            try
+            {
+                var parID = new SqlParameter("@HotelID", HotelID);
+                return await objDB.Database.SqlQuery<HotelPremisesList>("udspLCAppGetHotelPremName @HotelID", parID).ToListAsync();
+            }
+            catch (Exception e)
+            {
+
+                throw e;
+            }
+        }
+        public async Task<List<HotelPremisesList>> getPremMenu(string HotelID)
+        {
+            try
+            {
+                var parID = new SqlParameter("@HotelID", HotelID);
+                return await objDB.Database.SqlQuery<HotelPremisesList>("udspLCAppGetHotelPremName @HotelID", parID).ToListAsync();
+            }
+            catch (Exception e)
+            {
+
+                throw e;
+            }
+        }
+
         public async Task<List<HotelList>> gethotelvmlist(string HomeTypeID)
         {
             try
@@ -197,6 +255,11 @@ namespace LocalConn.Entities.Dal
                 throw e;
             }
         }
+
+
+
+
+
         public async Task<List<OrderList>> getOrderlist(string CustPhNo)
         {
             try
@@ -223,22 +286,23 @@ namespace LocalConn.Entities.Dal
                 throw e;
             }
         }
-        public async Task<string>preBooking(PreBookingDtl obj)
+        public string preBooking(PreBookingDtl obj)
         {
             try
             {
                 string Results = "";
                 var parCName = new SqlParameter("@CustName", obj.CustName);
                 var parCMail = new SqlParameter("@CustEmail", obj.CustEmail);
-                var parCustPhNo= new SqlParameter("@CustPhNo", obj.CustPhNo);
+                var parCustPhNo = new SqlParameter("@CustPhNo", obj.CustPhNo);
                 var parBHID = new SqlParameter("@HotelID", obj.HotelID);
-                var parBFrom = new SqlParameter("@BookingFrom",obj.BookingFrom);
-                var parBUpto = new SqlParameter("@BookingUpto",obj.BookingUpto);
+                var parBFrom = new SqlParameter("@BookingFrom", obj.BookingFrom);
+                var parBUpto = new SqlParameter("@BookingUpto", obj.BookingUpto);
                 var parCDtl = new SqlParameter("@CustDetails", obj.CustDetails);
                 var parBStatue = new SqlParameter("@BookingStatus", obj.BookingStatus);
-                var parFare= new SqlParameter("@FinalFare", obj.FinalFare);
-                Results = await objDB.Database.SqlQuery<string>("udspLCAppBookingRooms @CustName, @CustEmail,@CustPhNo,@HotelID,@BookingFrom,@BookingUpto,@CustDetails,@BookingStatus,@FinalFare",
-                    parCName, parCMail, parCustPhNo, parBHID, parBFrom, parBUpto, parCDtl, parBStatue, parFare).FirstOrDefaultAsync();
+                var parFare = new SqlParameter("@FinalFare", obj.FinalFare);
+                var parPGCode = new SqlParameter("@PaymentGatewayCode", obj.PaymentGatewayCode);
+                Results = objDB.Database.SqlQuery<string>("udspLCAppBookingRooms @CustName, @CustEmail,@CustPhNo,@HotelID,@BookingFrom,@BookingUpto,@CustDetails,@BookingStatus,@FinalFare,@PaymentGatewayCode",
+                    parCName, parCMail, parCustPhNo, parBHID, parBFrom, parBUpto, parCDtl, parBStatue, parFare, parPGCode).FirstOrDefault();
 
                 return Results;
             }
@@ -248,9 +312,123 @@ namespace LocalConn.Entities.Dal
             }
         }
 
-        //public async Task<string> confirmBooking()
-        //{
+        public string cancelBooking(string BookingID)
+        {
+            try
+            {
+                var parID = new SqlParameter("@BookingID", BookingID);
+                return objDB.Database.SqlQuery<string>("udspLCAppCancelBooking @BookingID", parID).FirstOrDefault();
+            }
+            catch (Exception e)
+            {
 
-        //}
+                throw e;
+            }
+            
+
+        }
+
+
+
+
+
+
+        public List<OfferList> getOfferlist(string Date)
+        {
+            try
+            {
+                var parID = new SqlParameter("@Date", Date);
+                return  objDB.Database.SqlQuery<OfferList>("udspLCAppGetOfferList @Date", parID).ToList();
+            }
+            catch (Exception e)
+            {
+
+                throw e;
+            }
+        }
+
+        public async Task<List<HotelList>> getOfferHotellist(long OfferID)
+        {
+            try
+            {
+                var parID = new SqlParameter("@OfferID", OfferID);
+                return await objDB.Database.SqlQuery<HotelList>("udspLCAppGetOfferHotelList @OfferID", parID).ToListAsync();
+            }
+            catch (Exception e)
+            {
+
+                throw e;
+            }
+        }
+        public async Task<List<HomeTypeOnOffer>> getHomtTypeOnOffer(long OfferID)
+        {
+            var parOfferID = new SqlParameter("@OfferID", OfferID);
+            return await objDB.Database.SqlQuery<HomeTypeOnOffer>("udspLCAppGetOfferHomeTypeList @OfferID", parOfferID).ToListAsync();
+        }
+
+        public List<TermsPolicyList> getTermPolicyList(string HotelID)
+        {
+            try
+            {
+                var parID = new SqlParameter("@HotelID", HotelID);
+                return objDB.Database.SqlQuery<TermsPolicyList>("udspLCAppGetTermPolicyList @HotelID", parID).ToList();
+            }
+            catch (Exception e)
+            {
+
+                throw e;
+            }
+        }
+        public  List<CancellationPolicyList> getCancelPolicyList(string HotelID)
+        {
+            try
+            {
+                var parID = new SqlParameter("@HotelID", HotelID);
+                return  objDB.Database.SqlQuery<CancellationPolicyList>("udspLCAppGetCancelPolicyList @HotelID", parID).ToList();
+            }
+            catch (Exception e)
+            {
+
+                throw e;
+            }
+        }
+        public async Task<List<NotificationList>> getNotificationList()
+        {
+            try
+            {
+                return await objDB.Database.SqlQuery<NotificationList>("udspLCAppGetNotificationList").ToListAsync();
+            }
+            catch (Exception e)
+            {
+
+                throw e;
+            }
+        }
+        public  List<NearbyList> getNearByList(string HotelID,string NearByID)
+        {
+            try
+            {
+                var parHID = new SqlParameter("@HotelID", HotelID);
+                var parNID = new SqlParameter("@NearByID", NearByID);
+                return  objDB.Database.SqlQuery<NearbyList>("udspLCAppGetNearbyList @HotelID,@NearByID", parHID,parNID).ToList();
+            }
+            catch (Exception e)
+            {
+
+                throw e;
+            }
+        }
+        public HelpPageDtl getHelpPage()
+        {
+            try
+            {
+                return  objDB.Database.SqlQuery<HelpPageDtl>("udspLCAppGetHelpPageDtl").FirstOrDefault();
+            }
+            catch (Exception e)
+            {
+
+                throw e;
+            }
+        }
     }
 }

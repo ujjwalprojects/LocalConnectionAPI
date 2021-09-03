@@ -23,6 +23,7 @@ namespace LocalConn.Entities.Models
         public DbSet<utblLCHotelImage> utblLCHotelImages { get; set; }
         
         public DbSet<utblMstActivitie> utblMstActivities { get; set; }
+        public DbSet<utblTrnUserOTP> utblTrnUserOTPs { get; set; }
 
         //package type
         public DbSet<utblMstPackageType> utblMstPackageTypes { get; set; }
