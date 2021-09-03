@@ -32,6 +32,7 @@ namespace LocalConn.Entities.ViewModels
         public long HotelAmenitiesMapID { get; set; }
         public long HotelID { get; set; }
         public long AmenitiesID { get; set; }
+        public decimal AmenitiesBasePrice { get; set; }
     }
     public class HotelAmenitiesVM
     {

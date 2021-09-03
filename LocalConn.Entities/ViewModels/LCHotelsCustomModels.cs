@@ -94,6 +94,8 @@ namespace LocalConn.Entities.ViewModels
         public long RoomID { get; set; }
         public decimal RoomTypePrice { get; set; }
         public bool IsStandard { get; set; }
+        public bool IsActive { get; set; }
+
     }
     public class HotelRoomTypeMapView
     {
@@ -102,6 +104,8 @@ namespace LocalConn.Entities.ViewModels
         public string RoomType { get; set; }
         public decimal RoomTypePrice { get; set; }
         public bool IsStandard { get; set; }
+        public bool IsActive { get; set; }
+
     }
 
     //LCHotel Terms and cancellations
