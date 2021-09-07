@@ -17,14 +17,15 @@ namespace LocalConn.Entities.Dal
         {
             try
             {
+                List<CityList> list = new List<CityList>();
                 var parID = new SqlParameter("@StateID", StateID);
-                return await objDB.Database.SqlQuery<CityList>("udspLCAppGetCityList @StateID", parID).ToListAsync();
-
+                list=  await objDB.Database.SqlQuery<CityList>("udspLCAppGetCityList").ToListAsync();
+                return list;
             }
-            catch (Exception e)
+            catch (Exception ex)
             {
 
-                throw e;
+                throw ex;
             }
 
 
@@ -248,6 +249,20 @@ namespace LocalConn.Entities.Dal
             {
                 var parID = new SqlParameter("@Date", Date);
                 return await objDB.Database.SqlQuery<FtHotelList>("udspLCAppGetFeaturedList @Date", parID).ToListAsync();
+            }
+            catch (Exception e)
+            {
+
+                throw e;
+            }
+        }
+
+        public async Task<List<FtHotelList_web>> getFeaturedlist_web(DateTime Date)
+        {
+            try
+            {
+                var pardate = new SqlParameter("@Date", Date);
+                return await objDB.Database.SqlQuery<FtHotelList_web>("udspLCAppGetFeaturedList_Web @Date", pardate).ToListAsync();
             }
             catch (Exception e)
             {

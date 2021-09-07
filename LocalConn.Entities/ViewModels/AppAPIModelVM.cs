@@ -36,6 +36,16 @@ namespace LocalConn.Entities.ViewModels
         public string PhotoThumbPath { get; set; }
         public bool IsActive { get; set; }
     }
+    public class FtHotelList_web
+    {
+        public long HotelID { get; set; }
+        public string HotelName { get; set; }
+        public string HotelAddress { get; set; }
+        public string PhotoThumbPath { get; set; }
+        public decimal RoomTypePrice { get; set; }
+        public decimal OfferPrice { get; set; }
+        public Int16 OverallOfferPercentage { get; set; }
+    }
 
     public class HotelDtl
     {
