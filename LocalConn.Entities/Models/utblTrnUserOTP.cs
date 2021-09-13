@@ -16,4 +16,11 @@ namespace LocalConn.Entities.Models
         public DateTime GeneratedDateTime { get; set; }
         public bool IsVerified { get; set; }
     }
+    public class OTPModel
+    {
+        public string MobileNo { get; set; }
+        public string Type { get; set; }
+        public string OTP { get; set; }
+    }
+
 }

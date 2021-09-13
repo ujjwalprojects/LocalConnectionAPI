@@ -124,6 +124,7 @@ namespace LocalConn.API.Providers
                 {"userName", user.UserName },
                 {"profileName", user.ProfileName==null?"":user.ProfileName},
                 {"role", user.RoleName??""},
+                {"PhoneNumber", user.PhoneNumber??""},
                 {"PhoneNumberConfirmed", user.PhoneNumberConfirmed.ToString()},
                 {"userImage", user.UserImage==null?"":user.UserImage}
             };
