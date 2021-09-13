@@ -167,7 +167,51 @@ namespace LocalConn.API.Controllers
             {
                 return "Error: " + ex.Message;
             }
-        } 
+        }
+
+        [AllowAnonymous]
+        [Route("ForgotPasswordWeb")]
+        [HttpPost]
+        public async Task<string> ForgotPasswordWeb(ForgotPasswordModel model)
+        {
+            try
+            {
+                if (!ModelState.IsValid)
+                {
+                    return "Error: Missing required fields.";
+                }
+                ApplicationUser user = await UserManager.FindByNameAsync(model.MobileNo);
+
+                if (user == null)
+                    return "No user registered with the given Email";
+                if (!user.PhoneNumberConfirmed)
+                {
+                    return "Verify Mobile No";
+                }
+                   
+                if (!user.IsActive)
+                    return "Account has been disabled by admin";
+                else
+                {
+                    IdentityResult result;
+                    result = await UserManager.RemovePasswordAsync(user.Id);
+                    result = await UserManager.AddPasswordAsync(user.Id, model.Password);
+                    IHttpActionResult errorResult = GetErrorResult(result);
+
+                    if (errorResult != null)
+                    {
+                        return "Error"+errorResult;
+                    }
+
+                }
+                return "Success";
+            }
+            catch (Exception ex)
+            {
+                return "Error: " + ex.Message;
+            }
+        }
+
         [AllowAnonymous]
         [HttpPost]
         [Route("ResetPassword")]
@@ -725,6 +769,87 @@ namespace LocalConn.API.Controllers
             }
           
         }
+        [AllowAnonymous]
+        [Route("RequestOTPWeb")]
+        [HttpPost]
+        public async Task<string> RequestOTPWeb(OTPModel obj)
+        {
+            try
+            {
+                string otp = OTPGenerator.GenerateRandomOTP(6);
+                utblTrnUserOTP model = new utblTrnUserOTP()
+                {
+                    UserMobileNo = obj.MobileNo,
+                    OTPNo = otp,
+                    GeneratedDateTime = DateTime.Now,
+                    IsVerified = false
+                };
+                if (obj.Type == "ForgotPass")
+                {
+                    ApplicationUser user = UserManager.FindByName(obj.MobileNo);
+                    if (user == null)
+                    {
+                        return "User Not Registered";
+                    }
+                    db.utblTrnUserOTPs.Add(model);
+                    await db.SaveChangesAsync();
+
+                }
+                else if (obj.Type == "Register")
+                {
+                    db.utblTrnUserOTPs.Add(model);
+                    await db.SaveChangesAsync();
+                }
+
+                SendOTPMessage.SendHttpSMSRequest(otp, obj.MobileNo, obj.Type);
+                return "Success";
+            }
+            catch (Exception ex)
+            {
+                return ex.ToString();
+            }
+        }
+
+
+        [AllowAnonymous]
+        [Route("VerifyOTPWeb")]
+        [HttpPost]
+        public async Task<string> VerifyOTPWeb(OTPModel model)
+        {
+            try
+            {
+                utblTrnUserOTP curOTP = db.utblTrnUserOTPs.Where(x => x.UserMobileNo == model.MobileNo && x.OTPNo == model.OTP).FirstOrDefault();
+                if (curOTP == null)
+                {
+                    return "User Not Registered";
+                }
+                else
+                {
+                    TimeSpan timespan = DateTime.Now - curOTP.GeneratedDateTime;
+                    int minDiff = timespan.Seconds;
+                    if (minDiff > 300)
+                    {
+                        return "OTP_Expired";
+                    }
+                    curOTP.IsVerified = true;
+                    await db.SaveChangesAsync();
+                    ApplicationUser user = await UserManager.FindByNameAsync(model.MobileNo);
+                    user.PhoneNumberConfirmed = true;
+                    //user.isregistered = true;
+                    await UserManager.UpdateAsync(user);
+
+                    return "Success";
+                }
+            }
+            catch (Exception e)
+            {
+
+                return "Error"+e;
+            }
+
+        }
+
+
 
         [Route("setpasswordapp")]
         [HttpPost]
@@ -747,6 +872,30 @@ namespace LocalConn.API.Controllers
 
             return Ok();
         }
+        //used in case of forgot password from web
+        [Route("webpasswordset")]
+        [AllowAnonymous]
+        [HttpPost]
+        public async Task<IHttpActionResult> WebPasswordSet(ForgotPasswordModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            ApplicationUser user = UserManager.FindByName(model.MobileNo);
+            IdentityResult result;
+            result = await UserManager.RemovePasswordAsync(user.Id);
+            result = await UserManager.AddPasswordAsync(user.Id, model.Password);
+            IHttpActionResult errorResult = GetErrorResult(result);
+
+            if (errorResult != null)
+            {
+                return errorResult;
+            }
+
+            return Ok();
+        }
+
         [Route("changepasswordapp")]
         [HttpPost]
         public async Task<string> ChangePasswordApp(ChangePasswordModel model)
