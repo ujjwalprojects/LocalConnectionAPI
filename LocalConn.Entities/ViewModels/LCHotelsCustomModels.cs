@@ -251,4 +251,18 @@ namespace LocalConn.Entities.ViewModels
         public string paymentstatus { get; set; }
         public DateTime PaymentDate { get; set; }
     }
+
+    //General Web Section Model
+    public class GenLCHotelVM
+    {
+        public IEnumerable<HotelList> HotelList { get; set; }
+        public int TotalRecords { get; set; }
+    }
+    public class GenLCSearchModel
+    {
+        public string Where { get; set; }
+        public List<long> HomeType { get; set; }
+        public int PageNo { get; set; }
+        public int PageSize { get; set; }
+    }
 }

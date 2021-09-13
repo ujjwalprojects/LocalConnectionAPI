@@ -1,7 +1,10 @@
 ﻿using LocalConn.Entities.Models;
+using LocalConn.Entities.Utility;
 using LocalConn.Entities.ViewModels;
 using System;
 using System.Collections.Generic;
+using System.Data;
+using System.Data.Entity;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
@@ -147,8 +150,6 @@ namespace LocalConn.Entities.Dal
                 throw e;
             }
         }
-
-
         public async Task<HotelDtl> getHotelDtl(string HotelID)
         {
             try
@@ -162,7 +163,6 @@ namespace LocalConn.Entities.Dal
                 throw e;
             }
         }
-
         public async Task<List<HAmenitiesList>> getAmnetieslist(string HotelID)
         {
             try
@@ -176,7 +176,6 @@ namespace LocalConn.Entities.Dal
                 throw e;
             }
         }
-
         public async Task<List<HotelRoomList>> getHotelRoomList(string HotelID)
         {
             try
@@ -229,7 +228,6 @@ namespace LocalConn.Entities.Dal
                 throw e;
             }
         }
-
         public async Task<List<HotelList>> gethotelvmlist(string HomeTypeID)
         {
             try
@@ -256,7 +254,6 @@ namespace LocalConn.Entities.Dal
                 throw e;
             }
         }
-
         public async Task<List<FtHotelList_web>> getFeaturedlist_web(DateTime Date)
         {
             try
@@ -270,11 +267,6 @@ namespace LocalConn.Entities.Dal
                 throw e;
             }
         }
-
-
-
-
-
         public async Task<List<OrderList>> getOrderlist(string CustPhNo)
         {
             try
@@ -326,7 +318,6 @@ namespace LocalConn.Entities.Dal
                 throw e;
             }
         }
-
         public PreBookingDtl cancelBooking(string BookingID)
         {
             try
@@ -342,12 +333,6 @@ namespace LocalConn.Entities.Dal
 
 
         }
-
-
-
-
-
-
         public List<OfferList> getOfferlist(string Date)
         {
             try
@@ -361,13 +346,12 @@ namespace LocalConn.Entities.Dal
                 throw e;
             }
         }
-
-        public async Task<List<HotelList>> getOfferHotellist(long OfferID)
+        public async Task<List<HotelList_Offer>> getOfferHotellist(long OfferID)
         {
             try
             {
                 var parID = new SqlParameter("@OfferID", OfferID);
-                return await objDB.Database.SqlQuery<HotelList>("udspLCAppGetOfferHotelList @OfferID", parID).ToListAsync();
+                return await objDB.Database.SqlQuery<HotelList_Offer>("udspLCAppGetOfferHotelList_Web @OfferID", parID).ToListAsync();
             }
             catch (Exception e)
             {
@@ -375,12 +359,13 @@ namespace LocalConn.Entities.Dal
                 throw e;
             }
         }
+       
+
         public async Task<List<HomeTypeOnOffer>> getHomtTypeOnOffer(long OfferID)
         {
             var parOfferID = new SqlParameter("@OfferID", OfferID);
             return await objDB.Database.SqlQuery<HomeTypeOnOffer>("udspLCAppGetOfferHomeTypeList @OfferID", parOfferID).ToListAsync();
         }
-
         public List<TermsPolicyList> getTermPolicyList(string HotelID)
         {
             try
@@ -457,7 +442,6 @@ namespace LocalConn.Entities.Dal
                 throw e;
             }
         }
-
         public PolicyList getPolicyList()
         {
             try
@@ -472,6 +456,71 @@ namespace LocalConn.Entities.Dal
 
                 throw e;
             }
+        }
+
+        //General Page for web
+        public async Task<GenLCHotelVM> SearchGenLCHotelListAsync(GenLCSearchModel search)
+        {
+            GenLCHotelVM model = new GenLCHotelVM();
+            ConvertListToDT objList = new ConvertListToDT();
+            DataTable subdt = new DataTable();
+            try
+            {
+                //Converting subject list to datatable if record is present else send empty datatable
+                if (search.HomeType != null)
+                {
+                    List<IDModel> villList = search.HomeType.Select(x => new IDModel()
+                    {
+                        ID = Convert.ToInt64(x)
+                    }).ToList();
+                    subdt = objList.ConvertIEnumerableToDataTable(villList);
+                }
+                else
+                {
+                    if (subdt.Columns.Count == 0)
+                    {
+                        DataColumn col = new DataColumn();
+                        col.ColumnName = "ID";
+                        subdt.Columns.Add(col);
+                    }
+                }
+                var parSubDT = new SqlParameter("@HomeTypeTable", subdt);
+                parSubDT.SqlDbType = SqlDbType.Structured;
+                parSubDT.TypeName = "dbo.IDType";
+
+                var parStart = new SqlParameter("@Start", (search.PageNo - 1) * search.PageSize);
+                var parEnd = new SqlParameter("@PageSize", search.PageSize);
+
+                var parWhere = new SqlParameter("@Where", DBNull.Value);
+                if (!(search.Where == null || search.Where == ""))
+                    parWhere.Value = search.Where;
+                // setting stored procedure OUTPUT value
+                // This return total number of rows, and avoid two database call for data and total number of rows 
+                var spOutput = new SqlParameter
+                {
+                    ParameterName = "@TotalCount",
+                    SqlDbType = System.Data.SqlDbType.BigInt,
+                    Direction = System.Data.ParameterDirection.Output
+                };
+
+                model.HotelList = await objDB.Database.SqlQuery<HotelList>("udspGenLCHotelSearch @Start, @PageSize,@Where, @HomeTypeTable, @TotalCount out",
+                    parStart, parEnd, parWhere, parSubDT, spOutput).ToListAsync();
+                model.TotalRecords = int.Parse(spOutput.Value.ToString());
+                return model;
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+
+        }
+        public async Task<IEnumerable<string>> GetStateCityNamesAsync()
+        {
+            List<string> names = new List<string>();
+            names = await objDB.utblLCMstCities.Select(x => x.CityName).Distinct().ToListAsync();
+            names.AddRange(await objDB.utblMstStates.Select(x => x.StateName).Distinct().ToListAsync());
+            return names;
         }
     }
 }

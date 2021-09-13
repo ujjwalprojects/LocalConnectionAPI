@@ -20,6 +20,7 @@ namespace LocalConn.API.Areas.General.Controllers
     public class WebRequestController : ApiController
     {
         dalWebRequest objDal = new dalWebRequest();
+        dalConfigurations objConfig = new dalConfigurations();
 
          
 
@@ -252,19 +253,34 @@ namespace LocalConn.API.Areas.General.Controllers
         }
         [HttpGet]
         [Route("getofferhotellist")]
-        public async Task<OfferHotelsList> getOfferHotelList(string OfferID)
+        public async Task<List<HotelList_Offer>> getOfferHotelList(string id)
         {
-            OfferHotelsList obj = new OfferHotelsList();
-            obj.hotelList = await objDal.getOfferHotellist(Convert.ToInt64(OfferID));
-            obj.homeTypeList = await objDal.getHomtTypeOnOffer(Convert.ToInt64(OfferID));
-            return obj;
+            //OfferHotelsList obj = new OfferHotelsList();
+           return await objDal.getOfferHotellist(Convert.ToInt64(id));
+            //obj.homeTypeList = await objDal.getHomtTypeOnOffer(Convert.ToInt64(OfferID));
+            //return obj;
         }
-
-
         #endregion
 
 
-
+        [HttpPost]
+        [Route("GenLCHotelSearch")]
+        public async Task<GenLCHotelVM> GenLCHotelSearch(GenLCSearchModel model)
+        {
+            return await objDal.SearchGenLCHotelListAsync(model);
+        }
+        [HttpGet]
+        [Route("WhereLCNames")]
+        public async Task<IEnumerable<string>> WhereLCNames()
+        {
+            return await objDal.GetStateCityNamesAsync();
+        }
+        [HttpGet]
+        [Route("HomeTypes")]
+        public async Task<IEnumerable<utblLCMstHomeType>> HomeTypes()
+        {
+            return await objConfig.getHomeTypeAsync();
+        }
         #region Mail and SMS
         [Route("SendEmail")]
         [HttpPost]
