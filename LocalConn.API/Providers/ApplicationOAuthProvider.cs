@@ -44,7 +44,7 @@ namespace LocalConn.API.Providers
 
                     if (user == null)
                     {
-                        context.SetError("error_description", "The email or password is incorrect.");
+                        context.SetError("error_description", "The Mobile Number or password is incorrect.");
                         return;
                     }
                     else if (!user.IsActive)
@@ -122,6 +122,7 @@ namespace LocalConn.API.Providers
             {
                 {"userId", user.Id },
                 {"userName", user.UserName },
+                {"email", user.Email},
                 {"profileName", user.ProfileName==null?"":user.ProfileName},
                 {"role", user.RoleName??""},
                 {"PhoneNumber", user.PhoneNumber??""},
