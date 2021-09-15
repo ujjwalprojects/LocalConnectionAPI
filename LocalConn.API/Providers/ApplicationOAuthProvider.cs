@@ -122,6 +122,7 @@ namespace LocalConn.API.Providers
             {
                 {"userId", user.Id },
                 {"userName", user.UserName },
+                {"email", user.Email},
                 {"profileName", user.ProfileName==null?"":user.ProfileName},
                 {"role", user.RoleName??""},
                 {"PhoneNumber", user.PhoneNumber??""},
