@@ -60,6 +60,7 @@ namespace LocalConn.Entities.Dal
                 var parStarRatingID = new SqlParameter("@StarRatingID", model.LCHotel.StarRatingID);
                 var parMaxOccupant = new SqlParameter("@MaxOccupant", model.LCHotel.MaxOccupant);
                 var parMaxRooms = new SqlParameter("@MaxRooms", model.LCHotel.MaxRooms);
+                var parMaxOccupantPerRoom = new SqlParameter("@MaxOccupantPerRoom", model.LCHotel.MaxOccupantPerRoom);
                 var parOverallOfferPercentage = new SqlParameter("@OverallOfferPercentage", model.LCHotel.OverallOfferPercentage);
                 var parTwoOccupantPercentage = new SqlParameter("@TwoOccupantPercentage", model.LCHotel.TwoOccupantPercentage);
                 var parThreeOccupantPercentage = new SqlParameter("@ThreeOccupantPercentage", model.LCHotel.ThreeOccupantPercentage);
@@ -69,8 +70,8 @@ namespace LocalConn.Entities.Dal
                 var parIsActive = new SqlParameter("@IsActive", model.LCHotel.IsActive);
 
 
-                return await db.Database.SqlQuery<string>("udspLCHotelSave @HotelID, @HotelName, @HotelAddress, @HotelDesc, @HotelContactNo, @HotelEmail, @CountryID,@StateID,@CityID,@LocalityID,@HomeTypeID,@StarRatingID,@MaxOccupant,@MaxRooms,@OverallOfferPercentage,@TwoOccupantPercentage,@ThreeOccupantPercentage,@FourPlusOccupantPercentage,@ChildOccupantNote,@LatLong,@IsActive",
-                    parHotelID, parHotelName, parHotelAddress, parHotelDesc, parHotelContactNo, parHotelEmail, parCountryID, parStateID, parCityID, parLocalityID, parHomeTypeID, parStarRatingID, parMaxOccupant,parMaxRooms, parOverallOfferPercentage, parTwoOccupantPercentage, parThreeOccupantPercentage, parFourPlusOccupantPercentage, parChildOccupantNote,parLatLong,parIsActive).FirstOrDefaultAsync();
+                return await db.Database.SqlQuery<string>("udspLCHotelSave @HotelID, @HotelName, @HotelAddress, @HotelDesc, @HotelContactNo, @HotelEmail, @CountryID,@StateID,@CityID,@LocalityID,@HomeTypeID,@StarRatingID,@MaxOccupant,@MaxRooms,@MaxOccupantPerRoom,@OverallOfferPercentage,@TwoOccupantPercentage,@ThreeOccupantPercentage,@FourPlusOccupantPercentage,@ChildOccupantNote,@LatLong,@IsActive",
+                    parHotelID, parHotelName, parHotelAddress, parHotelDesc, parHotelContactNo, parHotelEmail, parCountryID, parStateID, parCityID, parLocalityID, parHomeTypeID, parStarRatingID, parMaxOccupant,parMaxRooms, parMaxOccupantPerRoom, parOverallOfferPercentage, parTwoOccupantPercentage, parThreeOccupantPercentage, parFourPlusOccupantPercentage, parChildOccupantNote,parLatLong,parIsActive).FirstOrDefaultAsync();
             }
             catch (Exception ex)
             {

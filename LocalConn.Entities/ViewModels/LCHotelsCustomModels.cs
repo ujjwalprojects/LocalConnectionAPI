@@ -51,6 +51,7 @@ namespace LocalConn.Entities.ViewModels
         public long StarRatingID { get; set; }
         public Int16 MaxOccupant { get; set; }
         public Int16 MaxRooms { get; set; }
+        public Int16 MaxOccupantPerRoom { get; set; }
         public Int16 OverallOfferPercentage { get; set; }
         public Int16 TwoOccupantPercentage { get; set; }
         public Int16 ThreeOccupantPercentage { get; set; }
