@@ -85,6 +85,7 @@ namespace LocalConn.API.Areas.General.Controllers
         {
             HotelDtl obj = new HotelDtl();
             obj = await objDal.getHotelDtl(HotelID);
+            obj.MaxOccupantPerRoom = 3;
             return obj;
         }
         [HttpGet]
