@@ -27,9 +27,9 @@ namespace LocalConn.API.Areas.General.Controllers
 
         [HttpGet]
         [Route("getcitylist")]//state id
-        public async Task<List<CityList>> getCityList(string id)
+        public async Task<List<CityList>> getCityList()
         {
-            return await objDal.getCityMenuList(id);
+            return await objDal.getCityMenuList();
         }
 
         [HttpGet]

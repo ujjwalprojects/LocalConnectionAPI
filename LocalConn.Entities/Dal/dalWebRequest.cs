@@ -16,12 +16,12 @@ namespace LocalConn.Entities.Dal
     { 
         EFDBContext objDB = new EFDBContext();
 
-        public async Task<List<CityList>> getCityMenuList(string StateID)
+        public async Task<List<CityList>> getCityMenuList()
         {
             try
             {
                 List<CityList> list = new List<CityList>();
-                var parID = new SqlParameter("@StateID", StateID);
+                //var parID = new SqlParameter("@StateID", StateID);
                 list=  await objDB.Database.SqlQuery<CityList>("udspLCAppGetCityList").ToListAsync();
                 return list;
             }
