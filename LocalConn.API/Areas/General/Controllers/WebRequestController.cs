@@ -126,9 +126,9 @@ namespace LocalConn.API.Areas.General.Controllers
 
         [HttpGet]
         [Route("getFHotelList")]
-        public async Task<List<FtHotelList_web>> getFeaturedList(DateTime Dt)
+        public async Task<List<FtHotelList_web>> getFeaturedList()
         {
-            return await objDal.getFeaturedlist_web(Dt);
+            return await objDal.getFeaturedlist_web();
         }
 
         [HttpGet]

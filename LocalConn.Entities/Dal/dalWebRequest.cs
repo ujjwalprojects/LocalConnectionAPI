@@ -254,12 +254,12 @@ namespace LocalConn.Entities.Dal
                 throw e;
             }
         }
-        public async Task<List<FtHotelList_web>> getFeaturedlist_web(DateTime Date)
+        public async Task<List<FtHotelList_web>> getFeaturedlist_web()
         {
             try
             {
-                var pardate = new SqlParameter("@Date", Date);
-                return await objDB.Database.SqlQuery<FtHotelList_web>("udspLCAppGetFeaturedList_Web @Date", pardate).ToListAsync();
+                //var pardate = new SqlParameter("@Date", Date);
+                return await objDB.Database.SqlQuery<FtHotelList_web>("udspLCAppGetFeaturedList_Web").ToListAsync();
             }
             catch (Exception e)
             {
