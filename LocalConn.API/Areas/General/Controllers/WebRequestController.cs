@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Linq;
 using System.Net;
 using System.Net.Configuration;
@@ -22,8 +23,9 @@ namespace LocalConn.API.Areas.General.Controllers
         dalWebRequest objDal = new dalWebRequest();
         dalConfigurations objConfig = new dalConfigurations();
 
-         
 
+        private string AdminNo = ConfigurationManager.AppSettings["AdminNo"];
+        private string AdminEmail = ConfigurationManager.AppSettings["AdminEmail"];
 
         [HttpGet]
         [Route("getcitylist")]//state id
@@ -307,20 +309,26 @@ namespace LocalConn.API.Areas.General.Controllers
             switch (obj.BookingStatus)
             {
                 case "Booked":
-                    //mail.Subject = "Booking Details";
-                    //mailbody.Append("<p>Dear " + obj.CustName + ",</p>");
-                    //mailbody.Append("<p>" + "You have successfully Booked your stay with Booking ID :" + obj.BookingID + ".\n Please check your order details in the app booking section or order list section " + "</p>");
-                    //mailbody.Append("<p>Booking Date: " + DateTime.Now.ToString("dd MMM yyyy HH:mm tt") + "</p>");
-                    //mailbody.Append("<i>This is an auto generated mail, please do not reply.</i>");
+                    mail.Subject = "Booking Details";
+                    mailbody.Append("<p>Dear " + obj.CustName + ",</p>");
+                    mailbody.Append("<p>" + "You have successfully Booked your stay with Booking ID :" + obj.BookingID + ".\n Please check your order details in the app booking section or order list section " + "</p>");
+                    mailbody.Append("<p>Booking Date: " + DateTime.Now.ToString("dd MMM yyyy HH:mm tt") + "</p>");
+                    mailbody.Append("<i>This is an auto generated mail, please do not reply.</i>");
+                    //SendSMS(obj.FinalFare.ToString(), obj.BookingID, obj.CustPhNo, "Booked");
+
                     SendSMS(obj.FinalFare.ToString(), obj.BookingID, obj.CustPhNo, "Booked");
+                    SendSMSToAdmin(obj.FinalFare.ToString(), obj.BookingID, AdminNo, "Booked");
                     break;
                 case "Cancelled":
-                    //mail.Subject = "Cancellation Details";
-                    //mailbody.Append("<p>Dear " + obj.CustName + ",</p>");
-                    //mailbody.Append("<p>" + "Your Booking ID : "+ obj.BookingID+ " Has been cancelled successfully" + "</p>");
-                    //mailbody.Append("<p>Cancellation Date: " + DateTime.Now.ToString("dd MMM yyyy HH:mm tt") + "</p>");
-                    //mailbody.Append("<i>This is an auto generated mail, please do not reply.</i>");
-                    SendSMS(obj.PaymentGatewayCode, obj.BookingID, obj.CustPhNo, "Cancelled");
+                    mail.Subject = "Cancellation Details";
+                    mailbody.Append("<p>Dear " + obj.CustName + ",</p>");
+                    mailbody.Append("<p>" + "Your Booking ID : " + obj.BookingID + " Has been cancelled successfully" + "</p>");
+                    mailbody.Append("<p>Cancellation Date: " + DateTime.Now.ToString("dd MMM yyyy HH:mm tt") + "</p>");
+                    mailbody.Append("<i>This is an auto generated mail, please do not reply.</i>");
+                    //SendSMS(obj.PaymentGatewayCode, obj.BookingID, obj.CustPhNo, "Cancelled");
+
+                    SendSMS(obj.FinalFare.ToString(), obj.BookingID, obj.CustPhNo, "Cancelled");
+                    SendSMSToAdmin(obj.FinalFare.ToString(), obj.BookingID, AdminNo, "Cancelled");
                     break;
 
                 default:
@@ -333,7 +341,7 @@ namespace LocalConn.API.Areas.General.Controllers
 
             try
             {
-                //client.Send(mail);
+                client.Send(mail);
 
                 return obj.BookingID;
             }
@@ -351,6 +359,19 @@ namespace LocalConn.API.Areas.General.Controllers
             {
 
                 SendConfirmationmessage.SendHttpSMSConfirmation(amount, bookingID, mobno, Type);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return InternalServerError(ex);
+            }
+        }
+        public IHttpActionResult SendSMSToAdmin(string amount, string bookingID, string mobno, string Type)
+        {
+            try
+            {
+
+                SendConfirmationmessage.SendHttpSMSConfirmationToAdmin(amount, bookingID, mobno, Type);
                 return Ok();
             }
             catch (Exception ex)
