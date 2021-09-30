@@ -37,12 +37,12 @@ namespace LocalConn.API.Helper
     }
     public static class SendOTPMessage
     {
-        public static string SendHttpSMSRequest(string otp, string mobNo,string type)
+        public static string SendHttpSMSRequest(string otp, string mobNo, string type)
         {
             string message = "";
             if (type == "Register")
             {
-               message = HttpUtility.UrlEncode("Your OTP for LocalConnection is "+otp+ "%nRegards,%nLocalConnection");
+                message = HttpUtility.UrlEncode("Your OTP for LocalConnection is " + otp + "%nRegards,%nLocalConnection");
             }
             if (type == "ForgotPass")
             {
@@ -67,28 +67,28 @@ namespace LocalConn.API.Helper
             catch (Exception e)
             {
 
-                return e +"error";
+                return e + "error";
             }
 
 
         }
 
 
-   
+
     }
 
     public static class SendConfirmationmessage
     {
-        public static string SendHttpSMSConfirmation(string amount,string bookingid, string mobNo, string type)
+        public static string SendHttpSMSConfirmation(string amount, string bookingid, string mobNo, string type)
         {
             string message = "";
             if (type == "Booked")
             {
-                message = HttpUtility.UrlEncode("Your Payment of "+amount+" has been made successfully with BookingID: "+bookingid+". Enjoy you stay !");
+                message = HttpUtility.UrlEncode("Your Payment of " + amount + " has been made successfully with BookingID: " + bookingid + ". Enjoy you stay !");
             }
             if (type == "Cancelled")
             {
-                message = HttpUtility.UrlEncode("Your Bookiing for "+ amount + " has been successfully cancelled. Your refund will be initiated within 24 hrs. Regards LocalConnection");
+                message = HttpUtility.UrlEncode("Your Booking for " + amount + " has been successfully cancelled. Your refund will be initiated within 24-48 hrs. Regards LocalConnection");
             }
             try
             {
@@ -105,14 +105,49 @@ namespace LocalConn.API.Helper
                     return result;
                 }
 
+
+
+
             }
             catch (Exception e)
             {
 
                 return e + "error";
             }
+        }
 
+        public static string SendHttpSMSConfirmationToAdmin(string amount, string bookingid, string mobNo, string type)
+        {
+            string message = "";
+            if (type == "Booked")
+            {
+                message = HttpUtility.UrlEncode("Payment of " + amount + " has been made successfully made for BookingID: " + bookingid + ".");
+            }
+            if (type == "Cancelled")
+            {
+                message = HttpUtility.UrlEncode("BookingID: " + bookingid +" has been cancelled by the user.");
 
+            }
+            try
+            {
+                using (var wb = new WebClient())
+                {
+                    byte[] response = wb.UploadValues("https://api.textlocal.in/send/", new NameValueCollection()
+                {
+                {"apikey" , "NzE4ZTJlZTAyOTBlNjgyZjNkZGMwNmY0YzBhYjE1ZjY="},
+                {"numbers" , "91"+mobNo},
+                {"message" , message},
+                {"sender" , "LocCon"}
+                });
+                    string result = System.Text.Encoding.UTF8.GetString(response);
+                    return result;
+                }
+            }
+            catch (Exception e)
+            {
+
+                return e + "error";
+            }
         }
 
 

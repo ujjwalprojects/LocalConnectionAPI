@@ -518,7 +518,7 @@ namespace LocalConn.API.Controllers
                     //string msg = "Please activate your " + model.RoleName + " account by clicking <a href=\"" + callbackUrl + "\">here</a>";
                     //await SendMail(model.Email, msg, "New");
 
-                    return "User Registered...Please Login !";
+                    return "Success";
                 }
 
                 return "Error: " + string.Join("; ", result.Errors

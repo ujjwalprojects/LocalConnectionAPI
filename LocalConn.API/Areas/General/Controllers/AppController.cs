@@ -5,6 +5,7 @@ using LocalConn.Entities.Models;
 using LocalConn.Entities.ViewModels;
 using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Linq;
 using System.Net;
 using System.Net.Configuration;
@@ -21,7 +22,8 @@ namespace LocalConn.API.Areas.General.Controllers
     public class AppController : ApiController
     {
         dalApp objDal = new dalApp();
-
+        private string AdminNo = ConfigurationManager.AppSettings["AdminNo"];
+        private string AdminEmail = ConfigurationManager.AppSettings["AdminEmail"];
 
 
         [HttpGet]
@@ -298,6 +300,7 @@ namespace LocalConn.API.Areas.General.Controllers
                     //mailbody.Append("<p>Booking Date: " + DateTime.Now.ToString("dd MMM yyyy HH:mm tt") + "</p>");
                     //mailbody.Append("<i>This is an auto generated mail, please do not reply.</i>");
                     SendSMS(obj.FinalFare.ToString(), obj.BookingID, obj.CustPhNo, "Booked");
+                    SendSMSToAdmin(obj.FinalFare.ToString(), obj.BookingID, AdminNo, "Booked");
                     break;
                 case "Cancelled":
                     //mail.Subject = "Cancellation Details";
@@ -306,6 +309,7 @@ namespace LocalConn.API.Areas.General.Controllers
                     //mailbody.Append("<p>Cancellation Date: " + DateTime.Now.ToString("dd MMM yyyy HH:mm tt") + "</p>");
                     //mailbody.Append("<i>This is an auto generated mail, please do not reply.</i>");
                     SendSMS(obj.PaymentGatewayCode, obj.BookingID, obj.CustPhNo, "Cancelled");
+                    SendSMSToAdmin(obj.PaymentGatewayCode, obj.BookingID, AdminNo, "Cancelled");
                     break;
 
                 default:
@@ -336,6 +340,19 @@ namespace LocalConn.API.Areas.General.Controllers
             {
 
                 SendConfirmationmessage.SendHttpSMSConfirmation(amount, bookingID, mobno, Type);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return InternalServerError(ex);
+            }
+        }
+        public IHttpActionResult SendSMSToAdmin(string amount, string bookingID, string mobno, string Type)
+        {
+            try
+            {
+
+                SendConfirmationmessage.SendHttpSMSConfirmationToAdmin(amount, bookingID, mobno, Type);
                 return Ok();
             }
             catch (Exception ex)
