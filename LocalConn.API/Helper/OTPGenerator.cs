@@ -88,7 +88,7 @@ namespace LocalConn.API.Helper
             }
             if (type == "Cancelled")
             {
-                message = HttpUtility.UrlEncode("Your Booking for " + amount + " has been successfully cancelled. Your refund will be initiated within 24-48 hrs. Regards LocalConnection");
+                message = HttpUtility.UrlEncode("Your Bookiing for " + amount + " has been successfully cancelled. Your refund will be initiated within 24 hrs. Regards LocalConnection");
             }
             try
             {
@@ -104,9 +104,6 @@ namespace LocalConn.API.Helper
                     string result = System.Text.Encoding.UTF8.GetString(response);
                     return result;
                 }
-
-
-
 
             }
             catch (Exception e)
