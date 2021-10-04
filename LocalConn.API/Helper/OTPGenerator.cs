@@ -118,7 +118,7 @@ namespace LocalConn.API.Helper
             string message = "";
             if (type == "Booked")
             {
-                message = HttpUtility.UrlEncode("Payment of " + amount + " has been made successfully made for BookingID: " + bookingid + ".");
+                message = HttpUtility.UrlEncode("Payment of " + amount + " has been made successfully made for BookingID: " + bookingid + "Enjoy you stay ! Regards LocalConnection");
             }
             if (type == "Cancelled")
             {
