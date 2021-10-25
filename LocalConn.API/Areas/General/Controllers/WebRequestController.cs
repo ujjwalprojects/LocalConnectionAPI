@@ -135,10 +135,10 @@ namespace LocalConn.API.Areas.General.Controllers
 
         [HttpGet]
         [Route("getorderlist")]
-        public async Task<List<OrderList>> GetOrderList(string CustPhNo)
+        public async Task<List<OrderList>> GetOrderList(string UserID)
         {
             List<OrderList> obj = new List<OrderList>();
-            obj = await objDal.getOrderlist(CustPhNo);
+            obj = await objDal.getOrderlist(UserID);
             return obj;
         }
 
@@ -152,14 +152,18 @@ namespace LocalConn.API.Areas.General.Controllers
         //final booking with payment
         [Route("paynow")]
         [HttpPost]
-        public string PayNow(PreBookingDtl obj)
+        public async Task<string> PayNow(PreBookingDtl obj)
         {
             string Result = "";
             Result = objDal.preBooking(obj);
             if (!(Result.Contains("Error")))
             {
                 obj.BookingID = Result;
-                Result = SendMail(obj);
+                Result = await SendMail(obj);
+                if(!(Result.Contains("Error")))
+                {
+                    Result = await SendMailToAdmin(obj);
+                }
             }
             return Result;
         }
@@ -168,7 +172,7 @@ namespace LocalConn.API.Areas.General.Controllers
 
         [Route("cancelbooking")]
         [HttpPost]
-        public string CancelBooking(string BookingID)
+        public async Task<string> CancelBooking(string BookingID)
         {
             string Result = "";
 
@@ -176,7 +180,7 @@ namespace LocalConn.API.Areas.General.Controllers
             PreBookingDtl obj = new PreBookingDtl();
             obj = objDal.cancelBooking(BookingID);
             if (obj.BookingStatus == "Cancelled")
-                Result = SendMail(obj);
+                Result = await SendMail(obj);
             return Result;
         }
 
@@ -286,79 +290,63 @@ namespace LocalConn.API.Areas.General.Controllers
         #region Mail and SMS
         [Route("SendEmail")]
         [HttpPost]
-        public string SendMail(PreBookingDtl obj)
+        public async Task<string> SendMail(PreBookingDtl obj)
         {
-            //MailDetails email = objDal.getEmailByApplication(applicationcode);
-            //email.EmailID = email.EmailID;
-            //email.MobileNo = email.MobileNo;
-            System.Configuration.Configuration config = WebConfigurationManager.OpenWebConfiguration(System.Web.HttpContext.Current.Request.ApplicationPath);
-            MailSettingsSectionGroup settings = (MailSettingsSectionGroup)config.GetSectionGroup("system.net/mailSettings");
-            System.Net.NetworkCredential credential = new System.Net.NetworkCredential(settings.Smtp.Network.UserName, settings.Smtp.Network.Password);
-            //Create the SMTP Client
-            SmtpClient client = new SmtpClient();
-            client.Host = settings.Smtp.Network.Host;
-            client.Credentials = credential;
-            client.Timeout = 300000;
-            client.EnableSsl = true;
-            MailMessage mail = new MailMessage();
-            StringBuilder mailbody = new StringBuilder();
-            mail.From = new MailAddress(settings.Smtp.Network.UserName, "Local Connection");
-            mail.To.Add(obj.CustEmail);
-            mail.Priority = MailPriority.High;
-
-            switch (obj.BookingStatus)
+            HotelDtl hotelDtl = await objDal.getHotelDtl(Convert.ToString(obj.HotelID));
+            PreBookingTransDtl sendmailmodel = new PreBookingTransDtl()
             {
-                case "Booked":
-                    mail.Subject = "Booking Details";
-                    mailbody.Append("<p>Dear " + obj.CustName + ",</p>");
-                    mailbody.Append("<p>" + "You have successfully Booked your stay with Booking ID :" + obj.BookingID + ".\n Please check your order details in the app booking section or order list section " + "</p>");
-                    mailbody.Append("<p>Booking Date: " + DateTime.Now.ToString("dd MMM yyyy HH:mm tt") + "</p>");
-                    mailbody.Append("<i>This is an auto generated mail, please do not reply.</i>");
-                    //SendSMS(obj.FinalFare.ToString(), obj.BookingID, obj.CustPhNo, "Booked");
+                BookingID = obj.BookingID,
+                HotelID = obj.HotelID,
+                CustName = obj.CustName,
+                CustEmail = obj.CustEmail,
+                CustPhNo = obj.CustPhNo,
+                BookingFrom = obj.BookingFrom,
+                BookingUpto = obj.BookingUpto,
+                BookingDate = obj.BookingDate,
+                CustDetails = obj.CustDetails,
+                BookingStatus = obj.BookingStatus,
+                FinalFare = obj.FinalFare,
+                PaymentGatewayCode = obj.PaymentGatewayCode,
+                HotelName = hotelDtl.HotelName
+            };
+            SendMail objSendMail = new SendMail();
+            string result = objSendMail.SendEmail(sendmailmodel, "Customer");
+            return result;
+        }
 
-                    SendSMS(obj.FinalFare.ToString(), obj.BookingID, obj.CustPhNo, "Booked");
-                    SendSMSToAdmin(obj.FinalFare.ToString(), obj.BookingID, AdminNo, "Booked");
-                    break;
-                case "Cancelled":
-                    mail.Subject = "Cancellation Details";
-                    mailbody.Append("<p>Dear " + obj.CustName + ",</p>");
-                    mailbody.Append("<p>" + "Your Booking ID : " + obj.BookingID + " Has been cancelled successfully" + "</p>");
-                    mailbody.Append("<p>Cancellation Date: " + DateTime.Now.ToString("dd MMM yyyy HH:mm tt") + "</p>");
-                    mailbody.Append("<i>This is an auto generated mail, please do not reply.</i>");
-                    //SendSMS(obj.PaymentGatewayCode, obj.BookingID, obj.CustPhNo, "Cancelled");
-
-                    SendSMS(obj.FinalFare.ToString(), obj.BookingID, obj.CustPhNo, "Cancelled");
-                    SendSMSToAdmin(obj.FinalFare.ToString(), obj.BookingID, AdminNo, "Cancelled");
-                    break;
-
-                default:
-                    break;
-
-            }
-
-            mail.Body = mailbody.ToString();
-            mail.IsBodyHtml = true;
-
-            try
+        [Route("SendEmailAdmin")]
+        [HttpPost]
+        public async Task<string> SendMailToAdmin(PreBookingDtl obj)
+        {
+            HotelDtl hotelDtl = await objDal.getHotelDtl(Convert.ToString(obj.HotelID));
+            PreBookingTransDtl sendmailmodel = new PreBookingTransDtl()
             {
-                client.Send(mail);
-
-                return obj.BookingID;
-            }
-            catch (Exception e)
-            {
-
-                return "Error: Something Went Wrong" + e;
-            }
+                BookingID = obj.BookingID,
+                HotelID = obj.HotelID,
+                CustEmail = obj.CustEmail,
+                CustName = obj.CustName,
+                CustPhNo = obj.CustPhNo,
+                BookingFrom = obj.BookingFrom,
+                BookingUpto = obj.BookingUpto,
+                BookingDate = obj.BookingDate,
+                CustDetails = obj.CustDetails,
+                BookingStatus = obj.BookingStatus,
+                FinalFare = obj.FinalFare,
+                PaymentGatewayCode = obj.PaymentGatewayCode,
+                HotelName = hotelDtl.HotelName
+            };
+            SendMail objSendMail = new SendMail();
+            string result = objSendMail.SendEmail(sendmailmodel, "Admin");
+            return result;
 
         }
 
-        public IHttpActionResult SendSMS(string amount, string bookingID, string mobno, string Type)
+        public IHttpActionResult SendSMS(string custName, string hotelName, string amount, string bookingID, string mobno, string Type)
         {
             try
             {
 
-                SendConfirmationmessage.SendHttpSMSConfirmation(amount, bookingID, mobno, Type);
+                SendConfirmationmessage.SendHttpSMSConfirmation(custName, hotelName, amount, bookingID, mobno, Type);
                 return Ok();
             }
             catch (Exception ex)

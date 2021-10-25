@@ -152,14 +152,14 @@ namespace LocalConn.API.Areas.General.Controllers
         //final booking with payment
         [Route("paynow")]
         [HttpPost]
-        public string PayNow(PreBookingDtl obj)
+        public async  Task<string> PayNow(PreBookingDtl obj)
         {
             string Result = "";
             Result = objDal.preBooking(obj);
             if (!(Result.Contains("Error")))
             {
                 obj.BookingID = Result;
-                Result = SendMail(obj);
+                Result = await SendMail(obj);
             }
             return Result;
         }
@@ -168,7 +168,7 @@ namespace LocalConn.API.Areas.General.Controllers
 
         [Route("cancelbooking")]
         [HttpPost]
-        public string CancelBooking(string BookingID)
+        public async Task<string> CancelBooking(string BookingID)
         {
             string Result = "";
             
@@ -176,7 +176,7 @@ namespace LocalConn.API.Areas.General.Controllers
             PreBookingDtl obj = new PreBookingDtl();
             obj = objDal.cancelBooking(BookingID);
             if (obj.BookingStatus == "Cancelled") 
-            Result = SendMail(obj);
+            Result = await SendMail(obj);
             return Result;
         }
 
@@ -271,7 +271,7 @@ namespace LocalConn.API.Areas.General.Controllers
         #region Mail and SMS
         [Route("SendEmail")]
         [HttpPost]
-        public string SendMail(PreBookingDtl obj)
+        public async Task<string> SendMail(PreBookingDtl obj)
         {
             //MailDetails email = objDal.getEmailByApplication(applicationcode);
             //email.EmailID = email.EmailID;
@@ -290,7 +290,17 @@ namespace LocalConn.API.Areas.General.Controllers
             mail.From = new MailAddress(settings.Smtp.Network.UserName, "Local Connection");
             mail.To.Add(obj.CustEmail);
             mail.Priority = MailPriority.High;
-
+            HotelDtl hotelDtl = await objDal.getHotelDtl(Convert.ToString(obj.HotelID));
+            string hotelName = "";
+            //limit hotel name upto 10 characters
+            if (hotelDtl.HotelName.Length > 10)
+            {
+                hotelName = hotelDtl.HotelName.Substring(0, 10);
+            }
+            else
+            {
+                hotelName = hotelDtl.HotelName;
+            }
             switch (obj.BookingStatus)
             {
                 case "Booked":
@@ -299,7 +309,7 @@ namespace LocalConn.API.Areas.General.Controllers
                     mailbody.Append("<p>" + "You have successfully Booked your stay with Booking ID :" + obj.BookingID + ".\n Please check your order details in the app booking section or order list section " + "</p>");
                     mailbody.Append("<p>Booking Date: " + DateTime.Now.ToString("dd MMM yyyy HH:mm tt") + "</p>");
                     mailbody.Append("<i>This is an auto generated mail, please do not reply.</i>");
-                    SendSMS(obj.FinalFare.ToString(), obj.BookingID, obj.CustPhNo, "Booked");
+                    SendSMS(obj.CustName, hotelName, obj.FinalFare.ToString(), obj.BookingID, obj.CustPhNo, "Booked");
                     SendSMSToAdmin(obj.FinalFare.ToString(), obj.BookingID, AdminNo, "Booked");
                     break;
                 case "Cancelled":
@@ -310,7 +320,7 @@ namespace LocalConn.API.Areas.General.Controllers
                     mailbody.Append("<i>This is an auto generated mail, please do not reply.</i>");
                     //SendSMS(obj.PaymentGatewayCode, obj.BookingID, obj.CustPhNo, "Cancelled");
                     //SendSMSToAdmin(obj.PaymentGatewayCode, obj.BookingID, AdminNo, "Cancelled");
-                    SendSMS(obj.FinalFare.ToString(), obj.BookingID, obj.CustPhNo, "Cancelled");
+                    SendSMS(obj.CustName, hotelName, obj.FinalFare.ToString(), obj.BookingID, obj.CustPhNo, "Cancelled");
                     SendSMSToAdmin(obj.FinalFare.ToString(), obj.BookingID, AdminNo, "Cancelled");
 
 
@@ -338,12 +348,12 @@ namespace LocalConn.API.Areas.General.Controllers
 
         }
 
-        public IHttpActionResult SendSMS(string amount, string bookingID, string mobno, string Type)
+        public IHttpActionResult SendSMS(string custName, string hotelName, string amount, string bookingID, string mobno, string Type)
         {
             try
             {
 
-                SendConfirmationmessage.SendHttpSMSConfirmation(amount, bookingID, mobno, Type);
+                SendConfirmationmessage.SendHttpSMSConfirmation(custName, hotelName, amount, bookingID, mobno, Type);
                 return Ok();
             }
             catch (Exception ex)

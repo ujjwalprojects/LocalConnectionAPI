@@ -79,16 +79,17 @@ namespace LocalConn.API.Helper
 
     public static class SendConfirmationmessage
     {
-        public static string SendHttpSMSConfirmation(string amount, string bookingid, string mobNo, string type)
+        public static string SendHttpSMSConfirmation(string cusName,string hotelName, string amount, string bookingid, string mobNo, string type)
         {
             string message = "";
             if (type == "Booked")
             {
-                message = HttpUtility.UrlEncode("Your Payment of " + amount + " has been made successfully with BookingID: " + bookingid + ". Enjoy you stay !");
+                //message = HttpUtility.UrlEncode("Your Payment of " + amount + " has been made successfully with BookingID: " + bookingid + ". Enjoy you stay !");
+                message = HttpUtility.UrlEncode("Hi, " + cusName + ". Thank you for choosing our hotel! We have you confirmed a reservation for" + hotelName + ". Your bookingid is " + bookingid + ". Helpline +917319079996, Local Conn.");
             }
             if (type == "Cancelled")
             {
-                message = HttpUtility.UrlEncode("Your Bookiing for " + amount + " has been successfully cancelled. Your refund will be initiated within 24 hrs. Regards LocalConnection");
+                message = HttpUtility.UrlEncode("Hi, your booking at Local Conn. has been cancelled,  as per your request. BookingID: " + bookingid + ". Helpline" + +917319079996 + ". Look forward to hosting you soon!");
             }
             try
             {

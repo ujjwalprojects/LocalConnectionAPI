@@ -324,8 +324,6 @@ namespace LocalConn.Entities.Dal
 
                 throw e;
             }
-            
-
         }
 
 
