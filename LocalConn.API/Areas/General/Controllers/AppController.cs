@@ -135,10 +135,10 @@ namespace LocalConn.API.Areas.General.Controllers
 
         [HttpGet]
         [Route("getorderlist")]
-        public async Task<List<OrderList>> GetOrderList(string CustPhNo)
+        public async Task<List<OrderList>> GetOrderList(string UserID)
         {
             List<OrderList> obj = new List<OrderList>();
-            obj = await objDal.getOrderlist(CustPhNo);
+            obj = await objDal.getOrderlist(UserID);
             return obj;
         }
 

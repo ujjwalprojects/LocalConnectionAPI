@@ -138,6 +138,7 @@ namespace LocalConn.Entities.ViewModels
         public string BookingStatus { get; set; }
         public decimal FinalFare { get; set; }
         public string PaymentGatewayCode { get; set; }
+        public string UserID { get; set; }
     }
     public class OrderList
     {

@@ -260,12 +260,12 @@ namespace LocalConn.Entities.Dal
 
 
 
-        public async Task<List<OrderList>> getOrderlist(string CustPhNo)
+        public async Task<List<OrderList>> getOrderlist(string UserID)
         {
             try
             {
-                var parID = new SqlParameter("@CustPhNo", CustPhNo);
-                return await objDB.Database.SqlQuery<OrderList>("udspLCAppGetOrderList @CustPhNo", parID).ToListAsync();
+                var parID = new SqlParameter("@UserID", UserID);
+                return await objDB.Database.SqlQuery<OrderList>("udspLCAppGetOrderList @UserID", parID).ToListAsync();
             }
             catch (Exception e)
             {
@@ -301,8 +301,9 @@ namespace LocalConn.Entities.Dal
                 var parBStatue = new SqlParameter("@BookingStatus", obj.BookingStatus);
                 var parFare = new SqlParameter("@FinalFare", obj.FinalFare);
                 var parPGCode = new SqlParameter("@PaymentGatewayCode", obj.PaymentGatewayCode);
-                Results = objDB.Database.SqlQuery<string>("udspLCAppBookingRooms @CustName, @CustEmail,@CustPhNo,@HotelID,@BookingFrom,@BookingUpto,@CustDetails,@BookingStatus,@FinalFare,@PaymentGatewayCode",
-                    parCName, parCMail, parCustPhNo, parBHID, parBFrom, parBUpto, parCDtl, parBStatue, parFare, parPGCode).FirstOrDefault();
+                var parUserID = new SqlParameter("@UserID", obj.UserID);
+                Results = objDB.Database.SqlQuery<string>("udspLCAppBookingRooms @CustName, @CustEmail,@CustPhNo,@HotelID,@BookingFrom,@BookingUpto,@CustDetails,@BookingStatus,@FinalFare,@PaymentGatewayCode,@UserID",
+                    parCName, parCMail, parCustPhNo, parBHID, parBFrom, parBUpto, parCDtl, parBStatue, parFare, parPGCode,parUserID).FirstOrDefault();
 
                 return Results;
             }
