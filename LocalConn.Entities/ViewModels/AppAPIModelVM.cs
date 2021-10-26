@@ -139,6 +139,7 @@ namespace LocalConn.Entities.ViewModels
         public decimal FinalFare { get; set; }
         public string PaymentGatewayCode { get; set; }
         public string UserID { get; set; }
+        public string UserName { get; set; }
     }
     public class OrderList
     {

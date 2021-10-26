@@ -302,8 +302,9 @@ namespace LocalConn.Entities.Dal
                 var parFare = new SqlParameter("@FinalFare", obj.FinalFare);
                 var parPGCode = new SqlParameter("@PaymentGatewayCode", obj.PaymentGatewayCode);
                 var parUserID = new SqlParameter("@UserID", obj.UserID);
-                Results = objDB.Database.SqlQuery<string>("udspLCAppBookingRooms @CustName, @CustEmail,@CustPhNo,@HotelID,@BookingFrom,@BookingUpto,@CustDetails,@BookingStatus,@FinalFare,@PaymentGatewayCode,@UserID",
-                    parCName, parCMail, parCustPhNo, parBHID, parBFrom, parBUpto, parCDtl, parBStatue, parFare, parPGCode,parUserID).FirstOrDefault();
+                var parUserName = new SqlParameter("@UserName", obj.UserName);
+                Results = objDB.Database.SqlQuery<string>("udspLCAppBookingRooms @CustName, @CustEmail,@CustPhNo,@HotelID,@BookingFrom,@BookingUpto,@CustDetails,@BookingStatus,@FinalFare,@PaymentGatewayCode,@UserID,@UserName",
+                    parCName, parCMail, parCustPhNo, parBHID, parBFrom, parBUpto, parCDtl, parBStatue, parFare, parPGCode,parUserID,parUserName).FirstOrDefault();
 
                 return Results;
             }
