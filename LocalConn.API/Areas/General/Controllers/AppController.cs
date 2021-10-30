@@ -306,24 +306,22 @@ namespace LocalConn.API.Areas.General.Controllers
                 case "Booked":
                     mail.Subject = "Booking Details";
                     mailbody.Append("<p>Dear " + obj.CustName + ",</p>");
-                    mailbody.Append("<p>" + "You have successfully Booked your stay with Booking ID :" + obj.BookingID + ".\n Please check your order details in the app booking section or order list section " + "</p>");
+                    mailbody.Append("<p>" + "Hi, "+obj.CustName+".Thank you for choosing our hotel.We have you confirmed a reservation for "+hotelName+"+.Your BookingID is "+obj.BookingID+"  + 917319079996 + LocalConnection.");
                     mailbody.Append("<p>Booking Date: " + DateTime.Now.ToString("dd MMM yyyy HH:mm tt") + "</p>");
                     mailbody.Append("<i>This is an auto generated mail, please do not reply.</i>");
                     SendSMS(obj.CustName, hotelName, obj.FinalFare.ToString(), obj.BookingID, obj.CustPhNo, "Booked");
-                    SendSMSToAdmin(obj.FinalFare.ToString(), obj.BookingID, AdminNo, "Booked");
+                    SendSMSToAdmin(obj.CustName, obj.FinalFare.ToString(), obj.BookingID, AdminNo, "Booked",Convert.ToString(obj.BookingDate));
                     break;
                 case "Cancelled":
                     mail.Subject = "Cancellation Details";
                     mailbody.Append("<p>Dear " + obj.CustName + ",</p>");
-                    mailbody.Append("<p>" + "Your Booking ID : " + obj.BookingID + " Has been cancelled successfully" + "</p>");
+                    mailbody.Append("<p>" + "Hi, your booking at Local Conn. has been cancelled, as per your request. BookingID: " + obj.BookingID + ". Helpline " + 917319079996 + ". Look forward to hosting you soon!" + "</p>");
                     mailbody.Append("<p>Cancellation Date: " + DateTime.Now.ToString("dd MMM yyyy HH:mm tt") + "</p>");
                     mailbody.Append("<i>This is an auto generated mail, please do not reply.</i>");
                     //SendSMS(obj.PaymentGatewayCode, obj.BookingID, obj.CustPhNo, "Cancelled");
                     //SendSMSToAdmin(obj.PaymentGatewayCode, obj.BookingID, AdminNo, "Cancelled");
                     SendSMS(obj.CustName, hotelName, obj.FinalFare.ToString(), obj.BookingID, obj.CustPhNo, "Cancelled");
-                    SendSMSToAdmin(obj.FinalFare.ToString(), obj.BookingID, AdminNo, "Cancelled");
-
-
+                    SendSMSToAdmin(obj.CustName,obj.FinalFare.ToString(), obj.BookingID, AdminNo, "Cancelled",Convert.ToString(obj.BookingDate));
                     break;
 
                 default:
@@ -361,12 +359,12 @@ namespace LocalConn.API.Areas.General.Controllers
                 return InternalServerError(ex);
             }
         }
-        public IHttpActionResult SendSMSToAdmin(string amount, string bookingID, string mobno, string Type)
+        public IHttpActionResult SendSMSToAdmin(string name,string amount, string bookingID, string mobno, string Type,string date)
         {
             try
             {
 
-                SendConfirmationmessage.SendHttpSMSConfirmationToAdmin(amount, bookingID, mobno, Type);
+                SendConfirmationmessage.SendHttpSMSConfirmationToAdmin(name,amount, bookingID, mobno, Type,date);
                 return Ok();
             }
             catch (Exception ex)

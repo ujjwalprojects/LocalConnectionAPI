@@ -354,12 +354,12 @@ namespace LocalConn.API.Areas.General.Controllers
                 return InternalServerError(ex);
             }
         }
-        public IHttpActionResult SendSMSToAdmin(string amount, string bookingID, string mobno, string Type)
+        public IHttpActionResult SendSMSToAdmin(string name, string amount, string bookingID, string mobno, string Type,string bookingDate)
         {
             try
             {
 
-                SendConfirmationmessage.SendHttpSMSConfirmationToAdmin(amount, bookingID, mobno, Type);
+                SendConfirmationmessage.SendHttpSMSConfirmationToAdmin(name,amount, bookingID, mobno, Type,bookingDate);
                 return Ok();
             }
             catch (Exception ex)

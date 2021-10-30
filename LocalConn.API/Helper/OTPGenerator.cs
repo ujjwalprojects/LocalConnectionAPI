@@ -85,11 +85,11 @@ namespace LocalConn.API.Helper
             if (type == "Booked")
             {
                 //message = HttpUtility.UrlEncode("Your Payment of " + amount + " has been made successfully with BookingID: " + bookingid + ". Enjoy you stay !");
-                message = HttpUtility.UrlEncode("Hi, " + cusName + ". Thank you for choosing our hotel! We have you confirmed a reservation for" + hotelName + ". Your bookingid is " + bookingid + ". Helpline +917319079996, Local Conn.");
+                message = HttpUtility.UrlEncode("Hi, "+cusName+". Thank you for choosing our hotel. We have you confirmed a reservation for "+hotelName+". Your BookingID is "+bookingid+ ". Helpline " + 917319079996 + ", LocalConnection.");
             }
             if (type == "Cancelled")
             {
-                message = HttpUtility.UrlEncode("Hi, your booking at Local Conn. has been cancelled,  as per your request. BookingID: " + bookingid + ". Helpline" + +917319079996 + ". Look forward to hosting you soon!");
+                message = HttpUtility.UrlEncode("Hi, your booking at Local Conn. has been cancelled, as per your request. BookingID: "+bookingid+ ". Helpline "+917319079996+ ". Look forward to hosting you soon!");
             }
             try
             {
@@ -114,16 +114,16 @@ namespace LocalConn.API.Helper
             }
         }
 
-        public static string SendHttpSMSConfirmationToAdmin(string amount, string bookingid, string mobNo, string type)
+        public static string SendHttpSMSConfirmationToAdmin(string name, string amount, string bookingid, string mobNo, string type,string bookingDate)
         {
             string message = "";
             if (type == "Booked")
             {
-                message = HttpUtility.UrlEncode("Payment of " + amount + " has been made successfully made for BookingID: " + bookingid + "Enjoy you stay ! Regards LocalConnection");
+                message = HttpUtility.UrlEncode("Hi, Customer "+name+" has made a new booking. BookingID: "+bookingid+", Amount: "+ amount + ", Booking Date: "+bookingDate+". LocalConnection");
             }
             if (type == "Cancelled")
             {
-                message = HttpUtility.UrlEncode("BookingID: " + bookingid +" has been cancelled by the user.");
+                message = HttpUtility.UrlEncode("Hi, Customer "+name+" has cancelled the booking. BookingID: "+bookingid+", Amount: "+amount+". LocalConnection");
 
             }
             try
