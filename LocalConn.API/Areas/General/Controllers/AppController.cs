@@ -1,4 +1,6 @@
-﻿using LocalConn.API.Helper;
+﻿
+
+using LocalConn.API.Helper;
 using LocalConn.API.Models;
 using LocalConn.Entities.Dal;
 using LocalConn.Entities.Models;
@@ -135,10 +137,10 @@ namespace LocalConn.API.Areas.General.Controllers
 
         [HttpGet]
         [Route("getorderlist")]
-        public async Task<List<OrderList>> GetOrderList(string CustPhNo)
+        public async Task<List<OrderList>> GetOrderList(string UserID)
         {
             List<OrderList> obj = new List<OrderList>();
-            obj = await objDal.getOrderlist(CustPhNo);
+            obj = await objDal.getOrderlist(UserID);
             return obj;
         }
 
@@ -158,8 +160,11 @@ namespace LocalConn.API.Areas.General.Controllers
             Result = objDal.preBooking(obj);
             if (!(Result.Contains("Error")))
             {
+                 HotelDtl hotelDtl = await objDal.getHotelDtl(Convert.ToString(obj.HotelID));
                 obj.BookingID = Result;
-                Result = await SendMail(obj);
+                SendSMS(obj.CustName, hotelDtl.HotelName, obj.FinalFare.ToString(), obj.BookingID, obj.CustPhNo, "Booked");
+                SendSMSToAdmin(obj.CustName, obj.FinalFare.ToString(), obj.BookingID, AdminNo, "Booked", Convert.ToString(obj.BookingFrom));
+                string mailStat = await SendMail(obj);
             }
             return Result;
         }
@@ -175,8 +180,15 @@ namespace LocalConn.API.Areas.General.Controllers
             string[] subs = Result.Split('%');
             PreBookingDtl obj = new PreBookingDtl();
             obj = objDal.cancelBooking(BookingID);
-            if (obj.BookingStatus == "Cancelled") 
-            Result = await SendMail(obj);
+            if (obj.BookingStatus == "Cancelled")
+            {
+                HotelDtl hotelDtl = await objDal.getHotelDtl(Convert.ToString(obj.HotelID));
+                SendSMS(obj.CustName, hotelDtl.HotelName, obj.FinalFare.ToString(), obj.BookingID, obj.CustPhNo, "Cancelled");
+                SendSMSToAdmin(obj.CustName, obj.FinalFare.ToString(), obj.BookingID, AdminNo, "Cancelled", Convert.ToString(obj.BookingFrom));
+                Result = obj.BookingID;
+
+                string mailStat = await SendMail(obj);
+            }
             return Result;
         }
 
@@ -309,8 +321,8 @@ namespace LocalConn.API.Areas.General.Controllers
                     mailbody.Append("<p>" + "Hi, "+obj.CustName+".Thank you for choosing our hotel.We have you confirmed a reservation for "+hotelName+"+.Your BookingID is "+obj.BookingID+"  + 917319079996 + LocalConnection.");
                     mailbody.Append("<p>Booking Date: " + DateTime.Now.ToString("dd MMM yyyy HH:mm tt") + "</p>");
                     mailbody.Append("<i>This is an auto generated mail, please do not reply.</i>");
-                    SendSMS(obj.CustName, hotelName, obj.FinalFare.ToString(), obj.BookingID, obj.CustPhNo, "Booked");
-                    SendSMSToAdmin(obj.CustName, obj.FinalFare.ToString(), obj.BookingID, AdminNo, "Booked",Convert.ToString(obj.BookingDate));
+                    //SendSMS(obj.CustName, hotelName, obj.FinalFare.ToString(), obj.BookingID, obj.CustPhNo, "Booked");
+                    //SendSMSToAdmin(obj.CustName, obj.FinalFare.ToString(), obj.BookingID, AdminNo, "Booked",Convert.ToString(obj.BookingDate));
                     break;
                 case "Cancelled":
                     mail.Subject = "Cancellation Details";
@@ -320,8 +332,8 @@ namespace LocalConn.API.Areas.General.Controllers
                     mailbody.Append("<i>This is an auto generated mail, please do not reply.</i>");
                     //SendSMS(obj.PaymentGatewayCode, obj.BookingID, obj.CustPhNo, "Cancelled");
                     //SendSMSToAdmin(obj.PaymentGatewayCode, obj.BookingID, AdminNo, "Cancelled");
-                    SendSMS(obj.CustName, hotelName, obj.FinalFare.ToString(), obj.BookingID, obj.CustPhNo, "Cancelled");
-                    SendSMSToAdmin(obj.CustName,obj.FinalFare.ToString(), obj.BookingID, AdminNo, "Cancelled",Convert.ToString(obj.BookingDate));
+                    //SendSMS(obj.CustName, hotelName, obj.FinalFare.ToString(), obj.BookingID, obj.CustPhNo, "Cancelled");
+                    //SendSMSToAdmin(obj.CustName,obj.FinalFare.ToString(), obj.BookingID, AdminNo, "Cancelled",Convert.ToString(obj.BookingDate));
                     break;
 
                 default:

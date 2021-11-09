@@ -81,13 +81,14 @@ namespace LocalConn.API.Helper
     {
         public static string SendHttpSMSConfirmation(string cusName,string hotelName, string amount, string bookingid, string mobNo, string type)
         {
-            string message = "";
+            string message = "", Hname = "";
+            Hname = hotelName.Substring(0,20);
             if (type == "Booked")
             {
                 //message = HttpUtility.UrlEncode("Your Payment of " + amount + " has been made successfully with BookingID: " + bookingid + ". Enjoy you stay !");
-                message = HttpUtility.UrlEncode("Hi, "+cusName+". Thank you for choosing our hotel. We have you confirmed a reservation for "+hotelName+". Your BookingID is "+bookingid+ ". Helpline " + 917319079996 + ", LocalConnection.");
+                message = HttpUtility.UrlEncode("Hi, "+cusName+". Thank you for choosing our hotel. We have you confirmed a reservation for "+Hname+". Your BookingID is "+bookingid+ ". Helpline " + 917319079996 + ", LocalConnection.");
             }
-            if (type == "Cancelled")
+            if (type == "Cancelled") 
             {
                 message = HttpUtility.UrlEncode("Hi, your booking at Local Conn. has been cancelled, as per your request. BookingID: "+bookingid+ ". Helpline "+917319079996+ ". Look forward to hosting you soon!");
             }
@@ -133,7 +134,7 @@ namespace LocalConn.API.Helper
                     byte[] response = wb.UploadValues("https://api.textlocal.in/send/", new NameValueCollection()
                 {
                 {"apikey" , "NzE4ZTJlZTAyOTBlNjgyZjNkZGMwNmY0YzBhYjE1ZjY="},
-                {"numbers" , "91"+mobNo},
+                {"numbers" , "91"+"7319079996"},
                 {"message" , message},
                 {"sender" , "LocCon"}
                 });
