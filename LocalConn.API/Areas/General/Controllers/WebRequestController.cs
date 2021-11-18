@@ -158,12 +158,11 @@ namespace LocalConn.API.Areas.General.Controllers
             Result = objDal.preBooking(obj);
             if (!(Result.Contains("Error")))
             {
+                HotelDtl hotelDtl = await objDal.getHotelDtl(Convert.ToString(obj.HotelID));
                 obj.BookingID = Result;
-                Result = await SendMail(obj);
-                if(!(Result.Contains("Error")))
-                {
-                    Result = await SendMailToAdmin(obj);
-                }
+                SendSMS(obj.CustName, hotelDtl.HotelName, obj.FinalFare.ToString(), obj.BookingID, obj.CustPhNo, "Booked");
+                SendSMSToAdmin(obj.CustName, obj.FinalFare.ToString(), obj.BookingID, AdminNo, "Booked", Convert.ToString(obj.BookingFrom));
+                string mailStat = await SendMail(obj);
             }
             return Result;
         }
@@ -180,7 +179,14 @@ namespace LocalConn.API.Areas.General.Controllers
             PreBookingDtl obj = new PreBookingDtl();
             obj = objDal.cancelBooking(BookingID);
             if (obj.BookingStatus == "Cancelled")
-                Result = await SendMail(obj);
+            {
+                HotelDtl hotelDtl = await objDal.getHotelDtl(Convert.ToString(obj.HotelID));
+                SendSMS(obj.CustName, hotelDtl.HotelName, obj.FinalFare.ToString(), obj.BookingID, obj.CustPhNo, "Cancelled");
+                SendSMSToAdmin(obj.CustName, obj.FinalFare.ToString(), obj.BookingID, AdminNo, "Cancelled", Convert.ToString(obj.BookingFrom));
+                Result = obj.BookingID;
+
+                string mailStat = await SendMail(obj);
+            }
             return Result;
         }
 
@@ -287,57 +293,78 @@ namespace LocalConn.API.Areas.General.Controllers
         {
             return await objConfig.getHomeTypeAsync();
         }
+
         #region Mail and SMS
         [Route("SendEmail")]
         [HttpPost]
         public async Task<string> SendMail(PreBookingDtl obj)
         {
+            //MailDetails email = objDal.getEmailByApplication(applicationcode);
+            //email.EmailID = email.EmailID;
+            //email.MobileNo = email.MobileNo;
+            System.Configuration.Configuration config = WebConfigurationManager.OpenWebConfiguration(System.Web.HttpContext.Current.Request.ApplicationPath);
+            MailSettingsSectionGroup settings = (MailSettingsSectionGroup)config.GetSectionGroup("system.net/mailSettings");
+            System.Net.NetworkCredential credential = new System.Net.NetworkCredential(settings.Smtp.Network.UserName, settings.Smtp.Network.Password);
+            //Create the SMTP Client
+            SmtpClient client = new SmtpClient();
+            client.Host = settings.Smtp.Network.Host;
+            client.Credentials = credential;
+            client.Timeout = 300000;
+            client.EnableSsl = true;
+            MailMessage mail = new MailMessage();
+            StringBuilder mailbody = new StringBuilder();
+            mail.From = new MailAddress(settings.Smtp.Network.UserName, "Local Connection");
+            mail.To.Add(obj.CustEmail);
+            mail.Priority = MailPriority.High;
             HotelDtl hotelDtl = await objDal.getHotelDtl(Convert.ToString(obj.HotelID));
-            PreBookingTransDtl sendmailmodel = new PreBookingTransDtl()
+            string hotelName = "";
+            //limit hotel name upto 10 characters
+            if (hotelDtl.HotelName.Length > 10)
             {
-                BookingID = obj.BookingID,
-                HotelID = obj.HotelID,
-                CustName = obj.CustName,
-                CustEmail = obj.CustEmail,
-                CustPhNo = obj.CustPhNo,
-                BookingFrom = obj.BookingFrom,
-                BookingUpto = obj.BookingUpto,
-                BookingDate = obj.BookingDate,
-                CustDetails = obj.CustDetails,
-                BookingStatus = obj.BookingStatus,
-                FinalFare = obj.FinalFare,
-                PaymentGatewayCode = obj.PaymentGatewayCode,
-                HotelName = hotelDtl.HotelName
-            };
-            SendMail objSendMail = new SendMail();
-            string result = objSendMail.SendEmail(sendmailmodel, "Customer");
-            return result;
-        }
+                hotelName = hotelDtl.HotelName.Substring(0, 10);
+            }
+            else
+            {
+                hotelName = hotelDtl.HotelName;
+            }
+            switch (obj.BookingStatus)
+            {
+                case "Booked":
+                    mail.Subject = "Booking Details";
+                    mailbody.Append("<p>Dear " + obj.CustName + ",</p>");
+                    mailbody.Append("<p>" + "Hi, " + obj.CustName + ".Thank you for choosing our hotel.We have you confirmed a reservation for " + hotelName + "+.Your BookingID is " + obj.BookingID + "  + 917319079996 + LocalConnection.");
+                    mailbody.Append("<p>Booking Date: " + DateTime.Now.ToString("dd MMM yyyy HH:mm tt") + "</p>");
+                    mailbody.Append("<i>This is an auto generated mail, please do not reply.</i>");
+                   
+                    break;
+                case "Cancelled":
+                    mail.Subject = "Cancellation Details";
+                    mailbody.Append("<p>Dear " + obj.CustName + ",</p>");
+                    mailbody.Append("<p>" + "Hi, your booking at Local Conn. has been cancelled, as per your request. BookingID: " + obj.BookingID + ". Helpline " + 917319079996 + ". Look forward to hosting you soon!" + "</p>");
+                    mailbody.Append("<p>Cancellation Date: " + DateTime.Now.ToString("dd MMM yyyy HH:mm tt") + "</p>");
+                    mailbody.Append("<i>This is an auto generated mail, please do not reply.</i>");
+                 
+                    break;
 
-        [Route("SendEmailAdmin")]
-        [HttpPost]
-        public async Task<string> SendMailToAdmin(PreBookingDtl obj)
-        {
-            HotelDtl hotelDtl = await objDal.getHotelDtl(Convert.ToString(obj.HotelID));
-            PreBookingTransDtl sendmailmodel = new PreBookingTransDtl()
+                default:
+                    break;
+
+            }
+
+            mail.Body = mailbody.ToString();
+            mail.IsBodyHtml = true;
+
+            try
             {
-                BookingID = obj.BookingID,
-                HotelID = obj.HotelID,
-                CustEmail = obj.CustEmail,
-                CustName = obj.CustName,
-                CustPhNo = obj.CustPhNo,
-                BookingFrom = obj.BookingFrom,
-                BookingUpto = obj.BookingUpto,
-                BookingDate = obj.BookingDate,
-                CustDetails = obj.CustDetails,
-                BookingStatus = obj.BookingStatus,
-                FinalFare = obj.FinalFare,
-                PaymentGatewayCode = obj.PaymentGatewayCode,
-                HotelName = hotelDtl.HotelName
-            };
-            SendMail objSendMail = new SendMail();
-            string result = objSendMail.SendEmail(sendmailmodel, "Admin");
-            return result;
+                client.Send(mail);
+
+                return obj.BookingID;
+            }
+            catch (Exception e)
+            {
+
+                return "Error: Something Went Wrong" + e;
+            }
 
         }
 
@@ -354,12 +381,12 @@ namespace LocalConn.API.Areas.General.Controllers
                 return InternalServerError(ex);
             }
         }
-        public IHttpActionResult SendSMSToAdmin(string name, string amount, string bookingID, string mobno, string Type,string bookingDate)
+        public IHttpActionResult SendSMSToAdmin(string name, string amount, string bookingID, string mobno, string Type, string date)
         {
             try
             {
 
-                SendConfirmationmessage.SendHttpSMSConfirmationToAdmin(name,amount, bookingID, mobno, Type,bookingDate);
+                SendConfirmationmessage.SendHttpSMSConfirmationToAdmin(name, amount, bookingID, mobno, Type, date);
                 return Ok();
             }
             catch (Exception ex)

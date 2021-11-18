@@ -20,9 +20,10 @@ namespace LocalConn.Entities.Dal
         {
             try
             {
+                long tempstateid = 0;
                 List<CityList> list = new List<CityList>();
-                //var parID = new SqlParameter("@StateID", StateID);
-                list=  await objDB.Database.SqlQuery<CityList>("udspLCAppGetCityList").ToListAsync();
+                var parID = new SqlParameter("@StateID", tempstateid);
+                list=  await objDB.Database.SqlQuery<CityList>("udspLCAppGetCityList @StateID", parID).ToListAsync();
                 return list;
             }
             catch (Exception ex)
@@ -326,7 +327,7 @@ namespace LocalConn.Entities.Dal
             try
             {
                 var parID = new SqlParameter("@BookingID", BookingID);
-                return objDB.Database.SqlQuery<PreBookingDtl>("udspLCWebCancelBooking @BookingID", parID).FirstOrDefault();
+                return objDB.Database.SqlQuery<PreBookingDtl>("udspLCAppCancelBooking @BookingID", parID).FirstOrDefault();
             }
             catch (Exception ex)
             {
