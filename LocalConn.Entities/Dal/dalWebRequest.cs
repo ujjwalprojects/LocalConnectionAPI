@@ -460,7 +460,10 @@ namespace LocalConn.Entities.Dal
                 throw e;
             }
         }
-
+        public async Task<IEnumerable<utblMstBanner>> getBannerList()
+        {
+            return await objDB.utblMstBanners.OrderByDescending(x => x.TransDate).Take(5).ToListAsync();
+        }
         //General Page for web
         public async Task<GenLCHotelVM> SearchGenLCHotelListAsync(GenLCSearchModel search)
         {

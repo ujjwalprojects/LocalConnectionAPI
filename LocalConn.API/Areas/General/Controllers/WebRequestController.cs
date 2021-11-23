@@ -252,7 +252,12 @@ namespace LocalConn.API.Areas.General.Controllers
             obj = objDal.getPolicyList();
             return obj;
         }
-
+        [HttpGet]
+        [Route("genbannerlist")]
+        public async Task<IEnumerable<utblMstBanner>> genBannerList()
+        {
+            return await objDal.getBannerList();
+        }
 
         #region Offer
         [HttpGet]

@@ -81,7 +81,7 @@ namespace LocalConn.API.Areas.Admin.Controllers
         [HttpGet]
         [Route("StateByID")]
         public async Task<utblMstState> StateByID(long id)
-        {   
+        {
             return await objDal.GetStateByIDAsync(id);
         }
         [HttpGet]
@@ -117,12 +117,12 @@ namespace LocalConn.API.Areas.Admin.Controllers
         {
             if (ModelState.IsValid)
             {
-                if(!model.CityIconPath.Contains(".jpg"))
+                if (!model.CityIconPath.Contains(".jpg"))
                 {
                     Random rand = new Random();
                     string name = model.CityName + "_" + DateTime.Now.ToString("yyyyMMdd") + "_" + rand.Next(50) + ".jpg";
                     string mappath = "~/Uploads/Cities";
-                    string normal_result = SaveImage(model.CityIconPath, name,mappath);
+                    string normal_result = SaveImage(model.CityIconPath, name, mappath);
                     if (normal_result.Contains("Error"))
                     {
                         string stringerror = normal_result;
@@ -130,7 +130,7 @@ namespace LocalConn.API.Areas.Admin.Controllers
                     }
                     model.CityIconPath = FileUrl + "Cities/" + normal_result;
                 }
-            
+
 
                 string result = await objDal.SaveCitiesAsync(model);
                 //if (result.ToLower().Contains("error"))
@@ -669,7 +669,23 @@ namespace LocalConn.API.Areas.Admin.Controllers
         {
             if (ModelState.IsValid)
             {
-                return await objDal.SaveBannerAsync(model);
+                if (!model.BannerPath.Contains(".jpg"))
+                {
+
+                    Random rand = new Random();
+                    string name = "Banner_" + DateTime.Now.ToString("yyyyMMdd") + "_" + rand.Next(50) + ".jpg";
+                    string mappath = "~/Uploads/Banner";
+                    string normal_result = SaveImage(model.BannerPath, name, mappath);
+                    if (normal_result.Contains("Error"))
+                    {
+                        string stringerror = normal_result;
+                        return "Unable to upload image" + stringerror;
+                    }
+                    model.BannerPath = FileUrl + "Banner/" + normal_result;
+
+                    return await objDal.SaveBannerAsync(model);
+                }
+              
             }
             string messages = string.Join("; ", ModelState.Values
                                          .SelectMany(x => x.Errors)
@@ -688,8 +704,8 @@ namespace LocalConn.API.Areas.Admin.Controllers
         {
             return await objDal.DeleteBannerAsync(BannerID);
         }
+      
 
-       
 
         #endregion
 

@@ -13,5 +13,7 @@ namespace LocalConn.Entities.Models
         public long BannerID { get; set; }
         [Required]
         public string BannerPath { get; set; }
+        public string UserID { get; set; }
+        public DateTime TransDate { get; set; }
     }
 }

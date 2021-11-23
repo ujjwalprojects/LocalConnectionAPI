@@ -302,6 +302,7 @@
     <Folder Include="Areas\General\Models\" />
     <Folder Include="Areas\General\Views\Shared\" />
     <Folder Include="Uploads\AmenitiesIcon\" />
+    <Folder Include="Uploads\Banner\" />
     <Folder Include="Uploads\Cities\" />
     <Folder Include="Uploads\FeatureOffers\" />
   </ItemGroup>

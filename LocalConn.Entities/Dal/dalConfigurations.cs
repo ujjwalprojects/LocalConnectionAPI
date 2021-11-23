@@ -1191,9 +1191,11 @@ namespace LocalConn.Entities.Dal
             {
                 var parPID = new SqlParameter("@BannerID", model.BannerID);
                 var parIName = new SqlParameter("@BannerPath", model.BannerPath);
+                var parUserID = new SqlParameter("@UserID", model.UserID);
+                var parTransDate = new SqlParameter("@TransDate", model.TransDate);
 
-                return await objDB.Database.SqlQuery<string>("udspMstBannerAddEdit @BannerID, @BannerPath",
-                    parPID, parIName).FirstOrDefaultAsync();
+                return await objDB.Database.SqlQuery<string>("udspMstBannerAddEdit @BannerID, @BannerPath,@UserID, @TransDate",
+                    parPID, parIName,parUserID,parTransDate).FirstOrDefaultAsync();
             }
             catch (Exception ex)
             {
